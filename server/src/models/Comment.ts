@@ -4,10 +4,10 @@ const commentSchema = new Schema(
     {
         text: { type: String, required: true, maxlength: 500 },
         image: { type: String },
-        liked: {type: [Types.ObjectId], ref: 'User'},
+        likes: {type: [Types.ObjectId], ref: 'Like', default: []},
         likeCount: { type: Number, default: 0 },
-        _ownerId: { type: Types.ObjectId, ref: 'User' },
         _postId: { type: Types.ObjectId, ref: 'Post', required: true },
+        _ownerId: { type: Types.ObjectId, ref: 'User', required: true },
     }, { timestamps: true }
 );
 

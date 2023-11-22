@@ -10,6 +10,7 @@ const userSchema = new Schema(
         bio: { type: String },
         profilePicture: { type: String },
         posts: { type: [Types.ObjectId], ref: 'Post', default: [] },
+        photos: { type: [String], default: [] },
         likedPosts: { type: [Types.ObjectId], ref: 'Post', default: [] },
         comments: { type: [Types.ObjectId], ref: 'Comment', default: [] },
         friends: { type: [Types.ObjectId], ref: 'User', default: [] },
