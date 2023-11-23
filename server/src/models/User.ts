@@ -2,13 +2,13 @@ import { Schema, model, Types } from 'mongoose';
 
 const userTypes = ['user', 'admin'];
 
-const userSchema = new Schema(
+const userSchema: Schema = new Schema(
     {
         username: { type: String, required: true, unique: true },
         email: { type: String, required: true, unique: true },
         password: { type: String, required: true },
-        bio: { type: String },
-        profilePicture: { type: String },
+        bio: { type: String, default: '' },
+        profilePicture: { type: String, default: '' },
         posts: { type: [Types.ObjectId], ref: 'Post', default: [] },
         photos: { type: [String], default: [] },
         likedPosts: { type: [Types.ObjectId], ref: 'Post', default: [] },

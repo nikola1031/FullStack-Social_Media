@@ -1,6 +1,6 @@
 import { Schema, model, Types } from 'mongoose';
 
-const commentSchema = new Schema(
+const commentSchema: Schema = new Schema(
     {
         text: { type: String, required: true, maxlength: 500 },
         image: { type: String },

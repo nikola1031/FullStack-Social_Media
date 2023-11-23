@@ -1,6 +1,6 @@
 import { Schema, model, Types } from 'mongoose';
 
-const postSchema = new Schema(
+const postSchema: Schema = new Schema(
     {
         text: { type: String, required: true, maxLength: 500 },
         image: { type: String },
