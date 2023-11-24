@@ -16,8 +16,8 @@ async function login({email, password}: IUserData) {
         throw new Error('Wrong email or password');
     }
 
-    const token = jwt.sign({email, username: existingUser.username, _id: existingUser._id}, SECRET!, {expiresIn: '2h'});
-    return { email, username: existingUser.username, _id: existingUser._id, token };
+    const accessToken = jwt.sign({email, username: existingUser.username, _id: existingUser._id}, SECRET!, {expiresIn: '2h'});
+    return { email, username: existingUser.username, _id: existingUser._id, accessToken };
 }
 
 async function register({email, username, password}: IUserData) {
@@ -30,8 +30,8 @@ async function register({email, username, password}: IUserData) {
     const hashedPassword = await hashPassword(password);
     const user = await User.create({email, username, password: hashedPassword});
 
-    const token = jwt.sign({email, username, _id: user._id}, SECRET!, {expiresIn: '2h'});
-    return { email, username, _id: user._id, token };
+    const accessToken = jwt.sign({email, username, _id: user._id}, SECRET!, {expiresIn: '2h'});
+    return { email, username, _id: user._id, accessToken };
 }
 
 function logout() {}
