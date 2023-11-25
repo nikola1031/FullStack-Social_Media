@@ -1,19 +1,20 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { IUserData } from "../services/types";
+import { IUserData } from "../types/types";
 
 export function auth() {
     return function(req: Request, res: Response, next: NextFunction) {
         const authHeader = req.headers.authorization;
         let token = '';
-
         if (authHeader) {
             token = authHeader.split(' ')[1];
         }
 
         try {
-            const user = validateToken(token);
-            req.user = user;
+            if (token) {
+                const user = validateToken(token);
+                req.user = user;
+            }
             next();
         } catch (error) {
             if (error instanceof jwt.TokenExpiredError) {
@@ -21,7 +22,6 @@ export function auth() {
             } else
                 return res.status(401).json({message: 'Invalid access token. Please log in'});
         }
-
     }
 }
 

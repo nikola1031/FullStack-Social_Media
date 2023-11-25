@@ -1,6 +1,10 @@
 import { Application } from 'express';
-import { router as userController } from '../controllers/userController';
+import authRouter from '../routes/authRouter';
+import postRouter from '../routes/postRouter';
+import commentRouter from '../routes/commentRouter';
 
 export function initRoutes(app: Application) {
-    app.use('/auth', userController);
+    app.use('/api/auth', authRouter);
+    app.use('/api/posts', postRouter);
+    app.use('/api/posts/:postId/comments', commentRouter);
 }

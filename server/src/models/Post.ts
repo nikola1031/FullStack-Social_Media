@@ -3,10 +3,9 @@ import { Schema, model, Types } from 'mongoose';
 const postSchema: Schema = new Schema(
     {
         text: { type: String, required: true, maxLength: 500 },
-        image: { type: String },
-        likes: {type: [Types.ObjectId], ref: 'Like', default: []},
+        imageUrls: { type: [String], default: [] },
         likeCount: { type: Number, default: 0 },
-        comments: { type: [Types.ObjectId], ref: 'Comment', default: [] },
+        commentCount: { type: Number, default: 0 },
         _ownerId: { type: Types.ObjectId, ref: 'User', required: true },
     }, { timestamps: true }
 );
