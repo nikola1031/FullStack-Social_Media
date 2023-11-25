@@ -1,6 +1,7 @@
 import { Comment } from "../models/Comment";
 import { Like } from "../models/Like";
 import { Post } from "../models/Post";
+import { TargetType } from "./types/enums";
 import { filterImageUrls } from "./validators/validators"; 
 
 interface IPost {
@@ -29,8 +30,14 @@ export const editPost = async (text: string, postId: string) => {
     return updatedPost;
 }
 
-export const removePost = async (id: string) => {
-    await Post.findByIdAndDelete(id);
-    await Comment.deleteMany({_postId: id});
-    await Like.deleteMany({})
+export const removePost = async (_postId: string) => {
+    await Post.findByIdAndDelete(_postId);
+    await Comment.deleteMany({_postId});
+    const commentIds = await Comment.distinct('_id', { _postId });
+    await Like.deleteMany({
+        $or: [
+            { _targetId: _postId, targetType: TargetType.Post },
+            { _targetId: { $in: commentIds }, targetType: TargetType.Comment }
+        ]
+    });
 }

@@ -1,5 +1,4 @@
 import { User } from '../models/User';
-import { IUserData } from '../types/types';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -8,7 +7,7 @@ const saltRounds = 10;
 const hashPassword = async (password: string) => await bcrypt.hash(password, saltRounds);
 const comparePasswords = async (password: string, hash: string) => await bcrypt.compare(password, hash);
 
-async function login({email, password}: IUserData) {
+async function login(email: string, password: string) {
     
     const existingUser = await User.findOne({email});
 
@@ -16,11 +15,11 @@ async function login({email, password}: IUserData) {
         throw new Error('Wrong email or password');
     }
 
-    const accessToken = jwt.sign({email, username: existingUser.username, _id: existingUser._id}, SECRET!, {expiresIn: '2h'});
-    return { email, username: existingUser.username, _id: existingUser._id, accessToken };
+    const accessToken = jwt.sign({email, username: existingUser.username, _id: existingUser._id, role: existingUser.role}, SECRET!, {expiresIn: '2h'});
+    return { email, username: existingUser.username, _id: existingUser._id, role: existingUser.role, accessToken };
 }
 
-async function register({email, username, password}: IUserData) {
+async function register(email: string, username: string, password: string) {
     const oldUser = await User.findOne({email, username});
     
     if (oldUser) {
@@ -30,8 +29,8 @@ async function register({email, username, password}: IUserData) {
     const hashedPassword = await hashPassword(password);
     const user = await User.create({email, username, password: hashedPassword});
 
-    const accessToken = jwt.sign({email, username, _id: user._id}, SECRET!, {expiresIn: '2h'});
-    return { email, username, _id: user._id, accessToken };
+    const accessToken = jwt.sign({email, username, _id: user._id, role: user.role}, SECRET!, {expiresIn: '2h'});
+    return { email, username, role: user.role, _id: user._id, accessToken };
 }
 
 function logout() {}

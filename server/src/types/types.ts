@@ -1,7 +1,8 @@
 export interface IUserData {
-    username?: string;
+    username: string;
     email: string;
     password: string;
-    _id?: string;
-    accessToken?: string;
+    _id: string;
+    role: 'user' | 'admin';
+    accessToken: string;
 }
