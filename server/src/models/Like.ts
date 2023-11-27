@@ -1,5 +1,5 @@
 import { Schema, model, Types } from 'mongoose';
-import { TargetType } from '../services/types/enums';
+import { TargetType } from '../services/types/types';
 
 const likeTypes = [TargetType.Post, TargetType.Comment];
 

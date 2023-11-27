@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import * as userService from '../services/userService';
+import * as authService from '../services/authService';
 import { trimmer } from '../utils/trimmer';
 
 export const login = async (req: Request, res: Response) => {
@@ -10,7 +10,7 @@ export const login = async (req: Request, res: Response) => {
             throw new Error('All fields are required');
         }
 
-        const user = await userService.login(email.toLocaleLowerCase(), password);
+        const user = await authService.login(email.toLocaleLowerCase(), password);
         res.status(200).json(user);
         console.log('logged in')
     } catch (error: any) {
@@ -33,7 +33,7 @@ export const register = async (req: Request, res: Response) => {
             throw new Error('Passwords must match');
         }
 
-        const user = await userService.register(email.toLocaleLowerCase(), username, password);
+        const user = await authService.register(email.toLocaleLowerCase(), username, password);
         res.status(201).json(user);
     } catch (error: any) {
         res.status(400).json({message: error.message})

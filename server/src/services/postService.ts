@@ -1,7 +1,7 @@
 import { Comment } from "../models/Comment";
 import { Like } from "../models/Like";
 import { Post } from "../models/Post";
-import { TargetType } from "./types/enums";
+import { TargetType } from "./types/types";
 import { filterImageUrls } from "./validators/validators"; 
 
 interface IPost {
@@ -31,8 +31,16 @@ export const editPost = async (text: string, postId: string) => {
 }
 
 export const removePost = async (_postId: string) => {
-    await Post.findByIdAndDelete(_postId);
-    await Comment.deleteMany({_postId});
+    const postDeletion = await Post.deleteOne({_id: _postId});
+    if (postDeletion.deletedCount === 0) {
+        throw new Error('Post not found. Deletion unsuccessful')
+    }
+    const commentDeletion = await Comment.deleteMany({_postId});
+    
+    if (commentDeletion.deletedCount === 0) {
+        return;
+    }
+    
     const commentIds = await Comment.distinct('_id', { _postId });
     await Like.deleteMany({
         $or: [

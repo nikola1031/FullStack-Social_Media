@@ -1,38 +1,45 @@
-import { User } from '../models/User';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import { User } from "../models/User";
+import { comparePasswords, hashPassword } from "./helpers/serviceHelpers";
+import { ProfileData, EmailAndPassword, Passwords } from "./types/types";
 
-const SECRET = process.env.JWT_SECRET;
-const saltRounds = 10;
-const hashPassword = async (password: string) => await bcrypt.hash(password, saltRounds);
-const comparePasswords = async (password: string, hash: string) => await bcrypt.compare(password, hash);
-
-async function login(email: string, password: string) {
-    
-    const existingUser = await User.findOne({email});
-
-    if (!existingUser || !(await comparePasswords(password, existingUser.password))){
-        throw new Error('Wrong email or password');
-    }
-
-    const accessToken = jwt.sign({email, username: existingUser.username, _id: existingUser._id, role: existingUser.role}, SECRET!, {expiresIn: '2h'});
-    return { email, username: existingUser.username, _id: existingUser._id, role: existingUser.role, accessToken };
+function hasEmailAndPassword(data: any): data is EmailAndPassword {
+    return data && typeof data.email === 'string' && typeof data.password === 'string';
 }
 
-async function register(email: string, username: string, password: string) {
-    const oldUser = await User.findOne({email, username});
-    
-    if (oldUser) {
-        throw new Error('User already exists');
+export const editProfile = async (data: ProfileData, userId: string) => {
+    const user = await User.findById(userId);
+    if (!user) {
+        throw new Error('User not found');
     }
 
-    const hashedPassword = await hashPassword(password);
-    const user = await User.create({email, username, password: hashedPassword});
+    if (hasEmailAndPassword(data) && !(await comparePasswords(data.password, user.password))) {
+        throw new Error('Incorrect password');
+    }
 
-    const accessToken = jwt.sign({email, username, _id: user._id, role: user.role}, SECRET!, {expiresIn: '2h'});
-    return { email, username, role: user.role, _id: user._id, accessToken };
+    if (hasEmailAndPassword(data)) {
+        user.email = data.email;
+    }
+    data.bio ? user.bio = data.bio : null;
+    data.username ? user.username = data.username : null;
+
+    await user.save();
+    return user;
 }
 
-function logout() {}
+export const editPassword = async (passwords: Passwords, userId: string) => {
+    const user = await User.findById(userId);
+    if (!user) {
+        throw new Error('User not found');
+    }
 
-export { login, register, logout };
+    if (!(await comparePasswords(passwords.password, user.password))) {
+        throw new Error('Incorrect password')
+    }
+
+    if (passwords.newPassword !== passwords.confirmPass){
+        throw new Error('Passwords must match');
+    }
+
+    user.password = await hashPassword(passwords.newPassword);
+    await user.save();
+}

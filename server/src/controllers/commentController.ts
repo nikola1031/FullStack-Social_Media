@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import * as commentService from '../services/commentService';
-import { TargetType } from '../services/types/enums';
+import { TargetType } from '../services/types/types';
 import { toggleLike } from '../services/helpers/serviceHelpers';
 
 export const createComment = async (req: Request, res: Response) => {

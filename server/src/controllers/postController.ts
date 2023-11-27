@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import * as postService from '../services/postService';
 import { toggleLike } from '../services/helpers/serviceHelpers';
-import { TargetType } from '../services/types/enums';
+import { TargetType } from '../services/types/types';
 
 export const createPost = async (req: Request, res: Response) => {
     const _ownerId = req.user!._id!;

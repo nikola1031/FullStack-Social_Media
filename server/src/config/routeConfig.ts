@@ -5,6 +5,7 @@ import commentRouter from '../routes/commentRouter';
 
 export function initRoutes(app: Application) {
     app.use('/api/auth', authRouter);
+    app.use('/api/users');
     app.use('/api/posts', postRouter);
     app.use('/api/posts/:postId/comments', commentRouter);
 }
