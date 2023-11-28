@@ -16,7 +16,7 @@ async function login(email: string, password: string) {
     return { email, username: existingUser.username, _id: existingUser._id, role: existingUser.role, accessToken };
 }
 
-async function register(email: string, username: string, password: string) {
+async function register(email: string, username: string, password: string, gender: 'male' | 'female') {
     const oldUser = await User.findOne({email, username});
     
     if (oldUser) {
@@ -24,10 +24,10 @@ async function register(email: string, username: string, password: string) {
     }
 
     const hashedPassword = await hashPassword(password);
-    const user = await User.create({email, username, password: hashedPassword});
+    const user = await User.create({email, username, password: hashedPassword, gender});
 
-    const accessToken = jwt.sign({email, username, _id: user._id, role: user.role}, SECRET!, {expiresIn: '2h'});
-    return { email, username, role: user.role, _id: user._id, accessToken };
+    const accessToken = jwt.sign({email, username, _id: user._id, role: user.role, gender}, SECRET!, {expiresIn: '2h'});
+    return { email, username, role: user.role, _id: user._id, gender, accessToken };
 }
 
 function logout() {}

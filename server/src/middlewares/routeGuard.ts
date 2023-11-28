@@ -35,7 +35,7 @@ function onlyAuthors(Model: any) {
             return res.status(403).json({ message: 'You are not authorized to perform this action' });
         }
 
-        // Naming convetion in routes for IDs - :postId, :commentId
+        // Naming convention in routes for IDs - :postId, :commentId
         const resourceId = req.params[Model.modelName.toLowerCase() + 'Id'];
         const userId = req.user._id;
 

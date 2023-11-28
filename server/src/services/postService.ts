@@ -2,7 +2,7 @@ import { Comment } from "../models/Comment";
 import { Like } from "../models/Like";
 import { Post } from "../models/Post";
 import { TargetType } from "./types/types";
-import { filterImageUrls } from "./validators/validators"; 
+import { filterImageUrls } from "../validators/validators"; 
 
 interface IPost {
     text: string;
