@@ -18,9 +18,8 @@ export const toggleLike = async (_targetId: string, _userId: string, targetType:
     const like = await Like.findOne({_targetId, _userId});
     if (!like) {
         const newLike = new Like({_targetId, _userId, targetType});
-        await newLike.save();
 
-        adjustLikes(_targetId, 1, modelMapping[targetType]);
+        await Promise.all([newLike.save(), adjustLikes(_targetId, 1, modelMapping[targetType])])
     } else {
         const result = await Like.deleteOne({_id: like._id});
         if (result.deletedCount === 1) {

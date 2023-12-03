@@ -61,12 +61,15 @@ export const toggleFriendshipRequest = async (userId: string, otherUserId: strin
 
     const [user, otherUser] = await Promise.all([User.findById(userId), User.findById(otherUserId)])
 
+    if (!user || !otherUser) {
+        throw new Error('User not found');
+    }
 
-    if (user && user.friends.includes(otherUserId)){
+    if (user.friends.includes(otherUserId)){
         throw new Error('Users are already friends');
     }
 
-    if (otherUser && otherUser.friendRequests.includes(userId)) {
+    if (otherUser.friendRequests.includes(userId)) {
         result = await User.updateOne({_id: otherUserId}, {$pull: {friendRequests: userId}});
     } else {
         result = await User.updateOne({_id: otherUserId}, {$push: {friendRequests: userId}});
@@ -82,7 +85,10 @@ export const toggleFriendshipRequest = async (userId: string, otherUserId: strin
 }
 
 export const removeFriendshipRequest = async (userId: string, otherUserId: string) => {
-    await User.updateOne({_id: userId}, {$pull: {friendRequests: otherUserId}});
+    const result = await User.updateOne({_id: userId}, {$pull: {friendRequests: otherUserId}});
+    if (result.modifiedCount !== 1) {
+        throw new Error('Remove friendship request operation had no effect. Perform database integrity check')
+    }
 }
 
 export const toggleFriendship = async (userId: string, otherUserId: string) => {
@@ -94,7 +100,11 @@ export const toggleFriendship = async (userId: string, otherUserId: string) => {
 
     const user = await User.findById(userId);
 
-    if (user && user.friends.includes(otherUserId)){
+    if (!user) {
+        throw new Error('User not found');
+    }
+
+    if (user.friends.includes(otherUserId)){
         result = await Promise.all([
             User.updateOne({_id: userId}, {$pull: {friends: otherUserId}}),
             User.updateOne({_id: otherUserId}, {$pull: {friends: userId}}),
@@ -118,15 +128,16 @@ export const toggleFollowUser = async (userId: string, otherUserId: string) => {
 
     const users = (await User.find({_id: {$in: [userId, otherUserId]}}));
 
-    if (users.length !== 2) {
+    if (users.length !== 2 || !users[0] || !users[1]) {
         throw new Error('One or more of requested users not found');
     }
+
     const user = users.find((user) => user._id!.toString() === userId);
     const otherUser = users.find((user) => user._id!.toString() === otherUserId);
 
     let result;
 
-    if (user && otherUser && user.following.includes(userId)) {
+    if (user!.following.includes(userId)) {
         result = await Promise.all([
             User.updateOne({_id: userId}, {$pull: {following: otherUserId}}),
             User.updateOne({_id: otherUserId}, {$pull: {followers: userId}}),

@@ -33,7 +33,7 @@ export const editPost = async (text: string, postId: string) => {
 export const removePost = async (_postId: string) => {
     const postDeletion = await Post.deleteOne({_id: _postId});
     if (postDeletion.deletedCount === 0) {
-        throw new Error('Post not found. Deletion unsuccessful')
+        throw new Error('Delete operation had no effect. Perform database integrity check')
     }
     const commentDeletion = await Comment.deleteMany({_postId});
     
