@@ -1,1 +1,26 @@
 @import url('./reset.css');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;500;700&display=swap');
+
+body, html {
+    background-color: #232525;
+    color: #c4c0ba;
+    font-family: Roboto, Arial, Helvetica, sans-serif;
+}
+
+#root {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
+    padding: 1rem 30% 0 30%;
+}
+
+@media screen and (max-width: 700px) {
+    main {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}

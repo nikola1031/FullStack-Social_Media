@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import './Register.css';
+import '../../styles/forms.css';
 
-export default function RegisterForm(){
+export default function Register(){
     const [username, setUsername] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
@@ -13,6 +13,7 @@ export default function RegisterForm(){
     };
 
     return (
+        <div className='form-wrapper'>
         <form onSubmit={handleSubmit} className="form-container">
             <div className="form-group">
                 <label htmlFor="username">Username</label>
@@ -46,5 +47,6 @@ export default function RegisterForm(){
             </div>
             <button type="submit" className="submit-btn">Register</button>
         </form>
+        </div>
     );
 };

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import './Login.css';
+import '../../styles/forms.css';
 
 export default function Login() {
     const [username, setUsername] = useState<string>('');
@@ -11,6 +11,7 @@ export default function Login() {
     };
 
     return (
+        <div className='form-wrapper'>
         <form onSubmit={handleSubmit} className="form-container">
             <div className="form-group">
                 <label htmlFor="username">Username</label>
@@ -34,5 +35,6 @@ export default function Login() {
             </div>
             <button type="submit" className="submit-btn">Login</button>
         </form>
+        </div>
     );
 };
