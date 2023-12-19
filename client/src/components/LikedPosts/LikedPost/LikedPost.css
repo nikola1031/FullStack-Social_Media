@@ -1,0 +1,56 @@
+.liked-post-container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  background-color: #000000;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.liked-post-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+
+.liked-post-image {
+    width: 120px;
+    height: 120px;
+    flex: 0 0 120px;
+    border-radius: 10%;
+}
+
+.liked-post-owner {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.liked-post-owner-username {
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.liked-post-owner .user-avatar {
+    margin: 0;
+    cursor: pointer;
+}
+
+.liked-post-btn {
+    color: inherit;
+    border-style: none;
+    background-color: rgba(193, 192, 192, 0.481);
+    border-radius: 5px;
+    height: 2.5rem;
+    cursor: pointer;
+    width: 50%;
+}
+
+.liked-post-btn:hover {
+    background-color: #f0f0f04d;
+    transition: background-color 0.2s ease-in-out;
+}

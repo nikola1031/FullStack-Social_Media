@@ -2,6 +2,7 @@ import Post from './Post/Post';
 import './Home.css';
 
 export default function Home() {
+    // TODO: Add posts from database here
     return (
         <>
             <section className="send-post">

@@ -26,8 +26,9 @@ const post: PostData = {
     commentCount: Math.floor(Math.random() * (200 - 1) + 1),
     _createdAt: String(Math.floor(Math.random() * (59 - 1) + 1)),
     _ownerId: '1'
-
 }
+// TODO: Need to add actual post data here
+// TODO: Fix the overlay on click thing
 
 export default function Post(/* {post}: {post: PostData} */) {
     const [showOverlay, setShowOverlay] = useState(false);

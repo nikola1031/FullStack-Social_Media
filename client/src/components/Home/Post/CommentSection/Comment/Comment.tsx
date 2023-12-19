@@ -1,6 +1,12 @@
 import "./Comment.css";
 
 export default function Comment() {
+
+    // TODO: Get comment data as a prop
+    // TODO: Like a comment
+    // TODO: Delete a comment if author 
+    // TODO: Edit a comment if author 
+
     return (
         <div className="comment">
             <img className="user-avatar" src="https://picsum.photos/50/50" alt="avatar" />

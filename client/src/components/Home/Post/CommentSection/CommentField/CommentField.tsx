@@ -3,6 +3,8 @@ import './CommentField.css';
 
 
 export default function CommentField() {
+    // TODO: Post comment
+    
     const [comment, setComment] = useState('');
 
     function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
