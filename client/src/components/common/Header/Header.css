@@ -4,7 +4,8 @@ header {
     display: flex;
     justify-content: center;
     align-items: center;
-    position: relative;
+    position: sticky;
+    top: 0;
 }
 
 nav {
@@ -29,6 +30,8 @@ header ul {
 
 .logo {
     height: 60px;
+    position: absolute;
+    left: 0;
 }
 
 /* Burger menu button */
@@ -44,10 +47,16 @@ header ul {
 
 /* Responsive styles */
 @media screen and (max-width: 700px) {
+    .logo {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 1000px) {
     .burger-menu {
         display: block;
     }
-    
+
     header ul {
         opacity: 0;
         display: none;
@@ -65,9 +74,5 @@ header ul {
         color: #c4c0ba;
         background-color: #2c3230;
         transition: background-color 500ms;
-    }
-    
-    .logo {
-        display: none;
     }
 }

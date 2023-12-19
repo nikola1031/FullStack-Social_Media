@@ -1,0 +1,33 @@
+.comment {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 1fr;
+}
+
+.comment-info {
+    font-size: 0.9rem;
+    color: #fff;
+    background-color: #3a3b3c;
+    width: fit-content;
+    border-radius: 1.2rem;
+    padding: 10px;
+}
+
+.comment-username {
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.comment-time {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.comment-action {
+    font-size: 0.9rem;
+    background: none;
+    color: inherit;
+    border: none;
+    cursor: pointer;
+    padding-left: 10px;
+}

@@ -13,6 +13,7 @@ export default function Login() {
     return (
         <div className='form-wrapper'>
         <form onSubmit={handleSubmit} className="form-container">
+            <h2 className="form-title">Login</h2>
             <div className="form-group">
                 <label htmlFor="username">Username</label>
                 <input 

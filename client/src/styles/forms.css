@@ -1,3 +1,8 @@
+.form-title {
+    margin: 0;
+    text-align: center;
+}
+
 .form-wrapper {
     display: flex;
     justify-content: center;
