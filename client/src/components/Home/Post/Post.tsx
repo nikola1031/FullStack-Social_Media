@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import './Post.css';
-import CommentSection from '../CommentSection/CommentSection';
+import CommentSection from './CommentSection/CommentSection';
 
 export type PostData = {
     text: string;
