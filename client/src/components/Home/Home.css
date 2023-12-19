@@ -5,7 +5,58 @@
     gap: 20px;
 }
 
+.send-post-img {
+    flex: 1 0 50px;
+    margin: 0;
+}
+
 .send-post {
     background-color: #000000;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border-radius: 10px;
+}
+
+.send-post-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    gap: 1rem;
+}
+
+.send-post-input-container {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    width: 100%;
+}
+
+.send-post-input {
+    padding-left: 0.5rem;
+    padding-top: 0.5rem;
+    width: 100%;
+    border-radius: 10px;
+    outline: none;
+    background-color: #3a3b3c;
+    border: none;
     color: #ffffff;
+    resize: none;
+    line-height: 1;
+}
+
+.send-post-btn {
+    color: inherit;
+    border-style: none;
+    background-color: rgba(193, 192, 192, 0.481);
+    border-radius: 5px;
+    height: 2rem;
+    cursor: pointer;
+    width: 50%;
+}
+
+.send-post-btn:hover {
+    background-color: #f0f0f04d;
+    transition: background-color 0.2s ease-in-out;
 }
