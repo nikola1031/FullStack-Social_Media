@@ -33,8 +33,10 @@ const post: PostData = {
 export default function LikedPosts() {
     const posts: PostData[] = [post];
 
+    // Need to get real posts here
+
     return (
-        <section className="liked-posts">
+        <section className="liked-posts-section">
             <h1 className='liked-posts-heading'>Liked Posts</h1>
             <LikedPost />
             <LikedPost />

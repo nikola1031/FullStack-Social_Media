@@ -15,9 +15,9 @@ export default function LikedPost() {
                     eum.
                 </p>
             </div>
-                <p className='liked-post-owner'>Post by <img className='user-avatar' src="https://picsum.photos/50/50" alt="avatar" /><span className='liked-post-owner-username'>KonImperator</span></p>
+                <p className='liked-post-owner'>Post by <img className='user-avatar' src="https://picsum.photos/50/50" alt="avatar" /><span className='liked-post-owner-username'>KonImperatorKonImperatorKonImperator  </span></p>
                 <button className='liked-post-btn unlike-post'>Remove from Liked</button>
-                {/* Should be linkk to the post */}
+                {/* Should be a link to the post */}
                 <button className='liked-post-btn go-to-post'>Go to Post</button>
         </article>
     );

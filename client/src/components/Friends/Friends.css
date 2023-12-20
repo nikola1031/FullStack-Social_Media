@@ -1,0 +1,15 @@
+.friends-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    margin-top: 2rem;
+    gap: 1rem;
+}
+
+.friends-heading {
+    margin: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    background-color: black;
+}
