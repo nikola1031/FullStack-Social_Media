@@ -11,7 +11,6 @@ export default function Friends() {
                 <FriendProfileCard />
                 <FriendProfileCard />
                 <FriendProfileCard />
-
             </div>
         </section>
     );
