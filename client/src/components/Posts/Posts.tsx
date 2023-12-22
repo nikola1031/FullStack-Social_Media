@@ -1,5 +1,9 @@
-import LikedPost from './LikedPost/LikedPost';
-import './LikedPosts.css';
+import { useSearchParams } from 'react-router-dom';
+import Post from './Post/Post';
+import './Posts.css';
+import { useState } from 'react';
+import Overlay from '../Overlay/Overlay';
+import FullPost from '../Home/FullPost/FullPost';
 
 export type PostData = {
     _id: string;
@@ -30,17 +34,29 @@ const post: PostData = {
     _createdAt: String(Math.floor(Math.random() * (59 - 1) + 1)),
     _ownerId: '1',
 };
-export default function LikedPosts() {
+export default function Posts() {
     const posts: PostData[] = [post];
+
+    const [showOverlay, setShowOverlay] = useState(false);
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const showLikedPosts = searchParams.get('liked');
+
+  // Assuming you have a function to handle clicking on a post
+  const handleShowOverlay = () => {
+    setShowOverlay(true);
+  };
 
     // Need to get real posts here
 
     return (
-        <section className="liked-posts-section">
-            <h1 className='liked-posts-heading'>Liked Posts</h1>
-            <LikedPost />
-            <LikedPost />
-            <LikedPost />
+        <section className="posts-section">
+            <button className="show-liked-posts-btn" onClick={() => setSearchParams({ liked: 'true' })} >Liked Posts</button>
+            <h1 className="posts-heading">{showLikedPosts ? 'Liked' : 'All'} Posts</h1>
+            <Post showOverlayOnCLick={handleShowOverlay} post={post} author={author}/>
+            <Post showOverlayOnCLick={handleShowOverlay} post={post} author={author}/>
+            <Post showOverlayOnCLick={handleShowOverlay} post={post} author={author}/>
+            {showOverlay && <Overlay isOpen={showOverlay} onClose={() => setShowOverlay(false)}><FullPost /></Overlay>}
         </section>
     );
 }

@@ -20,7 +20,8 @@ export default function Register(){
                 <label htmlFor="username">Username</label>
                 <input 
                     type="text" 
-                    id="username" 
+                    id="username"
+                    name="username" 
                     value={username} 
                     onChange={(e) => setUsername(e.target.value)} 
                     required 
@@ -30,7 +31,8 @@ export default function Register(){
                 <label htmlFor="email">Email</label>
                 <input 
                     type="email" 
-                    id="email" 
+                    id="email"
+                    name="email" 
                     value={email} 
                     onChange={(e) => setEmail(e.target.value)} 
                     required 
@@ -40,7 +42,8 @@ export default function Register(){
                 <label htmlFor="password">Password</label>
                 <input 
                     type="password" 
-                    id="password" 
+                    id="password"
+                    name="password" 
                     value={password} 
                     onChange={(e) => setPassword(e.target.value)} 
                     required 

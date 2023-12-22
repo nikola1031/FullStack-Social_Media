@@ -1,4 +1,4 @@
-import Post from './Post/Post';
+import FullPost from './FullPost/FullPost';
 import './Home.css';
 
 export default function Home() {
@@ -16,9 +16,9 @@ export default function Home() {
                 </form>
             </section>
             <section className="posts-container">
-                <Post />
-                <Post />
-                <Post />
+                <FullPost />
+                <FullPost />
+                <FullPost />
             </section>
         </>
     );

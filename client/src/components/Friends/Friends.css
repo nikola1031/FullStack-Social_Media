@@ -1,3 +1,7 @@
+.friend-requests-section {
+    margin-bottom: 20px;
+}
+
 .friends-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));

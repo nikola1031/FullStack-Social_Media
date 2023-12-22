@@ -4,19 +4,47 @@ import Home from '../components/Home/Home.tsx';
 import Register from '../components/Register/Register.tsx';
 import Login from '../components/Login/Login.tsx';
 import Friends from '../components/Friends/Friends.tsx';
-import LikedPosts from '../components/LikedPosts/LikedPosts.tsx';
+import Posts from '../components/Posts/Posts.tsx';
 import Profile from '../components/Profile/Profile.tsx';
 import Photos from '../components/Photos/Photos.tsx';
+import EditProfile from '../components/Profile/EditProfile/EditProfile.tsx';
+import ChangePassword from '../components/Profile/ChangePassword/ChangePassword.tsx';
+
+// TODO: Finish Profile Page {
+// - Make Edit Profile and Cange Password work
+// - Make Posts and Liked Posts show correct posts and an overlay of post with comments when post is clicked
+// - Make Remove from Liked button work
+// - Make Photos show overlay of enlarged photo when photo is clicked
+// - Allow deleting of photos
+// - Make Friends go to user's profile page when friend is clicked
+// - Make Friends count point to the friends route
+// - Make Remove Friends button work
+// }
+// TODO: Finish Home Page {
+// - Add image uploads
+// - Make Post button work
+// - Allow post deleting and editing for authors
+// - Make username and avatar point to user's profile page
+// - Make Like button work
+// - Make Comment button show post comments
+// - Make clicking on comment count show post comments
+// - Make clicking on comment username and avatar point to user's profile page
+// - Make comment liking work
+// - Make comment deleting and editing work and be visible for authors
+// - Make posting a comment work
+// }
+// TODO: Add Error page
 
 const routes: RouteObject[] = [
     { path: PathConstants.Home, element: <Home /> },
     { path: PathConstants.Register, element: <Register /> },
     { path: PathConstants.Login, element: <Login /> },
     { path: PathConstants.Profile, element: <Profile />, children: [
-        { path: PathConstants.LikedPosts, element: <LikedPosts /> },
+        { path: PathConstants.Posts, element: <Posts /> },
         { path: PathConstants.Photos, element: <Photos /> },
-        { path: PathConstants.Friends, element: <Friends /> }
-
+        { path: PathConstants.Friends, element: <Friends /> },
+        { path: PathConstants.Edit, element: <EditProfile /> },
+        { path: PathConstants.ChangePassword, element: <ChangePassword /> },
     ] },
 ];
 

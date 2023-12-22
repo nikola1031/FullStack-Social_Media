@@ -1,4 +1,4 @@
-.liked-post-container {
+.post-container {
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -9,7 +9,7 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
-.liked-post-wrapper {
+.post-wrapper {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -17,30 +17,30 @@
 }
 
 
-.liked-post-image {
+.post-image {
     width: 120px;
     height: 120px;
     flex: 0 0 120px;
     border-radius: 10%;
 }
 
-.liked-post-owner {
+.post-owner {
     display: flex;
     align-items: center;
     gap: 0.5rem;
 }
 
-.liked-post-owner-username {
+.post-owner-username {
     cursor: pointer;
     font-weight: bold;
 }
 
-.liked-post-owner .user-avatar {
+.post-owner .user-avatar {
     margin: 0;
     cursor: pointer;
 }
 
-.liked-post-btn {
+.post-btn {
     color: inherit;
     border-style: none;
     background-color: rgba(193, 192, 192, 0.481);
@@ -50,7 +50,7 @@
     width: 50%;
 }
 
-.liked-post-btn:hover {
+.post-btn:hover {
     background-color: #f0f0f04d;
     transition: background-color 0.2s ease-in-out;
 }

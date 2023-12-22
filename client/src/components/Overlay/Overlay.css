@@ -1,3 +1,7 @@
+.overlay {
+   
+}
+
 .backdrop {
     position: fixed;
     top: 0;
@@ -11,6 +15,9 @@
 
 .overlay-container {
     position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     top: 0;
     left: 0;
     right: 0;
@@ -20,5 +27,21 @@
 }
 
 .overlay-content {
-  
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: fit-content;
+    max-height: 100vh;
+    overflow-y: auto;
+}
+
+.close-button {
+    position: absolute;
+    top: 0;
+    right: 10px;
+    font-size: 2rem;
+    background-color: transparent;
+    border: none;
+    color: inherit;
+    cursor: pointer;
 }

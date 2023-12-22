@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import './Post.css';
+import './FullPost.css';
 import CommentSection from './CommentSection/CommentSection';
 
 export type PostData = {
@@ -28,50 +27,41 @@ const post: PostData = {
     _ownerId: '1'
 }
 // TODO: Need to add actual post data here
-// TODO: Fix the overlay on click thing
 
-export default function Post(/* {post}: {post: PostData} */) {
-    const [showOverlay, setShowOverlay] = useState(false);
-
-    const handleOverlayShow = () => {
-        setShowOverlay(!showOverlay);
-      };
+export default function FullPost(/* {post}: {post: PostData} */) {
 
     return (
-        <article className="post">
-                {/*   <Overlay isOpen={showOverlay} onClose={handleOverlayShow}>
-                      <img src={post.imageUrls[0]} alt="" />
-                  </Overlay> */}
-            <section className='post-info-container'>
+        <article className="full-post">
+            <section className='full-post-info-container'>
                 <div className="user-info">
                     <img
                         className="user-avatar"
                         src={user.avatar}
                         alt="avatar"
                         />
-                    <div className="post-info">
-                        <p className="post-username">{user.username}</p>
-                        <time className="post-time">
+                    <div className="full-post-info">
+                        <p className="full-post-username">{user.username}</p>
+                        <time className="full-post-time">
                         {post._createdAt} minutes ago
                         </time>
                     </div>
                 </div>
-                <div className="post-content">
-                    <p className='post-text'>
+                <div className="full-post-content">
+                    <p className='full-post-text'>
                         {post.text}
                     </p>
                     {post.imageUrls.map((imageUrl) => (
-                        <img className='post-image' src={imageUrl} alt="" />
+                        <img className='full-post-image' src={imageUrl} alt="" />
                         ))}
                 </div>
-                <div className="post-stats">
+                <div className="full-post-stats">
                     <p>{post.likeCount} Likes</p>
                     <p className='comment-count'>{post.commentCount} Comments</p>
                 </div>
                 <hr className='divider' />
-                <div className="post-buttons">
+                <div className="full-post-buttons">
                     <button className="like-button">Like</button>
-                    <button onClick={handleOverlayShow}>Comment</button>
+                    <button>Comment</button>
                 </div>       
             </section>
             <CommentSection />

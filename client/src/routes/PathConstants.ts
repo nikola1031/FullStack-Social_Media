@@ -6,16 +6,22 @@ enum PathKey {
     Register = 'Register',
     Login = 'Login',
     Photos = 'Photos',
+    Edit = 'Edit',
+    Posts = 'Posts',
+    ChangePassword = 'ChangePassword',
 }
 
 const PathConstants: Record<PathKey, string> = {
     Home: '',
     Friends: 'friends',
-    LikedPosts: 'liked-posts',
+    Posts: 'posts',
+    LikedPosts: '?liked=true',
     Photos: 'photos',
     Profile: 'profile',
+    Edit: 'edit',
     Login: 'login',
-    Register: 'register'
-}
+    Register: 'register',
+    ChangePassword: 'change-password',
+};
 
-export default PathConstants
+export default PathConstants;

@@ -1,5 +1,14 @@
+import Photo from './Photo/Photo';
 import './Photos.css';
 
 export default function Photos() {
-    return <div></div>;
+    return (
+        <section className='photos'>
+            <Photo />
+            <Photo />
+            <Photo />
+            <Photo />
+            <Photo />
+        </section>
+    );
 }
