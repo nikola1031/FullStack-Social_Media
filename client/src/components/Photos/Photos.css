@@ -1,6 +1,57 @@
+.photo-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
 .photos {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     margin-top: 2rem;
     gap: 1rem;
+}
+
+.photo-upload-button {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.photo-upload-button:hover {
+    background-color: #2980b9;
+}
+
+.confirm-photo-button {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 1rem;
+}
+
+.confirm-photo-button:hover {
+    background-color: #2980b9;
+}
+
+.delete-photo-button {
+    background-color: #e74c3c;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 1rem;
+}
+
+.delete-photo-button:hover {
+    background-color: #c0392b;
 }

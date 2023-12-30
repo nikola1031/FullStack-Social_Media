@@ -5,6 +5,7 @@ import { IUserData } from "../types/types";
 export function auth() {
     return function(req: Request, res: Response, next: NextFunction) {
         const authHeader = req.headers.authorization;
+        console.log(authHeader);
         let token = '';
         if (authHeader) {
             token = authHeader.split(' ')[1];

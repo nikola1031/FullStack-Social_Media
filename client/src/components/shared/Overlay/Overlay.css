@@ -1,5 +1,6 @@
 .overlay {
-   
+    position: relative;
+    z-index: 100001;
 }
 
 .backdrop {
@@ -9,8 +10,6 @@
     width: 100vw;
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.5);
-    /* background-color: rgba(204, 18, 18, 0.5); */
-    z-index: 111;
 }
 
 .overlay-container {
@@ -22,7 +21,6 @@
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 101;
     margin: auto;
 }
 
@@ -30,9 +28,10 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    max-width: fit-content;
+    max-width: 50%;
     max-height: 100vh;
     overflow-y: auto;
+    scrollbar-color: gray black;
 }
 
 .close-button {

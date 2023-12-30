@@ -12,16 +12,16 @@ import ChangePassword from '../components/Profile/ChangePassword/ChangePassword.
 
 // TODO: Finish Profile Page {
 // - Make Edit Profile and Cange Password work
-// - Make Posts and Liked Posts show correct posts and an overlay of post with comments when post is clicked
+// - Make Posts and Liked Posts show correct posts and an overlay of post with comments when post is clicked // kinda done
 // - Make Remove from Liked button work
-// - Make Photos show overlay of enlarged photo when photo is clicked
+// - Make Photos show overlay of enlarged photo when photo is clicked // kinda done
 // - Allow deleting of photos
 // - Make Friends go to user's profile page when friend is clicked
 // - Make Friends count point to the friends route
 // - Make Remove Friends button work
 // }
 // TODO: Finish Home Page {
-// - Add image uploads
+// - Add image uploads // kinda done
 // - Make Post button work
 // - Allow post deleting and editing for authors
 // - Make username and avatar point to user's profile page

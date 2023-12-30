@@ -2,8 +2,9 @@ import { useSearchParams } from 'react-router-dom';
 import Post from './Post/Post';
 import './Posts.css';
 import { useState } from 'react';
-import Overlay from '../Overlay/Overlay';
+import Overlay from '../shared/Overlay/Overlay';
 import FullPost from '../Home/FullPost/FullPost';
+import { useAuth } from '../../hooks/useAuth';
 
 export type PostData = {
     _id: string;
@@ -13,6 +14,8 @@ export type PostData = {
     commentCount: number;
     _ownerId: string;
     _createdAt: string;
+    author: {username: string, avatar: string}
+
 };
 
 const author = {
@@ -33,9 +36,12 @@ const post: PostData = {
     commentCount: Math.floor(Math.random() * (200 - 1) + 1),
     _createdAt: String(Math.floor(Math.random() * (59 - 1) + 1)),
     _ownerId: '1',
+    author: author
 };
 export default function Posts() {
-    const posts: PostData[] = [post];
+    const posts: PostData[] = [post, post, post];
+    const { user } = useAuth();
+    console.log(user);
 
     const [showOverlay, setShowOverlay] = useState(false);
     const [searchParams, setSearchParams] = useSearchParams();
@@ -53,9 +59,7 @@ export default function Posts() {
         <section className="posts-section">
             <button className="show-liked-posts-btn" onClick={() => setSearchParams({ liked: 'true' })} >Liked Posts</button>
             <h1 className="posts-heading">{showLikedPosts ? 'Liked' : 'All'} Posts</h1>
-            <Post showOverlayOnCLick={handleShowOverlay} post={post} author={author}/>
-            <Post showOverlayOnCLick={handleShowOverlay} post={post} author={author}/>
-            <Post showOverlayOnCLick={handleShowOverlay} post={post} author={author}/>
+            {posts.map(post => <Post showOverlayOnCLick={handleShowOverlay} post={post}></Post>)}
             {showOverlay && <Overlay isOpen={showOverlay} onClose={() => setShowOverlay(false)}><FullPost /></Overlay>}
         </section>
     );

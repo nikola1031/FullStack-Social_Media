@@ -6,6 +6,7 @@
     align-items: center;
     position: sticky;
     top: 0;
+    z-index: 10000;
 }
 
 .nav-wrapper {
@@ -24,8 +25,6 @@
     gap: 3%;
     justify-content: center;
     align-items: center;
-    position: relative;
-    z-index: 1000;
     transition: all 1s ease;
 }
 
@@ -77,8 +76,9 @@
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
-        flex: 1 0 300px;
+        flex: 1 0 fit-content;
         width: 300px;
+        padding-bottom: 20px;
         color: #c4c0ba;
         background-color: #2c3230;
         transition: background-color 500ms;

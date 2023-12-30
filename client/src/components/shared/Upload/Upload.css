@@ -1,0 +1,65 @@
+.photo-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.preview-container {
+  display: grid;
+  align-items: center;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+}
+
+.remove-photos-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 2rem;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  color: rgb(209, 24, 24);
+  cursor: pointer;
+}
+
+.file-label {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  cursor: pointer;
+  border: 2px solid #3498db;
+  border-radius: 8px;
+  padding: 10px;
+  transition: background 0.3s ease;
+}
+
+.file-label:hover {
+  background: #3498db;
+  color: #fff;
+}
+
+#file-input {
+  display: none;
+}
+
+.preview-image {
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.upload-icon {
+  font-size: 24px;
+  margin-bottom: 5px;
+}
+
+.file-text {
+  text-align: center;
+  font-size: 14px;
+  font-weight: bold;
+  color: inherit;
+}

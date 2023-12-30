@@ -1,4 +1,4 @@
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useEffect } from 'react';
 import './Overlay.css';
 
 type OverlayProps = {
@@ -7,6 +7,15 @@ type OverlayProps = {
 }
 
 export default function Overlay ({ isOpen, onClose, children }: PropsWithChildren & OverlayProps) {
+
+  useEffect(() => {
+    // Disable scrolling on the body when the overlay is active
+    document.body.style.overflow = 'hidden';
+    // Re-enable scrolling when the overlay is closed
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, []);
 
   const handleOverlayClick = (e: React.MouseEvent) => {
     // Prevent closing overlay when clicking inside the modal content
