@@ -17,7 +17,7 @@ export default function Header() {
     function handleLogout() {
         if (user) {
             try {
-                authApi.logout(user.accessToken);
+                // authApi.logout(user.accessToken);
                 logoutUser();
                 navigate('/');
             } catch (error) {

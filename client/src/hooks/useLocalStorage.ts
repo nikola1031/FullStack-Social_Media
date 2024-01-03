@@ -1,3 +1,5 @@
+// used in useUser.ts
+
 export function useLocalStorage() {
     function getItem<T>(key: string): T | null {
         const value = localStorage.getItem(key);

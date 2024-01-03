@@ -1,6 +1,8 @@
 import { useLocalStorage } from './useLocalStorage';
 import { IUserData } from '../types/user';
 
+// Used in useAuth.ts
+
 export const useUser = () => {
     const { setItem, getItem } = useLocalStorage();
 

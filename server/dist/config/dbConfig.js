@@ -9,7 +9,7 @@ const connectionString = 'mongodb://127.0.0.1:27017/' + process.env.DB_NAME;
 async function initDB() {
     try {
         const db = (await mongoose_1.default.connect(connectionString)).connection;
-        db.once('connection', () => console.log('DB connected successfully'));
+        db.on('open', () => console.log('DB connected successfully'));
         db.on('error', (err) => console.error(err));
         db.on('disconnect', () => console.log('DB has disconnected'));
     }

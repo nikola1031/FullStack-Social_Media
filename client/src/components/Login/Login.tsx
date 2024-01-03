@@ -1,23 +1,37 @@
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import '../../styles/forms.css';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../hooks/useAuthContext';
 import * as authApi from '../../api/auth';
 
 export default function Login() {
-    const [email, setEmail] = useState<string>('');
-    const [password, setPassword] = useState<string>('');
+    const [formValues, setFormValues] = useState({
+        email: '',
+        password: '',
+    });
+
+    const [formErrors, setFormErrors] = useState({
+        email: '',
+        password: '',
+    })
+
     const navigate = useNavigate();
     const { saveUser } = useAuthContext();
 
+    function changeHandler(e: ChangeEvent<HTMLInputElement>) {
+        setFormValues((oldValues) => ({...oldValues, [e.target.name]: e.target.value}));
+    }
+
     const handleSubmit = (e: React.SyntheticEvent) => {
         e.preventDefault();
+
+        const { email, password } = formValues;
         authApi
             .login({ email, password })
             .then((user) => {
                 if (user) {
                     saveUser(user);
-                    navigate('/');
+                    navigate('/', { replace: true });
                 }
             })
             .catch(console.error);
@@ -33,8 +47,8 @@ export default function Login() {
                         type="text"
                         id="email"
                         name="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        value={formValues.email}
+                        onChange={changeHandler}
                         required
                     />
                 </div>
@@ -44,8 +58,8 @@ export default function Login() {
                         type="password"
                         id="password"
                         name="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        value={formValues.password}
+                        onChange={changeHandler}
                         required
                     />
                 </div>

@@ -48,7 +48,7 @@ export default function Photos() {
 
     return (
         <>
-            <form onSubmit={handleSubmit} className="photo-form">
+            <form onSubmit={handleSubmit} className="photo-form" encType="multipart/form-data">
                 <Upload
                     selectedFiles={selectedFiles}
                     setSelectedFiles={setSelectedFiles}

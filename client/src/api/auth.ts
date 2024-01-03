@@ -1,11 +1,6 @@
 import { IUserData } from '../types/user';
+import { authEndpoints } from './ENDPOINTS';
 import * as requestApi from './helpers/fetcher';
-
-const endpoints = {
-    login: '/auth/login',
-    register: '/auth/register',
-    logout: '/auth/logout',
-}
 
 type LoginData = {
     email: string;
@@ -18,6 +13,6 @@ type RegisterData = LoginData & {
     gender: string;
 }
 
-export const login: (data: LoginData) => Promise<IUserData> = async (data) => requestApi.post(endpoints.login, data);
-export const register: (data: RegisterData) => Promise<IUserData> = async (data) => requestApi.post(endpoints.register, data);
-export const logout: (token: string) => Promise<void> = async (token) => requestApi.get(endpoints.logout, null, token);
+export const login: (data: LoginData) => Promise<IUserData> = async (data) => requestApi.post(authEndpoints.login(), data);
+export const register: (data: RegisterData) => Promise<IUserData> = async (data) => requestApi.post(authEndpoints.register(), data);
+export const logout: (token: string) => Promise<void> = async (token) => requestApi.get(authEndpoints.logout(), null, token);

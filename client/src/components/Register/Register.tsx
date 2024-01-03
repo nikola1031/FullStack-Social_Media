@@ -1,102 +1,128 @@
-import { useState } from 'react'
+import { ChangeEvent, useState } from 'react';
 import '../../styles/forms.css';
-import { register } from '../../api/auth';
+import * as authApi from '../../api/auth';
 import { useNavigate } from 'react-router-dom';
+import { useAuthContext } from '../../hooks/useAuthContext';
 
-export default function Register(){
-    const [username, setUsername] = useState<string>('');
-    const [email, setEmail] = useState<string>('');
-    const [password, setPassword] = useState<string>('');
-    const [confirmPass, setConfirmPass] = useState<string>('');
-    const [gender, setGender] = useState<string>('');
+export default function Register() {
+   
+    const [formValues, setFormValues] = useState({
+        username: '',
+        email: '',
+        password: '',
+        confirmPass: '',
+        gender: '',
+    });
 
+    const [formErrors, setFormErrors] = useState({
+        username: '',
+        email: '',
+        password: '',
+        confirmPass: '',
+        gender: '',
+    })
+    
     const navigate = useNavigate();
+    const { saveUser } = useAuthContext();
+    
+    function changeHandler(e: ChangeEvent<HTMLInputElement>) {
+        setFormValues((oldValues) => ({...oldValues, [e.target.name]: e.target.value}));
+    }
 
-    const handleSubmit = (e: React.SyntheticEvent) => {
+    function handleSubmit (e: React.SyntheticEvent) {
         e.preventDefault();
-        register({username, email, password, confirmPass, gender}).then((res) => {
-            navigate('/');
-        }).catch(console.error);
 
+        const { username, email, password, confirmPass, gender } = formValues;
+        authApi
+            .register({ username, email, password, confirmPass, gender })
+            .then((user) => {
+                if (user) {
+                    saveUser(user);
+                    navigate('/', { replace: true });
+                }
+            })
+            .catch(console.error);
     };
 
     return (
-        <div className='form-wrapper'>
-        <form onSubmit={handleSubmit} className="form-container">
-            <h2 className="form-title">Register</h2>
-            <div className="form-group">
-                <label htmlFor="username">Username</label>
-                <input 
-                    type="text" 
-                    id="username"
-                    name="username" 
-                    value={username} 
-                    onChange={(e) => setUsername(e.target.value)} 
-                    required 
-                />
-            </div>
-            <div className="form-group">
-                <label htmlFor="email">Email</label>
-                <input 
-                    type="email" 
-                    id="email"
-                    name="email" 
-                    value={email} 
-                    onChange={(e) => setEmail(e.target.value)} 
-                    required 
-                />
-            </div>
-            <div className="form-group">
-                <label htmlFor="password">Password</label>
-                <input 
-                    type="password" 
-                    id="password"
-                    name="password" 
-                    value={password} 
-                    onChange={(e) => setPassword(e.target.value)} 
-                    required 
-                />
-            </div>
-            <div className="form-group">
-                <label htmlFor="confirmPass">Confirm Password</label>
-                <input 
-                    type="password" 
-                    id="confirmPass"
-                    name="confirmPass" 
-                    value={confirmPass} 
-                    onChange={(e) => setConfirmPass(e.target.value)} 
-                    required 
-                />
-            </div>
-            <div className="form-group">
-                <label>Gender</label>
-                <div className='radio-group'>
-                    <input 
-                        type="radio" 
-                        id="male"
-                        name="gender" 
-                        value="male" 
-                        checked={gender === 'male'} 
-                        onChange={(e) => setGender(e.target.value)} 
-                        required 
+        <div className="form-wrapper">
+            <form onSubmit={handleSubmit} className="form-container">
+                <h2 className="form-title">Register</h2>
+                <div className="form-group">
+                    <label htmlFor="username">Username</label>
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        value={formValues.username}
+                        onChange={changeHandler}
+                        required
                     />
-                    <label htmlFor="male">Male</label>
                 </div>
-                <div className='radio-group'>
-                    <input 
-                        type="radio" 
-                        id="female"
-                        name="gender" 
-                        value="female" 
-                        checked={gender === 'female'} 
-                        onChange={(e) => setGender(e.target.value)} 
-                        required 
+                <div className="form-group">
+                    <label htmlFor="email">Email</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={formValues.email}
+                        onChange={changeHandler}
+                        required
                     />
-                    <label htmlFor="female">Female</label>
                 </div>
-            </div>
-            <button type="submit" className="submit-btn">Register</button>
-        </form>
+                <div className="form-group">
+                    <label htmlFor="password">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        value={formValues.password}
+                        onChange={changeHandler}
+                        required
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="confirmPass">Confirm Password</label>
+                    <input
+                        type="password"
+                        id="confirmPass"
+                        name="confirmPass"
+                        value={formValues.confirmPass}
+                        onChange={changeHandler}
+                        required
+                    />
+                </div>
+                <div className="form-group">
+                    <label>Gender</label>
+                    <div className="radio-group">
+                        <input
+                            type="radio"
+                            id="male"
+                            name="gender"
+                            value="male"
+                            checked={formValues.gender === 'male'}
+                            onChange={changeHandler}
+                            required
+                        />
+                        <label htmlFor="male">Male</label>
+                    </div>
+                    <div className="radio-group">
+                        <input
+                            type="radio"
+                            id="female"
+                            name="gender"
+                            value="female"
+                            checked={formValues.gender === 'female'}
+                            onChange={changeHandler}
+                            required
+                        />
+                        <label htmlFor="female">Female</label>
+                    </div>
+                </div>
+                <button type="submit" className="submit-btn">
+                    Register
+                </button>
+            </form>
         </div>
     );
-};
+}

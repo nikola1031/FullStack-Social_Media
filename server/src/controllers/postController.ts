@@ -2,11 +2,17 @@ import { Request, Response } from 'express';
 import * as postService from '../services/postService';
 import { toggleLike } from '../services/helpers/serviceHelpers';
 import { TargetType } from '../services/types/types';
+import { uploadImages } from '../services/firebaseStorageService';
 
 export const createPost = async (req: Request, res: Response) => {
     const _ownerId = req.user!._id!;
     const { text } = req.body;
-    const imageUrls = req.body.imageUrls || [];
+    const images = req.files as Express.Multer.File[];
+    
+    const imageUrls = await uploadImages(images);
+    console.log('Images Uploaded', imageUrls);
+    console.log('Text', text, 'Images', images);
+    return res.status(201).json({ message: 'Post created successfully' });
 
     try {
         const newPost = await postService.savePost({text, imageUrls, _ownerId})

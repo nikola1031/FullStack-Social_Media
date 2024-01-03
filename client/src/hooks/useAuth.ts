@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { useUser } from './useUser';
 import { IUserData } from '../types/user';
 
+// used in AuthContext.tsx
+
 export function useAuth() {
     const { storeUser, removeUser, getUser } = useUser();
 
