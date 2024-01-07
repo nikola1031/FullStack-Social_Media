@@ -1,18 +1,18 @@
 import * as requestApi from './helpers/fetcher';
 import { commentsEndpoints, postsEndpoints, userEndpoints } from './ENDPOINTS';
 
-export const getPosts: () => Promise<any[]> = async () => requestApi.get(postsEndpoints.base());
-export const uploadPost: (post: any, token: string) => Promise<any> = async (post, token) => requestApi.post(postsEndpoints.base(), post, token);
+export const getPosts: () => Promise<any[]> = async () => requestApi.get(postsEndpoints.base(), null);
+export const uploadPost: (post: any) => Promise<any> = async (post) => requestApi.post(postsEndpoints.base(), post);
 export const getPostById: (postId: string) => Promise<any> = async (postId) => requestApi.get(postsEndpoints.postById(postId));
-export const deletePostById: (postId: string, token: string) => Promise<any> = async (postId, token) => requestApi.del(postsEndpoints.postById(postId), null, token);
+export const deletePostById: (postId: string) => Promise<any> = async (postId) => requestApi.del(postsEndpoints.postById(postId), null);
 export const getPostsByUser: (userId: string) => Promise<any[]> = async (userId) => requestApi.get(postsEndpoints.postByUser(userId));
-export const likePost: (postId: string, token: string) => Promise<void> = async (postId, token) => requestApi.post(postsEndpoints.likePost(postId), null, token);
+export const likePost: (postId: string) => Promise<{likeCount: number}> = async (postId) => requestApi.post(postsEndpoints.likePost(postId), null);
 
-export const getComments: (postId: string) => Promise<any[]> = async (postId) => requestApi.get(commentsEndpoints.base(postId));
-export const postComment: (postId: string, comment: any, token: string) => Promise<any> = async (postId, comment, token) => requestApi.get(commentsEndpoints.base(postId), comment, token);
+export const getComments: (postId: string) => Promise<any[]> = async (postId, ) => requestApi.get(commentsEndpoints.base(postId), null);
+export const postComment: (postId: string, comment: any) => Promise<any> = async (postId, comment) => requestApi.post(commentsEndpoints.base(postId), comment);
 export const getCommentById: (postId: string, commentId: string) => Promise<any> = async (postId, commentId) => requestApi.get(commentsEndpoints.commentById(postId, commentId));
-export const deleteCommentById: (postId: string, commentId: string, token: string) => Promise<any> = async (postId, commentId, token) => requestApi.del(commentsEndpoints.commentById(postId, commentId), null, token);
-export const likeComment: (postId: string, commentId: string) => Promise<void> = async (postId, commentId) => requestApi.post(commentsEndpoints.likeComment(postId, commentId), null);
+export const deleteCommentById: (postId: string, commentId: string) => Promise<any> = async (postId, commentId) => requestApi.del(commentsEndpoints.commentById(postId, commentId), null);
+export const likeComment: (postId: string, commentId: string) => Promise<{likeCount: number}> = async (postId, commentId) => requestApi.post(commentsEndpoints.likeComment(postId, commentId), null);
 
 export const getUserProfile: () => Promise<any> = async () => requestApi.get(userEndpoints.base());
 export const uploadUserPhotos: () => Promise<any> = async () => requestApi.post(userEndpoints.uploadPhotos(), null);

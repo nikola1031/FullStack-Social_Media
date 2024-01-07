@@ -45,7 +45,7 @@ export default function Header() {
                                 <Link to={PathConstants.Profile}>Profile</Link>
                             </li>
                             <li>
-                                <button onClick={handleLogout}>Logout</button>
+                                <button className='logout-btn' onClick={handleLogout}>Logout</button>
                             </li>
                         </>
                     ) : (

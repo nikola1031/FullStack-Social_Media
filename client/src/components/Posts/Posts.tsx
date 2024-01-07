@@ -6,7 +6,7 @@ import Overlay from '../shared/Overlay/Overlay';
 import FullPost from '../Home/FullPost/FullPost';
 import { useAuth } from '../../hooks/useAuth';
 
-export type PostData = {
+type PostData = {
     _id: string;
     text: string;
     imageUrls: string[];

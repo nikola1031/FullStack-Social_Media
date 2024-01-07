@@ -1,6 +1,6 @@
 .comment-form {
     display: flex;
-    margin-top: 1rem;
+    margin: 1rem 0;
     align-items: center;
     justify-content: center;
     width: 100%;

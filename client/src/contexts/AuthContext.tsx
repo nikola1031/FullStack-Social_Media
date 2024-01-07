@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { IUserData } from '../types/user';
+import { IUserData } from '../types/data';
 import { useAuth } from '../hooks/useAuth';
 
 interface IAuthContext {

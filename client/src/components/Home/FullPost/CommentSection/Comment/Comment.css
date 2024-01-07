@@ -5,12 +5,13 @@
 }
 
 .comment-info {
+    position: relative;
     font-size: 0.9rem;
     color: #fff;
     background-color: #3a3b3c;
     width: fit-content;
-    border-radius: 1.2rem;
-    padding: 10px;
+    border-radius: 8px;
+    padding: 8px;
 }
 
 .comment-username {
@@ -26,9 +27,26 @@
 
 .comment-action {
     font-size: 0.9rem;
+    font-weight: bold;
     background: none;
     color: inherit;
     border: none;
     cursor: pointer;
     padding-left: 10px;
+}
+
+.comment-like.active {
+    color: rgb(190, 17, 17)
+}
+
+.comment-likes {
+    position: absolute;
+    bottom: -6px;
+    right: 0;
+    font-size: 0.7rem;
+    color: rgb(158, 156, 156)
+}
+
+.fa-heart {
+    color: rgb(193, 14, 14);
 }

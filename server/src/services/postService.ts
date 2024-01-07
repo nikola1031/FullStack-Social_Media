@@ -1,33 +1,44 @@
 import { Comment } from "../models/Comment";
-import { Like } from "../models/Like";
 import { Post } from "../models/Post";
-import { TargetType } from "./types/types";
-import { filterImageUrls } from "../validators/validators"; 
 
 interface IPost {
     text: string;
     imageUrls: string[];
-    _ownerId: string;
+    author: string;
 }
 
-export const savePost = async ({text, imageUrls, _ownerId}: IPost) => {
-    const newPost = new Post({text, imageUrls: filterImageUrls(imageUrls), _ownerId});
-    await newPost.save();
-
-    return newPost;
+export const savePost = async ({text, imageUrls, author}: IPost) => {
+    try {
+        const newPost = new Post({text, imageUrls, author});
+        await newPost.save();
+        return newPost;
+    } catch (error) {
+        throw error;
+    }
 }
 
 export const getPosts = async (userId?: string) => {
     if (userId) {
-        return await Post.find({_ownerId: userId})
+        return await Post.find({author: userId}).populate(
+            {
+                path: 'author',
+                select: 'username profilePicture'
+            });
     }
-    const posts = await Post.find({});
-    return posts;
+    return await Post.find({}).populate(
+        {
+            path: 'author',
+            select: 'username profilePicture'
+        });
 }
 
 export const editPost = async (text: string, postId: string) => {
-    const updatedPost = await Post.findByIdAndUpdate(postId, { text }, { new: true, runValidators: true });
-    return updatedPost;
+    try {
+        const updatedPost = await Post.findByIdAndUpdate(postId, { text }, { new: true, runValidators: true });
+        return updatedPost;
+    } catch (error) {
+        throw error;
+    }
 }
 
 export const removePost = async (_postId: string) => {
@@ -35,17 +46,26 @@ export const removePost = async (_postId: string) => {
     if (postDeletion.deletedCount === 0) {
         throw new Error('Delete operation had no effect. Perform database integrity check')
     }
-    const commentDeletion = await Comment.deleteMany({_postId});
-    
-    if (commentDeletion.deletedCount === 0) {
-        return;
-    }
-    
-    const commentIds = await Comment.distinct('_id', { _postId });
-    await Like.deleteMany({
-        $or: [
-            { _targetId: _postId, targetType: TargetType.Post },
-            { _targetId: { $in: commentIds }, targetType: TargetType.Comment }
-        ]
-    });
+    await Comment.deleteMany({_postId});
 }
+
+export const likePost = async (postId: string, userId: string) => {
+    try {
+        const post = await Post.findById(postId);
+        if (!post) {
+            throw new Error("Post not found");
+        }
+            // pushing or pulling from array, and adjusting post count by +1 or -1
+            const adjustCount = post.likes.userLikes.includes(userId) ? -1 : 1;
+            const action = post.likes.userLikes.includes(userId) ? '$pull' : '$push';
+
+            return await Post.findByIdAndUpdate(
+                postId,
+                { [action]: { 'likes.userLikes': userId}, $inc: { 'likes.likeCount': adjustCount } }, 
+                { new: true, runValidators: true }
+            );
+            
+    } catch (error) {
+        throw error;
+    }
+};

@@ -13,6 +13,7 @@ async function login(email: string, password: string): Promise<IUserData> {
         throw new Error('Wrong email or password');
     }
 
+
     const accessToken = jwt.sign({email, username: existingUser.username, _id: existingUser._id, gender: existingUser.gender, role: existingUser.role}, SECRET!, {expiresIn: '2h'});
     return { email, username: existingUser.username, _id: existingUser._id as string, gender: existingUser.gender, role: existingUser.role, accessToken };
 }

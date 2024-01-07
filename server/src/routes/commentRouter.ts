@@ -5,7 +5,7 @@ import { Comment } from "../models/Comment";
 const router = Router({mergeParams: true});
 
 router.post('/', onlyUsers(), commentController.createComment);
-router.get('/', commentController.getAllComments);
+router.get('/', onlyUsers(), commentController.getAllComments);
 router.put('/:commentId', onlyAuthors(Comment), commentController.updateComment);
 router.delete('/:commentId', onlyAuthors(Comment), commentController.deleteComment);
 router.post('/:commentId/like', onlyUsers(), commentController.likeComment);

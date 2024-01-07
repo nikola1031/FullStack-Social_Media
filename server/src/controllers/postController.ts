@@ -1,42 +1,34 @@
 import { Request, Response } from 'express';
 import * as postService from '../services/postService';
-import { toggleLike } from '../services/helpers/serviceHelpers';
-import { TargetType } from '../services/types/types';
-import { uploadImages } from '../services/firebaseStorageService';
+import { deleteImage, uploadImages } from '../services/firebaseStorageService';
 
 export const createPost = async (req: Request, res: Response) => {
-    const _ownerId = req.user!._id!;
+    const author = req.user!._id!;
     const { text } = req.body;
     const images = req.files as Express.Multer.File[];
     
-    const imageUrls = await uploadImages(images);
-    console.log('Images Uploaded', imageUrls);
-    console.log('Text', text, 'Images', images);
-    return res.status(201).json({ message: 'Post created successfully' });
+    if (!text) {
+        throw new Error('Cannot post without text');
+    }
+    let imageUrls: string[] = [];
 
     try {
-        const newPost = await postService.savePost({text, imageUrls, _ownerId})
+        imageUrls = await uploadImages(images);
+        const newPost = await postService.savePost({text, imageUrls, author})
         res.status(201).json(newPost);
     } catch (error: any) {
+        if (imageUrls.length) {
+            imageUrls.forEach(deleteImage);
+        }
         res.status(400).json({ message: error.message });
     }
 };
 
-export const getAllPosts = async (req: Request, res: Response) => {
-    try {
-        const posts = await postService.getPosts();
-        res.status(200).json(posts);
-    } catch (error: any) {
-        res.status(404).json({ message: error.message });
-    }
-};
-
-export const getPostsByUserId = async (req: Request, res: Response) => {
+export const getPosts = async (req: Request, res: Response) => {
     const { userId } = req.params;
-
     try {
-        const posts = postService.getPosts(userId)
-        res.status(200).json(posts);
+           const posts = await postService.getPosts(userId ? userId : '');
+           res.status(200).json(posts);
     } catch (error: any) {
         res.status(404).json({ message: error.message });
     }
@@ -68,10 +60,10 @@ export const deletePost = async (req: Request, res: Response) => {
 
 export const likePost = async (req: Request, res: Response) => {
     const { postId } = req.params;
-    const userId = req.user!._id!;
+    const userId = req.user!._id;
     try {
-        await toggleLike(postId, userId, TargetType.Post);
-        res.status(200).json({ message: 'Like/Unlike successful' });
+        const likedPost = await postService.likePost(postId, userId);
+        res.status(200).json({ likeCount: likedPost?.likes.likeCount });
     } catch (error: any) {
         res.status(400).json({ message: error.message });
     }

@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import * as userService from '../services/userService';
 import { trimmer } from '../utils/trimmer';
-import { filterImageUrls } from '../validators/validators';
 
 export const getProfile = async (req: Request, res: Response) => {
     try {
@@ -54,7 +53,7 @@ export const updateProfilePicture = async (req: Request, res: Response) => {
 
 export const postPhotos = async (req: Request, res: Response) => {
     const trimmedBody = trimmer(req.body);
-    const photos = filterImageUrls(trimmedBody.photos);
+    const photos = trimmedBody.photos;
     try {
         if (photos.length === 0) {
             return res.status(400).json({message: 'Invalid photo URL format'});
@@ -115,7 +114,7 @@ export const toggleAddFriend = async (req: Request, res: Response) => {
 export const toggleFollow = async (req: Request, res: Response) => {
     const userId = req.user!._id;
     const otherUserId = req.params.userId;
-
+    
     try {
         await userService.toggleFollowUser(userId, otherUserId);
         res.status(200).json({message: 'User followed successfully'});

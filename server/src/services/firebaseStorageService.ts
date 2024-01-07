@@ -5,8 +5,10 @@ import { extractImageName } from "../utils/imageNameExtractor";
 const storage = getStorage(firebaseApp);
 
 export async function uploadImages(files: Express.Multer.File[]): Promise<string[]> {
-    const filesArray = Array.isArray(files) ? [...files] : [files];
-    
+    const filesArray = [...files];
+    if (!filesArray.length) {
+        return [];
+    }
     try {
         const uploadPromises = filesArray.map(async file => {
             const storageRef = ref(storage, `images/${file.originalname} ${Date.now()}`);
@@ -28,10 +30,9 @@ export async function uploadImages(files: Express.Multer.File[]): Promise<string
 
 export async function deleteImage(url: string) {
   const imageName = extractImageName(url);
-  console.log(imageName)
-  const desertRef = ref(storage, `images/${imageName}`);
+  const imageRef = ref(storage, `images/${imageName}`);
 
-  deleteObject(desertRef).then(() => {
+  deleteObject(imageRef).then(() => {
       console.log('Image deleted successfully')
   }).catch((error) => {
       console.error('Uh-oh, an error occurred!')

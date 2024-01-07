@@ -46,7 +46,7 @@ function onlyAuthors(Model: any) {
                 return res.status(404).json({ message: 'Resource not found' });
             }
 
-            if (resource._ownerId.toString() !== userId.toString() && req.user.role !== 'admin') {
+            if (resource.author.toString() !== userId.toString() && req.user.role !== 'admin') {
                 return res.status(403).json({ message: 'You are not authorized to perform this action' });
             }
 

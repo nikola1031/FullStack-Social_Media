@@ -7,8 +7,8 @@ import { upload } from '../middlewares/multer';
 const router = Router();
 
 router.post('/', onlyUsers(), upload.array('files', 5), postController.createPost);
-router.get('/', postController.getAllPosts);
-router.get('/user/:userId', postController.getPostsByUserId);
+router.get('/', onlyUsers(), postController.getPosts);
+router.get('/user/:userId', postController.getPosts);
 router.put('/:postId', onlyAuthors(Post), postController.updatePost);
 router.delete('/:postId', onlyAuthors(Post), postController.deletePost);
 router.post('/:postId/like', onlyUsers(), postController.likePost);
