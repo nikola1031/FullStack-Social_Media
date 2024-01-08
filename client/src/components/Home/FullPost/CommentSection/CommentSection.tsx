@@ -6,26 +6,33 @@ import { useEffect, useState } from "react";
 import { CommentData } from "../../../../types/data";
 
 interface CommentSectionProps {
-  postId: string  
+  postId: string;
+  setCommentCount: (count: number) => void;
 }
 
-
-export default function CommentSection({postId}: CommentSectionProps) {
+export default function CommentSection({postId, setCommentCount}: CommentSectionProps) {
   
   const [comments, setComments] = useState<CommentData[]>([]);
+
+  function fetchComments() {
+      dataApi.getComments(postId).then(comments => {
+          setComments(comments);
+          setCommentCount(comments.length);
+      });
+  }
   
   useEffect(() => {
-    dataApi.getComments(postId).then(setComments);
+    fetchComments();
   }, [])
 
   return (
     <section className="comment-section">
         <hr className="divider" />
-            <CommentField postId={postId} />
+            <CommentField postId={postId} fetchComments={fetchComments} />
         <div className="comment-area">
             {comments.map(comment => {
               return (
-                <Comment key={comment._id} comment={comment} postId={postId} />
+                <Comment key={comment._id} comment={comment} postId={postId} fetchComments={fetchComments}/>
               )
             })}
         </div>

@@ -38,10 +38,10 @@ export const updateComment = async (req: Request, res: Response) => {
 };
 
 export const deleteComment = async (req: Request, res: Response) => {
-    const { commentId } = req.params;
+    const { commentId, postId } = req.params;
 
     try {
-        await commentService.removeComment(commentId);
+        await commentService.removeComment(commentId, postId);
         res.status(200).json({ message: 'Comment successfully deleted' });
     } catch (error: any) {
         res.status(400).json({ message: error.message });

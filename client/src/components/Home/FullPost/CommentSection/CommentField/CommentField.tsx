@@ -3,19 +3,22 @@ import './CommentField.css';
 import * as dataApi from '../../../../../api/data';
 
 interface CommentFieldProps {
-    postId: string;    
+    postId: string;
+    fetchComments: () => void;
 }
 
-export default function CommentField({postId}: CommentFieldProps) {
-    const [text, setComment] = useState('');
+export default function CommentField({postId, fetchComments}: CommentFieldProps) {
+    const [text, setText] = useState('');
 
     function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
-        setComment(e.target.value);
+        setText(e.target.value);
     }
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         await dataApi.postComment(postId, { text });
+        fetchComments();
+        setText('');
     }
 
     return (

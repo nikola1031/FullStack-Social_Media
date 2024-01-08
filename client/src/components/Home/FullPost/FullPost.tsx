@@ -15,6 +15,8 @@ export default function FullPost({ post, user }: FullPostProps) {
     const [showComments, setShowComments] = useState<boolean>(false);
     const [isLiked, setIsLiked] = useState<boolean>(post.likes.userLikes.includes(user!._id));
     const [likeCount, setLikeCount] = useState<number>(post.likes.likeCount);
+    const [commentCount, setCommentCount] = useState<number>(post.commentCount);
+
     function showCommentsHandler() {
         setShowComments(!showComments);
     }
@@ -52,7 +54,7 @@ export default function FullPost({ post, user }: FullPostProps) {
                 </div>
                 <div className="full-post-stats">
                     <p>{likeCount} Likes</p>
-                    <p onClick={showCommentsHandler} className='comment-count'>{post.commentCount} Comments</p>
+                    <p onClick={showCommentsHandler} className='comment-count'>{commentCount} Comments</p>
                 </div>
                 <hr className='divider' />
                 <div className="full-post-buttons">
@@ -60,7 +62,7 @@ export default function FullPost({ post, user }: FullPostProps) {
                     <button onClick={showCommentsHandler}>Comments</button>
                 </div>       
             </section>
-            {showComments && <CommentSection postId={post._id} />}
+            {showComments && <CommentSection postId={post._id} setCommentCount={setCommentCount}/>}
         </article>
     );
 }

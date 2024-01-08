@@ -33,8 +33,9 @@ export const editComment = async (text: string, commentId: string) => {
     }
 }
 
-export const removeComment = async (commentId: string) => {
+export const removeComment = async (commentId: string, postId: string) => {
     await Comment.deleteOne({_id: commentId});
+    await adjustCommentCount(postId, -1);
 }
 
 export const likeComment = async (commentId: string, userId: string) => {
