@@ -11,14 +11,18 @@ export default function Home() {
     const [posts, setPosts] = useState<PostData[]>([]);
     const { user } = useAuthContext();
 
-    useEffect(() => {
+    function fetchPosts() {
         dataApi.getPosts().then(setPosts);
+    }
+
+    useEffect(() => {
+        fetchPosts();
     }, []);
 
 
     return (
         <>
-            <PostForm />
+            <PostForm fetchPosts={fetchPosts} />
             <section className="posts-container">
                 {posts.map(post => <FullPost key={post._id} post={post} user={user}/>)}
             </section>

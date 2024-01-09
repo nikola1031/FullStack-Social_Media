@@ -47,6 +47,29 @@
     color: rgb(158, 156, 156)
 }
 
+.comment-edit-form {
+    display: flex;
+    align-items: center;
+}
+
+.comment-edit-field {
+    background-color: #3a3b3c;
+    border: none;
+    outline: none;
+    color: #fff;
+    resize: none;
+}
+
+.comment-edit-submit-btn {
+    border-radius: 6px;
+    padding: 0.5rem;
+    cursor: pointer;
+    border: none;
+    background-color: #475b6f;
+    color: #fff;
+    font-weight: bold;
+}
+
 .fa-heart {
     color: rgb(193, 14, 14);
 }

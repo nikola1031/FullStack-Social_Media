@@ -22,7 +22,6 @@ export default function Comment({comment, postId, fetchComments}: CommentProps) 
         setUpdatedComment(e.target.value);
     }
 
-    // TODO: Edit a comment if author 
     function handleLikeComment() {
         dataApi.likeComment(postId, comment._id).then(likes => {
             setIsLiked(!isLiked)
@@ -58,16 +57,17 @@ export default function Comment({comment, postId, fetchComments}: CommentProps) 
                     <div className="comment-info">
                         <p className="comment-username">{comment.author.username}</p>
                         { isEditing ? 
-                            <form className="comment-form" onSubmit={handleEditComment}>
-                            <textarea className="comment-field" value={updatedComment} onChange={handleChange} placeholder="Write a comment..." />
-                            <button className="comment-submit" type="submit">Submit</button>
+                            (
+                            <form className="comment-edit-form" onSubmit={handleEditComment}>
+                                <textarea className="comment-edit-field" value={updatedComment} onChange={handleChange} placeholder="Write a comment..." />
+                                <button className="comment-edit-submit-btn" type="submit">Submit</button>
                             </form>    
-                                    : 
+                            )       : 
                         (
-                        <p className="comment-content">
-                            {comment.text}
-                            <span className="comment-likes">{likeCount}<i className="fa-solid fa-heart"></i></span>
-                        </p>
+                        <div className="comment-content">
+                            <p>{comment.text}</p>
+                            <div className="comment-likes">{likeCount || 0}<i className="fa-solid fa-heart"></i></div>
+                        </div>
                         )
                         }
                     </div>
@@ -75,7 +75,7 @@ export default function Comment({comment, postId, fetchComments}: CommentProps) 
                         <time className="comment-time">{formatRelativeTime(comment.createdAt)}</time>
                         <button onClick={handleLikeComment} className={`comment-action comment-like${isLiked ? ' active' : ''}`}>Like</button>
                         <button onClick={handleDeleteComment} className="comment-action comment-delete">Delete</button>
-                        <button onClick={handleShowEdit} className="comment-action comment-edit">Edit</button>
+                        <button onClick={handleShowEdit} className="comment-action comment-edit">{isEditing ? 'Cancel' : 'Edit'}</button>
                     </div>
                 </div>
             </div>

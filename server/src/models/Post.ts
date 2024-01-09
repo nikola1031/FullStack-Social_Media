@@ -5,7 +5,6 @@ const postSchema: Schema = new Schema(
         text: { type: String, required: true, maxLength: 500 },
         imageUrls: { type: [String], default: [] },
         likes: {
-            likeCount: { type: Number, default: 0 },
             userLikes: [{type: Types.ObjectId, ref: 'User', default: []}]
         },
         commentCount: { type: Number, default: 0 },
@@ -14,4 +13,7 @@ const postSchema: Schema = new Schema(
 );
 
 postSchema.index({ author: 1 });
+postSchema.virtual('likes.likeCount').get(function (this: any) {
+    return this.likes.userLikes.length;
+});
 export const Post = model('Post', postSchema);

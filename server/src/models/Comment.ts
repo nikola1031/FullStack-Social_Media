@@ -6,12 +6,14 @@ const commentSchema: Schema = new Schema(
         _postId: { type: Types.ObjectId, ref: 'Post', required: true },
         author: { type: Types.ObjectId, ref: 'User', required: true },
         likes: {
-            likeCount: { type: Number, default: 0 },
             userLikes: [{type: Types.ObjectId, ref: 'User', default: []}]
         },
     }, { timestamps: true }
 );
 
 commentSchema.index({ author: 1, postId: 1 });
+commentSchema.virtual('likes.likeCount').get(function (this: any) {
+    return this.likes.userLikes.length;
+})
 
 export const Comment = model('Comment', commentSchema);

@@ -4,7 +4,12 @@ import { useAuthContext } from '../../../hooks/useAuthContext';
 import * as dataApi from '../../../api/data';
 import './PostForm.css';
 
-export default function PostForm() {
+interface PostFormProps {
+    fetchPosts: () => void;
+}
+
+
+export default function PostForm({ fetchPosts }: PostFormProps) {
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const [postText, setPostText] = useState<string>('');
     const { user } = useAuthContext();
@@ -31,6 +36,7 @@ export default function PostForm() {
         if (user) {
             resetForm();
             await dataApi.uploadPost(formData);
+            fetchPosts();
         } else {
             throw new Error('Please login before posting');
         }

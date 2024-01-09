@@ -45,12 +45,11 @@ export const likeComment = async (commentId: string, userId: string) => {
             throw new Error("Comment not found");
         }
         // pushing or pulling from array, and adjusting comment count by +1 or -1
-        const adjustCount = comment.likes.userLikes.includes(userId) ? -1 : 1;
         const action = comment.likes.userLikes.includes(userId) ? '$pull' : '$push';
 
         return await Comment.findByIdAndUpdate(
             commentId,
-            { [action]: { 'likes.userLikes': userId }, $inc: { 'likes.likeCount': adjustCount } },
+            { [action]: { 'likes.userLikes': userId } },
             { new: true, runValidators: true }
         );
         

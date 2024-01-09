@@ -23,13 +23,13 @@ export const getPosts = async (userId?: string) => {
             {
                 path: 'author',
                 select: 'username profilePicture'
-            });
+            }).sort({createdAt: 'desc'});
     }
     return await Post.find({}).populate(
         {
             path: 'author',
             select: 'username profilePicture'
-        });
+        }).sort({createdAt: 'desc'});
 }
 
 export const editPost = async (text: string, postId: string) => {
@@ -56,12 +56,10 @@ export const likePost = async (postId: string, userId: string) => {
             throw new Error("Post not found");
         }
             // pushing or pulling from array, and adjusting post count by +1 or -1
-            const adjustCount = post.likes.userLikes.includes(userId) ? -1 : 1;
             const action = post.likes.userLikes.includes(userId) ? '$pull' : '$push';
-
             return await Post.findByIdAndUpdate(
                 postId,
-                { [action]: { 'likes.userLikes': userId}, $inc: { 'likes.likeCount': adjustCount } }, 
+                { [action]: { 'likes.userLikes': userId} }, 
                 { new: true, runValidators: true }
             );
             
