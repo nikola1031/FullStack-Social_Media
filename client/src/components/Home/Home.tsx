@@ -9,7 +9,6 @@ import { useAuthContext } from '../../hooks/useAuthContext';
 // TODO: Add posts from database here - getAllPosts()'
 export default function Home() {
     const [posts, setPosts] = useState<PostData[]>([]);
-    const { user } = useAuthContext();
 
     function fetchPosts() {
         dataApi.getPosts().then(setPosts);
@@ -24,7 +23,7 @@ export default function Home() {
         <>
             <PostForm fetchPosts={fetchPosts} />
             <section className="posts-container">
-                {posts.map(post => <FullPost key={post._id} post={post} user={user}/>)}
+                {posts.map(post => <FullPost key={post._id} post={post} />)}
             </section>
         </>
     );

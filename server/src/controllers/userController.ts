@@ -1,10 +1,13 @@
 import { Request, Response } from 'express';
 import * as userService from '../services/userService';
 import { trimmer } from '../utils/trimmer';
+import { deleteImage } from '../services/firebaseStorageService';
 
 export const getProfile = async (req: Request, res: Response) => {
+    const { userId } = req.params;
+    const loggedInUserId = req.user!._id;
     try {
-        const userData = await userService.fetchProfileData(req.user!._id);
+        const userData = await userService.fetchProfileData(userId, loggedInUserId);
         res.status(200).json({user: userData});
     } catch (error: any) {
         res.status(400).json({message: error.message});
@@ -65,8 +68,21 @@ export const postPhotos = async (req: Request, res: Response) => {
     }
 }
 
+export const deletePhoto = async (req: Request, res: Response) => {
+    const { url } = req.body;
+    try {
+        deleteImage(url).then( async () => {
+            await userService.deletePhoto(url, req.user!._id,);
+
+        });
+        res.status(200).json({message: 'Photo deleted successfully'});
+    } catch (error: any) {
+        res.status(400).json({message: error.message});
+    }
+}
+
 export const getUserPhotos = async (req: Request, res: Response) => {
-    const userId = req.params.userId;
+    const { userId } = req.params;
     try {
         const photos = await userService.fetchPhotos(userId) || [];
         res.status(200).json(photos);
@@ -77,7 +93,7 @@ export const getUserPhotos = async (req: Request, res: Response) => {
 
 export const toggleSendFriendRequest = async (req: Request, res: Response) => {
     const userId = req.user!._id;
-    const otherUserId = req.params.userId;
+    const { id: otherUserId } = req.params;
 
     try {
         await userService.toggleFriendshipRequest(userId, otherUserId);

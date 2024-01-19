@@ -13,7 +13,7 @@ interface CommentProps {
 
 export default function Comment({comment, postId, fetchComments}: CommentProps) {
     const { user } = useAuthContext();
-    const [likeCount, setLikeCount] = useState<number>(comment.likes.likeCount);
+    const [likeCount, setLikeCount] = useState<number>(comment.likes.userLikes.length);
     const [isLiked, setIsLiked] = useState<boolean>(() => comment.likes.userLikes.includes(user!._id))
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [updatedComment, setUpdatedComment] = useState<string>('');
@@ -23,9 +23,9 @@ export default function Comment({comment, postId, fetchComments}: CommentProps) 
     }
 
     function handleLikeComment() {
-        dataApi.likeComment(postId, comment._id).then(likes => {
+        dataApi.likeComment(postId, comment._id).then(data => {
             setIsLiked(!isLiked)
-            setLikeCount(likes.likeCount);
+            setLikeCount(data.likeCount);
         });
     }
 
@@ -56,19 +56,21 @@ export default function Comment({comment, postId, fetchComments}: CommentProps) 
                 <div className="comment-info-container">
                     <div className="comment-info">
                         <p className="comment-username">{comment.author.username}</p>
-                        { isEditing ? 
-                            (
-                            <form className="comment-edit-form" onSubmit={handleEditComment}>
-                                <textarea className="comment-edit-field" value={updatedComment} onChange={handleChange} placeholder="Write a comment..." />
-                                <button className="comment-edit-submit-btn" type="submit">Submit</button>
-                            </form>    
-                            )       : 
-                        (
-                        <div className="comment-content">
-                            <p>{comment.text}</p>
-                            <div className="comment-likes">{likeCount || 0}<i className="fa-solid fa-heart"></i></div>
-                        </div>
-                        )
+                        { isEditing 
+                            ? 
+                                (
+                                <form className="comment-edit-form" onSubmit={handleEditComment}>
+                                    <textarea className="comment-edit-field" value={updatedComment} onChange={handleChange} placeholder="Write a comment..." />
+                                    <button className="comment-edit-submit-btn" type="submit">Submit</button>
+                                </form>    
+                                )       
+                            : 
+                                (
+                                <div className="comment-content">
+                                    <p>{comment.text}</p>
+                                    <div className="comment-likes">{likeCount || 0}<i className="fa-solid fa-heart"></i></div>
+                                </div>
+                                )
                         }
                     </div>
                     <div className="comment-actions">

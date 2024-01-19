@@ -17,7 +17,16 @@ export const savePost = async ({text, imageUrls, author}: IPost) => {
     }
 }
 
-export const getPosts = async (userId?: string) => {
+export const getPosts = async (userId: string | null = null, liked: any) => {
+    
+    if (liked) {
+        return await Post.find({'likes.userLikes': userId}).populate(
+            {
+                path: 'author',
+                select: 'username profilePicture'
+            }).sort({createdAt: 'desc'});    
+    }
+
     if (userId) {
         return await Post.find({author: userId}).populate(
             {
@@ -25,7 +34,8 @@ export const getPosts = async (userId?: string) => {
                 select: 'username profilePicture'
             }).sort({createdAt: 'desc'});
     }
-    return await Post.find({}).populate(
+
+    return await Post.find(liked ? {'likes.userLikes': userId} : {}).populate(
         {
             path: 'author',
             select: 'username profilePicture'

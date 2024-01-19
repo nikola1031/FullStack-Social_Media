@@ -1,34 +1,35 @@
 import { useState } from 'react';
-import { IUserData, PostData } from '../../../types/data';
+import { PostData } from '../../../types/data';
 import { formatRelativeTime } from '../../../utils/timeAgoFormatter';
 import CommentSection from './CommentSection/CommentSection';
 import * as dataApi from '../../../api/data';
 import './FullPost.css';
+import { useAuthContext } from '../../../hooks/useAuthContext';
 
 interface FullPostProps {
     post: PostData;
-    user: IUserData | null; 
 }
 
-export default function FullPost({ post, user }: FullPostProps) {
-    // Update count when liking
+export default function FullPost({ post }: FullPostProps) {
+
+    const { user } = useAuthContext();
     const [showComments, setShowComments] = useState<boolean>(false);
     const [isLiked, setIsLiked] = useState<boolean>(post.likes.userLikes.includes(user!._id));
-    const [likeCount, setLikeCount] = useState<number>(post.likes.likeCount);
+    const [likeCount, setLikeCount] = useState<number>(post.likes.userLikes.length);
     const [commentCount, setCommentCount] = useState<number>(post.commentCount);
-
     function showCommentsHandler() {
         setShowComments(!showComments);
     }
 
     function handleLikePost() {
-        dataApi.likePost(post._id).then((likes) => {
+        dataApi.likePost(post._id).then((data) => {
             setIsLiked(!isLiked);
-            setLikeCount(likes.likeCount);
+            setLikeCount(data.likeCount);
         });
     }
 
     return (
+        
         <article className="full-post">
             <section className='full-post-info-container'>
                 <div className="user-info">

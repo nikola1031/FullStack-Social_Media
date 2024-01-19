@@ -156,29 +156,24 @@ export const toggleFollowUser = async (userId: string, otherUserId: string) => {
 
 export const uploadPhotos = async (photos: string[], userId: string) => {
     const mappedPhotos = photos.map((url) => ({url}));
-
     return User.findByIdAndUpdate(userId, { $push: { photos: { $each: mappedPhotos } } }).select('photos');
 }
 
 export const fetchPhotos = async (userId: string) => {
     return await User.findById(userId).select('photos');
 }
-export const fetchProfileData = async (userId: string) => {
-    const userData = await User.findById(userId).select('username email bio profilePicture photos gender');
-    const counts = await User.aggregate([
-        { $match: { _id: userId } },
-        { $project: {
-            friendCount: { $size: "$friends" },
-            followersCount: { $size: "$followers" },
-            followingCount: { $size: "$following" }
-        }}
-    ]);
-    const profileData = {
-        ...userData?.toObject(), 
-        friendCount: counts[0]?.friendCount || 0,
-        followersCount: counts[0]?.followersCount || 0,
-        followingCount: counts[0]?.followingCount || 0
-    }
 
-    return profileData;
+export const deletePhoto = async (url: string, userId: string) => {
+    User.findByIdAndUpdate(userId, {$pull: {photos: { url }}}, {new: true}).select('photos');
+}
+
+export const fetchProfileData = async (userId: string, loggedInUserId: string) => {
+    const fields = `username bio profilePicture photos gender friendRequests friends following followers`;
+
+    if (userId === loggedInUserId) {
+        return await User.findById(userId).select(`${fields}`)
+        .populate('friends friendRequests', 'username profilePicture');
+    } else {
+        return await User.findById(userId).select(fields).populate('friends', 'username profilePicture');
+    }
 }

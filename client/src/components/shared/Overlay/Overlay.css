@@ -28,7 +28,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    max-width: 50%;
+    width: 60%;
+    max-width: 80%;
     max-height: 100vh;
     overflow-y: auto;
     scrollbar-color: gray black;
@@ -43,4 +44,10 @@
     border: none;
     color: inherit;
     cursor: pointer;
+}
+
+@media screen and (max-width: 768px) {
+    .overlay {
+        width: 100vw
+    }
 }

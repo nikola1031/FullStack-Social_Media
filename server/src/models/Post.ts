@@ -13,7 +13,4 @@ const postSchema: Schema = new Schema(
 );
 
 postSchema.index({ author: 1 });
-postSchema.virtual('likes.likeCount').get(function (this: any) {
-    return this.likes.userLikes.length;
-});
 export const Post = model('Post', postSchema);

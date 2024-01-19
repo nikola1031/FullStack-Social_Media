@@ -1,8 +1,3 @@
-export enum TargetType {
-    Post = 'Post',
-    Comment = 'Comment',
-}
-
 interface BaseProfileData {
     username?: string;  
     bio?: string;

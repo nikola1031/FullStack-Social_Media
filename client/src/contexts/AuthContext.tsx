@@ -1,10 +1,10 @@
 import { createContext } from 'react';
-import { IUserData } from '../types/data';
+import { LoggedInUserData } from '../types/data';
 import { useAuth } from '../hooks/useAuth';
 
 interface IAuthContext {
-    user: IUserData | null;
-    saveUser: (user: IUserData) => void;
+    user: LoggedInUserData | null;
+    saveUser: (user: LoggedInUserData) => void;
     logoutUser: () => void;
 }
 

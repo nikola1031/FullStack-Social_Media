@@ -6,6 +6,7 @@ export const authEndpoints = {
 
 export const postsEndpoints = {
     base: () => `/posts`,
+    likedPosts: (userId: string) => `/posts/user/${userId}?liked=true`,
     postById: (postId: string) => `/posts/${postId}`,
     postByUser: (userId: string) => `/posts/user/${userId}`,
     likePost: (postId: string) => `/posts/${postId}/like`
@@ -18,13 +19,15 @@ export const commentsEndpoints = {
 };
 
 export const userEndpoints = {
-    base: () => `/profile`,
-    uploadPhotos: () => `/profile/photos`,
-    getProfilePhotos: (userId: string) => `/profile/${userId}/photos`,
-    updatePassword: () => `/profile/password`,
-    updateProfilePicture: () => `/profile/picture`,
-    sendFriendRequest: (userId: string) => `/friend/${userId}/request`,
-    denyFriendRequest: (userId: string) => `/friend/${userId}/request/deny`,
-    confirmFriendRequest: (userId: string) => `/friend/${userId}/confirm`,
-    followUser: (userId: string) => `/follow/${userId}`
+    base: () => `/users/profile`,
+    profileById: (userId: string) => `/users/profile/${userId}`,
+    updateProfile: (userId: string) => `/users/profile/${userId}`,
+    uploadPhotos: () => `/users/profile/photos`,
+    updatePassword: () => `/users/profile/password`,
+    updateProfilePicture: () => `/users/profile/picture`,
+    getProfilePhotos: (userId: string) => `/users/profile/${userId}/photos`,
+    sendFriendRequest: (userId: string) => `/users/friend/${userId}/request`,
+    denyFriendRequest: (userId: string) => `/users/friend/${userId}/request/deny`,
+    confirmFriendRequest: (userId: string) => `/users/friend/${userId}/confirm`,
+    followUser: (userId: string) => `/users/follow/${userId}`
 };

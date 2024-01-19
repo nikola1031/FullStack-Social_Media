@@ -1,66 +1,65 @@
-import { useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import Post from './Post/Post';
 import './Posts.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Overlay from '../shared/Overlay/Overlay';
 import FullPost from '../Home/FullPost/FullPost';
-import { useAuth } from '../../hooks/useAuth';
+import { PostData } from '../../types/data';
+import * as dataApi from '../../api/data';
+import { useAuthContext } from '../../hooks/useAuthContext';
 
-type PostData = {
-    _id: string;
-    text: string;
-    imageUrls: string[];
-    likeCount: number;
-    commentCount: number;
-    _ownerId: string;
-    _createdAt: string;
-    author: {username: string, avatar: string}
-
-};
-
-const author = {
-    username: 'KonImperator',
-    avatar: 'https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745',
-};
-
-const post: PostData = {
-    _id: '1',
-    text: `3a всички фенове на гейминг турнирите, които ще посетят AniFest
-   2023 - Коледно Издание - rp. Варна, сме подготвили специални
-   коледни, мини турнири на League of Legends c любезната подкрепа
-   на Acer ❤️ Повече на нашият сайт ⬇⬇⬇`,
-    imageUrls: [
-        'https://images.unsplash.com/photo-1581456495146-65a71b2c8e52?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8aHVtYW58ZW58MHx8MHx8fDA%3D',
-    ],
-    likeCount: Math.floor(Math.random() * (10000 - 1) + 1),
-    commentCount: Math.floor(Math.random() * (200 - 1) + 1),
-    _createdAt: String(Math.floor(Math.random() * (59 - 1) + 1)),
-    _ownerId: '1',
-    author: author
-};
 export default function Posts() {
-    const posts: PostData[] = [post, post, post];
-    const { user } = useAuth();
-    console.log(user);
-
+    const { user: loggedInUser } = useAuthContext();
+    const [posts, setPosts] = useState<PostData[]>([]);
     const [showOverlay, setShowOverlay] = useState(false);
     const [searchParams, setSearchParams] = useSearchParams();
-
+    const [overlayedPost, setOverlayedPost] = useState<PostData | null>(null);
+    const { id } = useParams();
     const showLikedPosts = searchParams.get('liked');
 
-  // Assuming you have a function to handle clicking on a post
-  const handleShowOverlay = () => {
-    setShowOverlay(true);
-  };
+    function fetchPosts() {
+        if (showLikedPosts === 'true') {
+            dataApi.getLikedPostsByUser(id!).then(data => setPosts(data));
+        } else {
+            dataApi.getPostsByUser(id!).then(data => setPosts(data))
+        }
+    }
 
-    // Need to get real posts here
+
+    useEffect(() => {
+        fetchPosts();
+    }, [showLikedPosts])
+
+
+    const handleShowOverlay = (post: PostData) => {
+        setOverlayedPost(post);
+        setShowOverlay(true);
+    };
+
+    const handleHideOverlay = () => {
+        setOverlayedPost(null);
+        setShowOverlay(false);
+    }
+
+    const handleShowLikedPosts = () => {
+        showLikedPosts ? setSearchParams({}) : setSearchParams({ liked: 'true' }) 
+    }
+
+    const handleLikePost = (postId: string, e: React.MouseEvent<HTMLButtonElement>) => {
+        dataApi.likePost(postId).then(fetchPosts);
+        e.stopPropagation();
+    }
+
+    const handleDeletePost = (postId: string, e: React.MouseEvent<HTMLButtonElement>) => {
+        dataApi.deletePostById(postId).then(fetchPosts);
+        e.stopPropagation();
+    }
 
     return (
         <section className="posts-section">
-            <button className="show-liked-posts-btn" onClick={() => setSearchParams({ liked: 'true' })} >Liked Posts</button>
-            <h1 className="posts-heading">{showLikedPosts ? 'Liked' : 'All'} Posts</h1>
-            {posts.map(post => <Post showOverlayOnCLick={handleShowOverlay} post={post}></Post>)}
-            {showOverlay && <Overlay isOpen={showOverlay} onClose={() => setShowOverlay(false)}><FullPost /></Overlay>}
+            <button className="show-liked-posts-btn" onClick={handleShowLikedPosts}>{showLikedPosts ? 'Liked' : 'All'} Posts</button>
+            {posts.map(post => <Post key={post._id} likePost={handleLikePost} deletePost={handleDeletePost} showOverlayOnCLick={handleShowOverlay} loggedInUserId={loggedInUser!._id} post={post}></Post>)}
+            {showOverlay && <Overlay isOpen={showOverlay} onClose={handleHideOverlay}><FullPost post={overlayedPost!} /></Overlay>}
         </section>
     );
 }

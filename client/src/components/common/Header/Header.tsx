@@ -32,17 +32,15 @@ export default function Header() {
                 <img className="logo" src="/images/logo.png" alt="" />
             </Link>
             <nav className="nav-wrapper">
-                <button className="burger-menu" onClick={toggleMenu}>
-                    ☰
-                </button>
+                <button className="burger-menu" onClick={toggleMenu}> ☰ </button>
                 <ul className={isMenuOpen ? 'nav-active' : ''}>
-                    <li>
-                        <Link to={PathConstants.Home}>Home</Link>
-                    </li>
                     {user ? (
                         <>
                             <li>
-                                <Link to={PathConstants.Profile}>Profile</Link>
+                                <Link to={PathConstants.Home}>Home</Link>
+                            </li>
+                            <li>
+                                <Link to={`${PathConstants.Profile}/${user._id}`}>Profile</Link>
                             </li>
                             <li>
                                 <button className='logout-btn' onClick={handleLogout}>Logout</button>

@@ -11,7 +11,7 @@ import EditProfile from '../components/Profile/EditProfile/EditProfile.tsx';
 import ChangePassword from '../components/Profile/ChangePassword/ChangePassword.tsx';
 
 // TODO: Finish Profile Page {
-// - Make Edit Profile and Cange Password work
+// - Make Edit Profile and Change Password work
 // - Make Posts and Liked Posts show correct posts and an overlay of post with comments when post is clicked // kinda done
 // - Make Remove from Liked button work
 // - Make Photos show overlay of enlarged photo when photo is clicked // kinda done
@@ -21,17 +21,10 @@ import ChangePassword from '../components/Profile/ChangePassword/ChangePassword.
 // - Make Remove Friends button work
 // }
 // TODO: Finish Home Page {
-// - Add image uploads // kinda done
-// - Make Post button work
 // - Allow post deleting and editing for authors
 // - Make username and avatar point to user's profile page
-// - Make Like button work
-// - Make Comment button show post comments
-// - Make clicking on comment count show post comments
 // - Make clicking on comment username and avatar point to user's profile page
-// - Make comment liking work
-// - Make comment deleting and editing work and be visible for authors
-// - Make posting a comment work
+// - Make comment deleting and editing work and be visible for authors - author part not done
 // }
 // TODO: Add Error page
 
@@ -39,7 +32,7 @@ const routes: RouteObject[] = [
     { path: PathConstants.Home, element: <Home /> },
     { path: PathConstants.Register, element: <Register /> },
     { path: PathConstants.Login, element: <Login /> },
-    { path: PathConstants.Profile, element: <Profile />, children: [
+    { path: `${PathConstants.Profile}/:id`, element: <Profile />, children: [
         { path: PathConstants.Posts, element: <Posts /> },
         { path: PathConstants.Photos, element: <Photos /> },
         { path: PathConstants.Friends, element: <Friends /> },

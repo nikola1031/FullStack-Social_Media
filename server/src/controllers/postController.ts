@@ -26,8 +26,9 @@ export const createPost = async (req: Request, res: Response) => {
 
 export const getPosts = async (req: Request, res: Response) => {
     const { userId } = req.params;
+    const { liked } = req.query;
     try {
-           const posts = await postService.getPosts(userId ? userId : '');
+           const posts = await postService.getPosts(userId, liked);
            res.status(200).json(posts);
     } catch (error: any) {
         res.status(404).json({ message: error.message });
@@ -63,7 +64,7 @@ export const likePost = async (req: Request, res: Response) => {
     const userId = req.user!._id;
     try {
         const likedPost = await postService.likePost(postId, userId);
-        res.status(200).json({ likeCount: likedPost?.likes.likeCount });
+        res.status(200).json({ likeCount: likedPost?.likes.userLikes.length });
     } catch (error: any) {
         res.status(400).json({ message: error.message });
     }

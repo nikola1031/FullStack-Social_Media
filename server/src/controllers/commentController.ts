@@ -53,7 +53,7 @@ export const likeComment = async (req: Request, res: Response) => {
     const userId = req.user!._id;
     try {
         const likedComment = await commentService.likeComment(commentId, userId);
-        res.status(200).json({likeCount: likedComment?.likes.likeCount});
+        res.status(200).json({likeCount: likedComment?.likes.userLikes.length});
     } catch (error: any) {
         res.status(400).json({ message: error.message });
     }

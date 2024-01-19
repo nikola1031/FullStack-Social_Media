@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useUser } from './useUser';
-import { IUserData } from '../types/data';
+import { LoggedInUserData } from '../types/data';
 
 // used in AuthContext.tsx
 
 export function useAuth() {
     const { storeUser, removeUser, getUser } = useUser();
 
-    const [user, setUser] = useState<IUserData | null>(() => {
+    const [user, setUser] = useState<LoggedInUserData | null>(() => {
         const storedUser = getUser();
         if (storedUser) {
             storeUser(storedUser);
@@ -24,7 +24,7 @@ export function useAuth() {
         }
     }, []);
 
-    function saveUser(user: IUserData) {
+    function saveUser(user: LoggedInUserData) {
         setUser(user);
         storeUser(user);
     }

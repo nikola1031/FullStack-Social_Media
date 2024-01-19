@@ -12,8 +12,4 @@ const commentSchema: Schema = new Schema(
 );
 
 commentSchema.index({ author: 1, postId: 1 });
-commentSchema.virtual('likes.likeCount').get(function (this: any) {
-    return this.likes.userLikes.length;
-})
-
 export const Comment = model('Comment', commentSchema);
