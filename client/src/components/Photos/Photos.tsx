@@ -2,32 +2,51 @@ import Overlay from '../shared/Overlay/Overlay';
 import Upload from '../shared/Upload/Upload';
 import Photo from './Photo/Photo';
 import './Photos.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import * as dataApi from '../../api/data';
+import { useParams } from 'react-router-dom';
+import { Image } from '../../types/data';
+
 
 export default function Photos() {
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-    const [selectedPhoto, setSelectedPhoto] = useState<{ url: string, _id: string } | null>(null);
-
-
+    const [selectedPhoto, setSelectedPhoto] = useState<Image | null>(null);
+    const [photos, setPhotos] = useState<Image[]>([]);
+    const { id } = useParams();
+    
     function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
+        const imageData = new FormData();
+
+        selectedFiles.forEach((file) => {
+            imageData.append(`files`, file);
+        });
+
+        dataApi.uploadUserPhotos(imageData).then((data) => setPhotos(data.photos));
+        setSelectedFiles([]);
     }
+
+    async function fetchPhotos() {
+        await dataApi.getProfilePhotos(id!).then((data) => setPhotos(data.photos));
+    }
+
+    useEffect(() => {
+        fetchPhotos();
+    }, [])
 
     function setProfilePicture() {
         if (!selectedPhoto) return;
-
         console.log('set profile picture');
     }
 
-    function deletePhoto() {
-        if (!selectedPhoto) return;
-
-        console.log('delete photo');
+    function deletePhoto(url: string | undefined) {
+        if (!url) return;
+        dataApi.deleteProfilePhoto(url).then((data) => setPhotos(data.photos))
     }
 
     const [showOverlay, setShowOverlay] = useState(false);
 
-    const handleShowOverlay = (photo: { url: string, _id: string }) => {
+    const handleShowOverlay = (photo: Image) => {
         setSelectedPhoto(photo);
         setShowOverlay(true);
     };
@@ -36,15 +55,6 @@ export default function Photos() {
         setSelectedPhoto(null);
         setShowOverlay(false);
     };
-
-
-    const photos = [
-        { url: 'https://picsum.photos/300/300', _id: '1' },
-        { url: 'https://picsum.photos/200/400', _id: '2' },
-        { url: 'https://picsum.photos/200/200', _id: '3' },
-        { url: 'https://picsum.photos/200/300', _id: '4' },
-        { url: 'https://picsum.photos/1600/1200', _id: '5' },
-    ];
 
     return (
         <>
@@ -66,7 +76,7 @@ export default function Photos() {
                     >
                         <Photo photo={selectedPhoto}/>
                         <button onClick={setProfilePicture} className="confirm-photo-button">Set as Profile picture</button>
-                        <button onClick={deletePhoto} className="delete-photo-button">Delete Photo</button>
+                        <button onClick={() => deletePhoto(selectedPhoto?.url)} className="delete-photo-button">Delete Photo</button>
                     </Overlay>
                 )}
             </section>

@@ -1,5 +1,5 @@
 import { User } from "../models/User";
-import { comparePasswords, hashPassword } from "./helpers/serviceHelpers";
+import { comparePasswords, hashPassword, savePhotos } from "./helpers/serviceHelpers";
 import { ProfileData, EmailAndPassword, Passwords } from "./types/types";
 
 function hasEmailAndPassword(data: any): data is EmailAndPassword {
@@ -45,7 +45,7 @@ export const editPassword = async (passwords: Passwords, userId: string) => {
 }
 
 export const editProfilePicture = async (profilePicture: string, userId: string) => {
-    const updatedUser = await User.findByIdAndUpdate(userId, {profilePicture}, {new: true});
+    const updatedUser = await User.findByIdAndUpdate(userId, {profilePicture}, {new: true}).select('profilePicture');
     if (!updatedUser) {
         throw new Error('Profile picture update failed. Invalid user');
     }
@@ -154,16 +154,22 @@ export const toggleFollowUser = async (userId: string, otherUserId: string) => {
     }
 }
 
-export const uploadPhotos = async (photos: string[], userId: string) => {
-    const mappedPhotos = photos.map((url) => ({url}));
-    return User.findByIdAndUpdate(userId, { $push: { photos: { $each: mappedPhotos } } }).select('photos');
+export const uploadPhotos = async (photos: Express.Multer.File[], userId: string) => {
+    const imageUrls = await savePhotos(photos, userId);
+    const images = await User.findByIdAndUpdate(userId, { 
+        $push: { 
+            photos: { 
+                $each: imageUrls.map(url => ({ url })) } } }, 
+        {new: true}).select('photos');
+    
+    return images;
 }
 
 export const fetchPhotos = async (userId: string) => {
     return await User.findById(userId).select('photos');
 }
 
-export const deletePhoto = async (url: string, userId: string) => {
+export const deletePhoto = async (userId: string, url: string) => {
     User.findByIdAndUpdate(userId, {$pull: {photos: { url }}}, {new: true}).select('photos');
 }
 

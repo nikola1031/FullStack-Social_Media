@@ -42,3 +42,9 @@ export type UserData = {
     following: string[];
     followers: string[];
 };
+
+export type Image = {
+    _id: string;
+    url: string;
+    dateAdded: string;
+}

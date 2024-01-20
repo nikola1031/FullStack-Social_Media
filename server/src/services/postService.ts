@@ -1,16 +1,22 @@
 import { Comment } from "../models/Comment";
 import { Post } from "../models/Post";
+import { User } from "../models/User";
+import { savePhotos } from "./helpers/serviceHelpers";
 
 interface IPost {
     text: string;
-    imageUrls: string[];
+    images: Express.Multer.File[];
     author: string;
 }
 
-export const savePost = async ({text, imageUrls, author}: IPost) => {
+export const savePost = async ({text, images, author}: IPost) => {
     try {
-        const newPost = new Post({text, imageUrls, author});
+        const imageUrls = await savePhotos(images, author);
+        await User.updateOne({_id: author }, { $push: { photos: { $each: imageUrls.map(url => ({url})) } } });
+
+        const newPost = new Post({text, imageUrls, author})
         await newPost.save();
+
         return newPost;
     } catch (error) {
         throw error;

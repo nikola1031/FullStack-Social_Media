@@ -41,28 +41,23 @@ export const updatePassword = async (req: Request, res: Response) => {
 }
 
 export const updateProfilePicture = async (req: Request, res: Response) => {
-    const trimmedBody = trimmer(req.body);
-    const profilePicture = trimmedBody.profilePicture;
+    const profilePicture = req.body.profilePicture;
     try {
-        if (!profilePicture || !profilePicture.startsWith('http://')) {
+        if (!profilePicture) {
             return res.status(400).json({message: 'Invalid profile picture format'});
         }
         const user = await userService.editProfilePicture(profilePicture, req.user!._id)
-        res.status(200).json(user.toObject());
+        res.status(200).json(user);
     } catch (error: any) {
         res.status(400).json({message: error.message});
     }
 }
 
 export const postPhotos = async (req: Request, res: Response) => {
-    const trimmedBody = trimmer(req.body);
-    const photos = trimmedBody.photos;
+    const images = (req.files as Express.Multer.File[]) || [];
     try {
-        if (photos.length === 0) {
-            return res.status(400).json({message: 'Invalid photo URL format'});
-        }
-        const data = await userService.uploadPhotos(photos, req.user!._id)
-        res.status(200).json(data!.toObject());
+        const imageData = await userService.uploadPhotos(images, req.user!._id);
+        res.status(200).json(imageData);
     } catch (error: any) {
         res.status(400).json({message: error.message});
     }
@@ -72,8 +67,7 @@ export const deletePhoto = async (req: Request, res: Response) => {
     const { url } = req.body;
     try {
         deleteImage(url).then( async () => {
-            await userService.deletePhoto(url, req.user!._id,);
-
+            await userService.deletePhoto(url, req.user!._id);
         });
         res.status(200).json({message: 'Photo deleted successfully'});
     } catch (error: any) {

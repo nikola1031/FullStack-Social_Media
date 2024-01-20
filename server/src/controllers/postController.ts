@@ -1,25 +1,19 @@
 import { Request, Response } from 'express';
 import * as postService from '../services/postService';
-import { deleteImage, uploadImages } from '../services/firebaseStorageService';
 
 export const createPost = async (req: Request, res: Response) => {
     const author = req.user!._id!;
     const { text } = req.body;
-    const images = req.files as Express.Multer.File[];
-    
+    const images = (req.files as Express.Multer.File[]) || [];
+
     if (!text) {
         throw new Error('Cannot post without text');
     }
-    let imageUrls: string[] = [];
 
     try {
-        imageUrls = await uploadImages(images);
-        const newPost = await postService.savePost({text, imageUrls, author})
+        const newPost = await postService.savePost({text, images, author})
         res.status(201).json(newPost);
     } catch (error: any) {
-        if (imageUrls.length) {
-            imageUrls.forEach(deleteImage);
-        }
         res.status(400).json({ message: error.message });
     }
 };

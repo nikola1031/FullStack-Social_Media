@@ -26,6 +26,7 @@ export const userEndpoints = {
     updatePassword: () => `/users/profile/password`,
     updateProfilePicture: () => `/users/profile/picture`,
     getProfilePhotos: (userId: string) => `/users/profile/${userId}/photos`,
+    deletePhoto: () => `/users/profile/photos`,
     sendFriendRequest: (userId: string) => `/users/friend/${userId}/request`,
     denyFriendRequest: (userId: string) => `/users/friend/${userId}/request/deny`,
     confirmFriendRequest: (userId: string) => `/users/friend/${userId}/confirm`,
