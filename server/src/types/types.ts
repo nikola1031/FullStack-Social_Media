@@ -4,5 +4,6 @@ export interface IUserData {
     _id: string;
     gender: 'male' | 'female'
     role: 'user' | 'admin';
+    profilePicture: string;
     accessToken: string;
 }

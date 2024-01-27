@@ -66,10 +66,8 @@ export const postPhotos = async (req: Request, res: Response) => {
 export const deletePhoto = async (req: Request, res: Response) => {
     const { url } = req.body;
     try {
-        deleteImage(url).then( async () => {
-            await userService.deletePhoto(url, req.user!._id);
-        });
-        res.status(200).json({message: 'Photo deleted successfully'});
+        const [_, photos] = await Promise.all([deleteImage(url), userService.deletePhoto(url, req.user!._id)])
+        res.status(200).json(photos);
     } catch (error: any) {
         res.status(400).json({message: error.message});
     }
@@ -87,7 +85,7 @@ export const getUserPhotos = async (req: Request, res: Response) => {
 
 export const toggleSendFriendRequest = async (req: Request, res: Response) => {
     const userId = req.user!._id;
-    const { id: otherUserId } = req.params;
+    const { userId: otherUserId } = req.params;
 
     try {
         await userService.toggleFriendshipRequest(userId, otherUserId);
@@ -97,17 +95,17 @@ export const toggleSendFriendRequest = async (req: Request, res: Response) => {
     }
 }
 
-export const denyFriendRequest = async (req: Request, res: Response) => {
-    const userId = req.user!._id;
-    const otherUserId = req.params.userId;
+// export const denyFriendRequest = async (req: Request, res: Response) => {
+//     const userId = req.user!._id;
+//     const otherUserId = req.params.userId;
 
-    try {
-        await userService.removeFriendshipRequest(userId, otherUserId);
-        res.status(200).json({message: 'Friend request removed successfully'});
-    } catch (error: any) {
-        res.status(400).json({message: error.message})
-    }
-}
+//     try {
+//         await userService.removeFriendshipRequest(userId, otherUserId);
+//         res.status(200).json({message: 'Friend request removed successfully'});
+//     } catch (error: any) {
+//         res.status(400).json({message: error.message})
+//     }
+// }
 
 export const toggleAddFriend = async (req: Request, res: Response) => {
     const userId = req.user!._id;

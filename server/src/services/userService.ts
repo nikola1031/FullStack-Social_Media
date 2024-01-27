@@ -53,7 +53,7 @@ export const editProfilePicture = async (profilePicture: string, userId: string)
 }
 
 export const toggleFriendshipRequest = async (userId: string, otherUserId: string) => {
-    let result;
+    let result; 
 
     if (userId === otherUserId) {
         throw new Error('Cannot request friendship with self');
@@ -69,31 +69,35 @@ export const toggleFriendshipRequest = async (userId: string, otherUserId: strin
         throw new Error('Users are already friends');
     }
 
-    if (otherUser.friendRequests.includes(userId)) {
-        result = await User.updateOne({_id: otherUserId}, {$pull: {friendRequests: userId}});
+    if (otherUser.friendRequests.includes(userId) || user.friendRequests.includes(otherUserId)) {
+        result = await Promise.all(
+            [
+                User.updateOne({_id: otherUserId}, {$pull: {friendRequests: userId}}),
+                User.updateOne({_id: otherUserId}, {$pull: {friendRequests: userId}})
+            ]);
     } else {
         result = await User.updateOne({_id: otherUserId}, {$push: {friendRequests: userId}});
     }
 
-    if (result.matchedCount === 0) {
+  /*   if (result[0].matchedCount === 0) {
         throw new Error('User not found');
     }
 
     if (result.modifiedCount === 0) {
         throw new Error('Friend request not added');
-    }
+    } */
 }
 
-export const removeFriendshipRequest = async (userId: string, otherUserId: string) => {
-    const result = await User.updateOne({_id: userId}, {$pull: {friendRequests: otherUserId}});
-    if (result.modifiedCount !== 1) {
-        throw new Error('Remove friendship request operation had no effect. Perform database integrity check')
-    }
-}
+// export const removeFriendshipRequest = async (userId: string, otherUserId: string) => {
+//     const result = await User.updateOne({_id: userId}, {$pull: {friendRequests: otherUserId}});
+//     if (result.modifiedCount !== 1) {
+//         throw new Error('Remove friendship request operation had no effect. Perform database integrity check')
+//     }
+// }
 
 export const toggleFriendship = async (userId: string, otherUserId: string) => {
     let result;
-
+    
     if (userId === otherUserId) {
         throw new Error('Cannot befriend self');
     }
@@ -110,9 +114,12 @@ export const toggleFriendship = async (userId: string, otherUserId: string) => {
             User.updateOne({_id: otherUserId}, {$pull: {friends: userId}}),
         ]);
     } else {
+        if (!user.friendRequests.includes(otherUserId)) {
+            throw new Error('Friend request must be sent before accepting');
+        }
         result = await Promise.all([
-            User.updateOne({_id: userId}, {$push: {friends: otherUserId}}),
-            User.updateOne({_id: otherUserId}, {$push: {friends: userId}, $pull: {friendRequests: userId}}),
+            User.updateOne({_id: userId}, {$push: {friends: otherUserId}, $pull: {friendRequests: otherUserId}}),
+            User.updateOne({_id: otherUserId}, {$push: {friends: userId}}),
         ]);
     }
 
@@ -169,8 +176,8 @@ export const fetchPhotos = async (userId: string) => {
     return await User.findById(userId).select('photos');
 }
 
-export const deletePhoto = async (userId: string, url: string) => {
-    User.findByIdAndUpdate(userId, {$pull: {photos: { url }}}, {new: true}).select('photos');
+export const deletePhoto = async (url: string, userId: string) => {
+    return await User.findByIdAndUpdate(userId, {$pull: {photos: { url }}}, {new: true}).select('photos');
 }
 
 export const fetchProfileData = async (userId: string, loggedInUserId: string) => {
@@ -180,6 +187,6 @@ export const fetchProfileData = async (userId: string, loggedInUserId: string) =
         return await User.findById(userId).select(`${fields}`)
         .populate('friends friendRequests', 'username profilePicture');
     } else {
-        return await User.findById(userId).select(fields).populate('friends', 'username profilePicture');
+        return await User.findById(userId).select(fields).populate('friends friendRequests', 'username profilePicture');
     }
 }

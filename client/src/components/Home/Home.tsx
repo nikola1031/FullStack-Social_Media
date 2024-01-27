@@ -6,7 +6,6 @@ import * as dataApi from '../../api/data';
 import { PostData } from '../../types/data';
 import { useAuthContext } from '../../hooks/useAuthContext';
 
-// TODO: Add posts from database here - getAllPosts()'
 export default function Home() {
     const [posts, setPosts] = useState<PostData[]>([]);
 

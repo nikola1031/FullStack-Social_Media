@@ -35,6 +35,6 @@ export async function deleteImage(url: string) {
   deleteObject(imageRef).then(() => {
       console.log('Image deleted successfully')
   }).catch((error) => {
-      console.error('Uh-oh, an error occurred!')
+      console.error('Uh-oh, an error occurred while deleting photo!')
   });
 }

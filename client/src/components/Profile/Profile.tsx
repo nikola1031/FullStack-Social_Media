@@ -6,6 +6,19 @@ import { useAuthContext } from '../../hooks/useAuthContext';
 import * as dataApi from '../../api/data';
 import { UserData } from '../../types/data';
 
+export type ProfileContextType = {
+    setUser: React.Dispatch<React.SetStateAction<UserData>>
+    toggleFriendship: (id: string) => void;
+    isProfileOwner: boolean;
+    user: UserData;
+}
+
+enum FriendStatus {
+    Friend = 'friend',
+    Pending = 'pending',
+    None = 'none',
+}
+
 export default function Profile() {
 
     const [dropDownActive, setDropDownActive] = useState(false);
@@ -13,24 +26,52 @@ export default function Profile() {
     const { user: loggedInUser } = useAuthContext();
     const isProfileOwner = loggedInUser?._id === id;
     const [user, setUser] = useState<UserData>();
-
-    useEffect(() => {
-            dataApi.getProfileById(id!).then((data) => setUser(data.user));
-    }, [id]);
+    const [friendStatus, setFriendStatus] = useState('');
     
-    const friendStatus = {
-        isFriend: false,
-        isPending: false,
-    };
+    useEffect(() => {
+        fetchUser();
+    }, [id]);
+
+
+    function fetchUser() {
+        dataApi.getProfileById(id!).then((data) => {
+            setUser(data.user)
+            determineFriendStatus(data.user);
+        });
+    }
+
+    function friendRequest() {
+        dataApi.toggleFriendRequest(id!).then(() => setFriendStatus((prevStatus) => {
+            return prevStatus === FriendStatus.Pending ? FriendStatus.None : FriendStatus.Pending;
+        }));
+    }
+
+    function toggleFriendship(id: string) {
+        dataApi.toggleFriend(id).then(() => setFriendStatus((prevStatus) => {
+            fetchUser();
+            return prevStatus === FriendStatus.Friend ? FriendStatus.None : FriendStatus.Friend;
+        }))
+    }
+    
+    function determineFriendStatus(user: UserData) {
+        if (user?.friends.some(friend => friend._id === user?._id)) {
+            return setFriendStatus(FriendStatus.Friend);
+        }
+       
+        if (user?.friendRequests.some(request => request._id === loggedInUser?._id)) {
+            return setFriendStatus(FriendStatus.Pending);
+        }
+        setFriendStatus(FriendStatus.None);
+    }
 
     const buttonText = () => {
-        if (friendStatus.isFriend) {
+        if (friendStatus === FriendStatus.Friend) {
           return "Remove Friend";
-        } else if (friendStatus.isPending) {
-          return "Request Pending";
-        } else {
-          return "Add Friend";
         }
+        if (friendStatus === FriendStatus.Pending) {
+          return "Cancel Request";
+        }          
+        return "Add Friend";
       };
 
     
@@ -41,11 +82,14 @@ export default function Profile() {
                     <header className="my-profile-header">
                         <img
                             className="my-profile-avatar"
-                            src="https://picsum.photos/200/300"
+                            src={user?.profilePicture}
                             alt="profile picture"
                         />
                         <div className='my-profile-username-wrapper'>
-                            <button className='friend-button' disabled={friendStatus.isPending}><i className="fa-solid fa-user-group"></i>{buttonText()}</button>
+                            {!isProfileOwner && <button onClick={friendRequest} className='friend-button'>
+                                <i className="fa-solid fa-user-group"></i>
+                                {buttonText()}
+                            </button>}
                             <h2 className="my-profile-username">{user?.username}</h2>
                             <p className="my-profile-friends-count">{user?.friends.length} Friends</p>
                         </div>
@@ -81,7 +125,7 @@ export default function Profile() {
                 </nav>
             </section>
             <hr className="divider" />
-            <Outlet />
+            <Outlet context={{setUser, toggleFriendship, isProfileOwner, user}}/>
         </div>
     );
 }

@@ -24,8 +24,8 @@ export const uploadUserPhotos: (photos: FormData) => Promise<{_id: string, photo
 export const getProfilePhotos: (userId: string) => Promise<{_id: string, photos: Image[]}> = async (userId) => requestApi.get(userEndpoints.getProfilePhotos(userId));
 export const deleteProfilePhoto: (url: string) => Promise<{_id: string, photos: Image[]}> = async (url) => requestApi.del(userEndpoints.deletePhoto(), {url});
 export const updatePassword: () => Promise<void> = async () => requestApi.put(userEndpoints.updatePassword(), null);
-export const updateProfilePicture: () => Promise<void> = async () => requestApi.put(userEndpoints.updateProfilePicture(), null);
-export const sendFriendRequest: (userId: string) => Promise<void> = async (userId) => requestApi.post(userEndpoints.sendFriendRequest(userId), null);
-export const denyFriendRequest: (userId: string) => Promise<void> = async (userId) => requestApi.post(userEndpoints.denyFriendRequest(userId), null);
-export const confirmFriendRequest: (userId: string) => Promise<void> = async (userId) => requestApi.post(userEndpoints.confirmFriendRequest(userId), null);
+export const updateProfilePicture: (url: string) => Promise<void> = async (url) => requestApi.put(userEndpoints.updateProfilePicture(), {profilePicture: url});
+export const toggleFriendRequest: (userId: string) => Promise<void> = async (userId) => requestApi.post(userEndpoints.friendRequest(userId), null);
+// export const denyFriendRequest: (userId: string) => Promise<void> = async (userId) => requestApi.post(userEndpoints.denyFriendRequest(userId), null);
+export const toggleFriend: (userId: string) => Promise<void> = async (userId) => requestApi.post(userEndpoints.friend(userId), null);
 export const followUser: (userId: string) => Promise<void> = async (userId) => requestApi.post(userEndpoints.followUser(userId), null);

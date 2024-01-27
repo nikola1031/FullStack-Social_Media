@@ -8,7 +8,6 @@ interface PostFormProps {
     fetchPosts: () => void;
 }
 
-
 export default function PostForm({ fetchPosts }: PostFormProps) {
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const [postText, setPostText] = useState<string>('');
@@ -52,7 +51,7 @@ export default function PostForm({ fetchPosts }: PostFormProps) {
                     <div className="send-post-input-container">
                         <img
                             className="send-post-img user-avatar"
-                            src="https://images.pexels.com/photos/1704488/pexels-photo-1704488.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+                            src={user?.profilePicture}
                             alt="avatar"
                         />
                         <textarea

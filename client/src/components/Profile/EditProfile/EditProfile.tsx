@@ -1,21 +1,21 @@
 import { useState } from 'react';
 import './EditProfile.css';
-
+import { useAuthContext } from '../../../hooks/useAuthContext';
 export default function EditProfile() {
-    const user = {
-        username: 'KonImperator',
-        email: 'konimperator@abv.bg',
-        bio: `Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quo rem temporibus ipsa, nam neque aliquam corrupti nulla facilis illo deserunt sapiente voluptatem unde sed assumenda nobis optio omnis. Dolorem, accusantium!`,
-    };
+   
+    const { user } = useAuthContext();
 
-    const [username, setUsername] = useState<string>(user.username);
-    const [email, setEmail] = useState<string>(user.email);
-    const [bio, setBio] = useState<string>(user.bio);
+    // FIX USER TYPES
+    // MAKE EDIT PROFILE AND UPDATE PASSWORD WORK
+
+    const [username, setUsername] = useState<string>(user!.username);
+    const [email, setEmail] = useState<string>(user!.email);
+    const [bio, setBio] = useState<string>(user!.bio);
     const [password, setPassword] = useState<string>('');
 
     const handleSubmit = (e: React.SyntheticEvent) => {
         e.preventDefault();
-        console.log(username, email, bio);
+       
     };
 
     return (

@@ -19,7 +19,7 @@ export default function Header() {
             try {
                 // authApi.logout(user.accessToken);
                 logoutUser();
-                navigate('/');
+                navigate('/login');
             } catch (error) {
                 console.log('This is an error', error);
             }

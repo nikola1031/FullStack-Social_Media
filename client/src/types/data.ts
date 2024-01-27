@@ -12,6 +12,12 @@ type BaseData = {
     createdAt: string;
 };
 
+export type Friend = {
+    _id: string;
+    username: string;
+    profilePicture: string;
+}
+
 export type PostData = BaseData & {
     imageUrls: string[];
     commentCount: number;
@@ -28,19 +34,7 @@ export type LoggedInUserData = {
     gender: 'male' | 'female';
     role: 'user' | 'admin';
     accessToken: string;
-};
-
-export type UserData = {
-    _id: string;
-    username: string;
-    bio: string;
     profilePicture: string;
-    photos: string[];
-    gender: 'male' | 'female';
-    friendRequests: string[];
-    friends: string[];
-    following: string[];
-    followers: string[];
 };
 
 export type Image = {
@@ -48,3 +42,16 @@ export type Image = {
     url: string;
     dateAdded: string;
 }
+
+export type UserData = {
+    _id: string;
+    username: string;
+    bio: string;
+    profilePicture: string;
+    photos: Image[];
+    gender: 'male' | 'female';
+    friendRequests: Friend[];
+    friends: Friend[];
+    following: string[];
+    followers: string[];
+};

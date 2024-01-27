@@ -2,17 +2,17 @@ import Overlay from '../shared/Overlay/Overlay';
 import Upload from '../shared/Upload/Upload';
 import Photo from './Photo/Photo';
 import './Photos.css';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import * as dataApi from '../../api/data';
-import { useParams } from 'react-router-dom';
+import { useOutletContext } from 'react-router-dom';
 import { Image } from '../../types/data';
-
+import { ProfileContextType } from '../Profile/Profile';
 
 export default function Photos() {
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const [selectedPhoto, setSelectedPhoto] = useState<Image | null>(null);
-    const [photos, setPhotos] = useState<Image[]>([]);
-    const { id } = useParams();
+    const [showOverlay, setShowOverlay] = useState(false);
+    const {setUser, isProfileOwner, user} = useOutletContext<ProfileContextType>();
     
     function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -22,29 +22,28 @@ export default function Photos() {
             imageData.append(`files`, file);
         });
 
-        dataApi.uploadUserPhotos(imageData).then((data) => setPhotos(data.photos));
+        dataApi.uploadUserPhotos(imageData).then((data) => setUser((prev) => ({...prev, photos: data.photos})));
         setSelectedFiles([]);
     }
 
-    async function fetchPhotos() {
-        await dataApi.getProfilePhotos(id!).then((data) => setPhotos(data.photos));
-    }
-
-    useEffect(() => {
-        fetchPhotos();
-    }, [])
-
-    function setProfilePicture() {
+    function updateProfilePicture() {
         if (!selectedPhoto) return;
-        console.log('set profile picture');
+        dataApi.updateProfilePicture(selectedPhoto.url).then(() =>{
+            setUser((prev) => ({...prev, profilePicture: selectedPhoto.url}))
+        });
+        
+        setSelectedPhoto(null);
+        setShowOverlay(false);
     }
 
     function deletePhoto(url: string | undefined) {
         if (!url) return;
-        dataApi.deleteProfilePhoto(url).then((data) => setPhotos(data.photos))
+        dataApi.deleteProfilePhoto(url).then((data) => {
+            setUser((prev) => ({...prev, photos: data.photos}))
+        });
+        setSelectedPhoto(null);
+        setShowOverlay(false);
     }
-
-    const [showOverlay, setShowOverlay] = useState(false);
 
     const handleShowOverlay = (photo: Image) => {
         setSelectedPhoto(photo);
@@ -66,17 +65,22 @@ export default function Photos() {
                 <button className="photo-upload-button">Confirm Upload</button>
             </form>
             <section className="photos">
-                {photos.map((photo) => (
+                {user?.photos.map((photo) => (
                     <Photo photo={photo} key={photo._id} showOverlayOnCLick={handleShowOverlay.bind(null, photo)} />
                 ))}
+
                 {showOverlay && (
                     <Overlay
                         isOpen={showOverlay}
                         onClose={handleCloseOverlay}
                     >
                         <Photo photo={selectedPhoto}/>
-                        <button onClick={setProfilePicture} className="confirm-photo-button">Set as Profile picture</button>
-                        <button onClick={() => deletePhoto(selectedPhoto?.url)} className="delete-photo-button">Delete Photo</button>
+                    {isProfileOwner &&
+                        <>
+                            <button onClick={updateProfilePicture} className="confirm-photo-button">Set as Profile picture</button>
+                            <button onClick={() => deletePhoto(selectedPhoto?.url)} className="delete-photo-button">Delete Photo</button>
+                        </>
+                    }
                     </Overlay>
                 )}
             </section>
