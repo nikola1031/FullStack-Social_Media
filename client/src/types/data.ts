@@ -12,12 +12,6 @@ type BaseData = {
     createdAt: string;
 };
 
-export type Friend = {
-    _id: string;
-    username: string;
-    profilePicture: string;
-}
-
 export type PostData = BaseData & {
     imageUrls: string[];
     commentCount: number;
@@ -26,6 +20,12 @@ export type PostData = BaseData & {
 export type CommentData = BaseData & {
     _postId: string;
 };
+
+export type Friend = {
+    _id: string;
+    username: string;
+    profilePicture: string;
+}
 
 export type LoggedInUserData = {
     _id: string;
@@ -55,3 +55,23 @@ export type UserData = {
     following: string[];
     followers: string[];
 };
+
+export type UserDataDTO = {
+    username: string;
+    bio: string;
+    email: string;
+    password: string;
+}
+
+export type ProfileContextType = {
+    setUser: React.Dispatch<React.SetStateAction<UserData>>
+    toggleFriendship: (id: string) => void;
+    isProfileOwner: boolean;
+    user: UserData;
+}
+
+export type Passwords = {
+    password: string;
+    newPassword: string;
+    confirmPass: string;
+}

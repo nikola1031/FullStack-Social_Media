@@ -3,12 +3,12 @@ interface BaseProfileData {
     bio?: string;
 }
 
-export interface EmailAndPassword {
+interface EmailAndPassword {
     email: string; 
-    password: string;
+    password?: string;
 }
 
-export type ProfileData = BaseProfileData | (BaseProfileData & EmailAndPassword)
+export type ProfileData = BaseProfileData & EmailAndPassword
 
 export interface Passwords {
     password: string;

@@ -6,13 +6,6 @@ import { useAuthContext } from '../../hooks/useAuthContext';
 import * as dataApi from '../../api/data';
 import { UserData } from '../../types/data';
 
-export type ProfileContextType = {
-    setUser: React.Dispatch<React.SetStateAction<UserData>>
-    toggleFriendship: (id: string) => void;
-    isProfileOwner: boolean;
-    user: UserData;
-}
-
 enum FriendStatus {
     Friend = 'friend',
     Pending = 'pending',

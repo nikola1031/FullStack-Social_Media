@@ -1,26 +1,26 @@
 import { User } from "../models/User";
 import { comparePasswords, hashPassword, savePhotos } from "./helpers/serviceHelpers";
-import { ProfileData, EmailAndPassword, Passwords } from "./types/types";
-
-function hasEmailAndPassword(data: any): data is EmailAndPassword {
-    return data && typeof data.email === 'string' && typeof data.password === 'string';
-}
+import { ProfileData, Passwords } from "./types/types";
 
 export const editProfile = async (data: ProfileData, userId: string) => {
     const user = await User.findById(userId);
+    
     if (!user) {
         throw new Error('User not found');
     }
-
-    if (hasEmailAndPassword(data) && !(await comparePasswords(data.password, user.password))) {
+    
+    const isEmailUpdating = data.email !== user.email;
+    
+    if (isEmailUpdating && !(await comparePasswords(data.password!, user.password))) {
         throw new Error('Incorrect password');
     }
 
-    if (hasEmailAndPassword(data)) {
+    if (isEmailUpdating) {
         user.email = data.email;
     }
-    data.bio ? user.bio = data.bio : null;
-    data.username ? user.username = data.username : null;
+
+    user.bio = data.bio;
+    user.username = data.username;
 
     await user.save();
     return user;

@@ -1,14 +1,15 @@
 import { useState } from 'react';
 import './ChangePassword.css';
+import * as dataApi from '../../../api/data';
 
 export default function ChangePassword() {
-    const [oldPassword, setOldPassword] = useState<string>('');
     const [password, setPassword] = useState<string>('');
-    const [confirmPassword, setConfirmPassword] = useState<string>('');
+    const [newPassword, setNewPassword] = useState<string>('');
+    const [confirmPass, setConfirmPass] = useState<string>('');
 
     const handleSubmit = (e: React.SyntheticEvent) => {
         e.preventDefault();
-        console.log(oldPassword, password, confirmPassword);
+        dataApi.updatePassword({password, newPassword, confirmPass});
     };
 
     return (
@@ -16,18 +17,7 @@ export default function ChangePassword() {
             <form onSubmit={handleSubmit} className="form-container">
                 <h2 className="form-title">Update Password</h2>
                 <div className="form-group">
-                    <label htmlFor="old-password">Old Password</label>
-                    <input
-                        type="password"
-                        id="old-password"
-                        name="old-password"
-                        value={oldPassword}
-                        onChange={(e) => setOldPassword(e.target.value)}
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="old-password">New Password</label>
+                    <label htmlFor="password">Old Password</label>
                     <input
                         type="password"
                         id="password"
@@ -38,13 +28,24 @@ export default function ChangePassword() {
                     />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="old-password">Confirm Password</label>
+                    <label htmlFor="newPassword">New Password</label>
                     <input
                         type="password"
-                        id="confirm-password"
-                        name="confirm-password"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        id="newPassword"
+                        name="newPassword"
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        required
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="confirmPass">Confirm Password</label>
+                    <input
+                        type="password"
+                        id="confirmPass"
+                        name="confirmPass"
+                        value={confirmPass}
+                        onChange={(e) => setConfirmPass(e.target.value)}
                         required
                     />
                 </div>

@@ -1,5 +1,4 @@
 import bcrypt from 'bcrypt';
-import { User } from '../../models/User';
 import { deleteImage, uploadImages } from '../firebaseStorageService';
 
 const saltRounds = 10;

@@ -6,7 +6,7 @@ import { useState } from 'react';
 import * as dataApi from '../../api/data';
 import { useOutletContext } from 'react-router-dom';
 import { Image } from '../../types/data';
-import { ProfileContextType } from '../Profile/Profile';
+import { ProfileContextType } from '../../types/data';
 
 export default function Photos() {
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);

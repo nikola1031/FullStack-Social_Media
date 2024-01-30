@@ -1,20 +1,28 @@
 import { useState } from 'react';
 import './EditProfile.css';
 import { useAuthContext } from '../../../hooks/useAuthContext';
-export default function EditProfile() {
-   
-    const { user } = useAuthContext();
+import { useOutletContext } from 'react-router-dom';
+import { ProfileContextType } from '../../../types/data';
+import * as dataApi from '../../../api/data';
 
-    // FIX USER TYPES
-    // MAKE EDIT PROFILE AND UPDATE PASSWORD WORK
+
+export default function EditProfile() {
+    const { user, setUser } = useOutletContext<ProfileContextType>();
+    const { user: loggedInUser, saveUser } = useAuthContext();
 
     const [username, setUsername] = useState<string>(user!.username);
-    const [email, setEmail] = useState<string>(user!.email);
+    const [email, setEmail] = useState<string>(loggedInUser!.email);
     const [bio, setBio] = useState<string>(user!.bio);
     const [password, setPassword] = useState<string>('');
 
     const handleSubmit = (e: React.SyntheticEvent) => {
         e.preventDefault();
+        dataApi.updateProfile({ username, email, bio, password })
+            .then(() => {
+                setUser((prevUser) => ({...prevUser, username, email, bio}));
+                saveUser({...loggedInUser!, email, username})
+                setPassword('');
+            });
        
     };
 
@@ -54,11 +62,11 @@ export default function EditProfile() {
                         required
                     />
                 </div>
-                {user.email !== email ? (
+                {loggedInUser?.email !== email ? (
                     <div className="form-group">
                         <label htmlFor="password">Password</label>
                         <input
-                            type="text"
+                            type="password"
                             id="password"
                             name="password"
                             value={password}
