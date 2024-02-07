@@ -1,7 +1,5 @@
 .friend-profile-card {
-    border: 2px solid rgb(68, 68, 68);
     border-radius: 10px;
-    box-shadow: 0 0 10px 0 rgb(68, 68, 68);
     width: 100%;
     border-radius: 10px;
     overflow: hidden;
@@ -21,7 +19,7 @@
     align-items: center;
     width: 100%;
     padding: 10px;
-    background-color: black;
+    background-color: #0f101aad;
 }
 
 .friend-profile-card-username {

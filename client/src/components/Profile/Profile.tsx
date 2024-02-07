@@ -7,6 +7,7 @@ import * as dataApi from '../../api/data';
 import { UserData } from '../../types/data';
 import { useTitle } from '../../hooks/useTitle';
 import { Link } from 'react-router-dom';
+import Avatar from '../UI/Avatar/Avatar';
 
 enum FriendStatus {
     Friend = 'friend',
@@ -79,11 +80,7 @@ export default function Profile() {
             <section className="my-profile-container">
                 <div className='my-profile-header-wrapper'>
                     <header className="my-profile-header">
-                        <img
-                            className="my-profile-avatar"
-                            src={user?.profilePicture}
-                            alt="profile picture"
-                        />
+                        <Avatar image={user?.profilePicture} large />
                         <div className='my-profile-username-wrapper'>
                             {(!isProfileOwner && !areAlreadyFiends) && <button onClick={() => friendRequest(user!._id)} className='friend-button'>
                                 <i className="fa-solid fa-user-group"></i>

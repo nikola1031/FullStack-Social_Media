@@ -8,14 +8,19 @@ import { useAuthContext } from '../../../hooks/useAuthContext';
 import { Link } from 'react-router-dom';
 import PathConstants from '../../../routes/PathConstants';
 import Carousell from '../../shared/Carousell/Carousell';
-import Overlay from '../../shared/Overlay/Overlay';
+import Avatar from '../../UI/Avatar/Avatar';
+import Time from '../../UI/Time/Time';
 
 interface FullPostProps {
-    post: PostData;
+    post: PostData | undefined;
     fetchPosts: () => void;
 }
 
 export default function FullPost({ post, fetchPosts }: FullPostProps) {
+
+    if (!post) {
+        throw new Error('Post not found');
+    }
 
     const { user } = useAuthContext();
     const [isLiked, setIsLiked] = useState<boolean>(post.likes.userLikes.includes(user!._id));
@@ -26,7 +31,6 @@ export default function FullPost({ post, fetchPosts }: FullPostProps) {
     const [showComments, setShowComments] = useState<boolean>(false);
     const [showDropdown, setShowDropdown] = useState<boolean>(false);
     const [showEdit, setShowEdit] = useState<boolean>(false);
-    const [showOverlay, setShowOverlay] = useState<boolean>(false);
     
     const [updatedText, setUpdatedText] = useState<string>(post.text);
 
@@ -39,36 +43,39 @@ export default function FullPost({ post, fetchPosts }: FullPostProps) {
     function handleShowEdit() {
         setShowEdit(!showEdit);
         setShowDropdown(false);
-        setUpdatedText(post.text);
+        setUpdatedText(post!.text);
     }
     
     function handleCancleEdit() {
         setShowEdit(false);
-        setUpdatedText(post.text);
+        setUpdatedText(post!.text);
     }
 
     function handleEditPost(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        dataApi.updatePost(post._id, {text: updatedText}).then(() => {
+        if (!updatedText || updatedText === post!.text) {
+            setShowEdit(false);
+            return;
+        }
+
+        dataApi.updatePost(post!._id, {text: updatedText}).then(() => {
             fetchPosts();
             setShowEdit(false);
         });
     }
 
     function handleLikePost() {
-        dataApi.likePost(post._id).then((data) => {
+        dataApi.likePost(post!._id).then((data) => {
             setIsLiked(!isLiked);
             setLikeCount(data.likeCount);
         });
     }
 
     function handleDeletePost() {
-        dataApi.deletePostById(post._id).then(() => {
+        dataApi.deletePostById(post!._id).then(() => {
             fetchPosts();
         });
     }
-
-   
 
     return (
         
@@ -76,20 +83,12 @@ export default function FullPost({ post, fetchPosts }: FullPostProps) {
             <section className='full-post-info-container'>
                 <div className='full-post-header'>
                     <div className="user-info">
-                        <Link to={`/${PathConstants.Profile}/${post.author._id}`}>
-                        <img
-                            className="user-avatar"
-                            src={post.author.profilePicture}
-                            alt="avatar"
-                            />
-                        </Link>
+                        <Avatar image={post.author.profilePicture} withLinkTo={post.author._id} />
                         <div className="full-post-info">
                         <Link to={`/${PathConstants.Profile}/${post.author._id}`}>
                             <p className="full-post-username">{post.author.username}</p>
                         </Link>
-                            <time className="full-post-time">
-                                {formatRelativeTime(post.createdAt)}
-                            </time>
+                            <Time time={post.createdAt} />
                         </div>
                     </div>
                     { isAuthor &&

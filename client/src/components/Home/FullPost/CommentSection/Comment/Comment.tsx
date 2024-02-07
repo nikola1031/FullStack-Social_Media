@@ -6,6 +6,9 @@ import { useState } from "react";
 import { useAuthContext } from "../../../../../hooks/useAuthContext";
 import { Link } from "react-router-dom";
 import PathConstants from "../../../../../routes/PathConstants";
+import Avatar from "../../../../UI/Avatar/Avatar";
+import Time from "../../../../UI/Time/Time";
+import CommentActionButton from "../../../../UI/CommentButton/CommentButton";
 
 interface CommentProps {
     comment: CommentData;
@@ -19,6 +22,7 @@ export default function Comment({comment, postId, fetchComments}: CommentProps) 
     const [isLiked, setIsLiked] = useState<boolean>(() => comment.likes.userLikes.includes(user!._id))
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [updatedComment, setUpdatedComment] = useState<string>('');
+    const isAuthor = user?._id === comment.author._id
 
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setUpdatedComment(e.target.value);
@@ -44,6 +48,12 @@ export default function Comment({comment, postId, fetchComments}: CommentProps) 
     
     function handleEditComment(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
+
+        if(!updatedComment || updatedComment === comment.text) {
+            setIsEditing(false);
+            return;
+        }
+
         dataApi.updateComment(postId, {text: updatedComment}, comment._id).then(() => {
             setUpdatedComment('');
             setIsEditing(false);
@@ -51,10 +61,9 @@ export default function Comment({comment, postId, fetchComments}: CommentProps) 
         })
     }
 
-
     return (
             <div className="comment">
-                <img className="user-avatar" src={comment.author.profilePicture} alt="avatar" />
+                <Avatar image={comment.author.profilePicture} withLinkTo={comment.author._id} />
                 <div className="comment-info-container">
                     <div className="comment-info">
                         <Link to={`/${PathConstants.Profile}/${comment.author._id}`}>
@@ -78,12 +87,12 @@ export default function Comment({comment, postId, fetchComments}: CommentProps) 
                         }
                     </div>
                     <div className="comment-actions">
-                        <time className="comment-time">{formatRelativeTime(comment.createdAt)}</time>
-                        <button onClick={handleLikeComment} className={`comment-action comment-like${isLiked ? ' active' : ''}`}>Like</button>
-                        {user?._id === comment.author._id &&
+                        <Time time={comment.createdAt} />
+                        <CommentActionButton onClickHandler={handleLikeComment} isLiked={isLiked} />
+                        {isAuthor &&
                             <>
-                                <button onClick={handleDeleteComment} className="comment-action comment-delete">Delete</button>
-                                <button onClick={handleShowEdit} className="comment-action comment-edit">{isEditing ? 'Cancel' : 'Edit'}</button>
+                                <CommentActionButton onClickHandler={handleDeleteComment} />
+                                <CommentActionButton onClickHandler={handleShowEdit} isEditing={isEditing} />
                             </>
                         }
                     </div>

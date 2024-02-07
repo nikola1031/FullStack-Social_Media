@@ -1,0 +1,13 @@
+.comment-action {
+    font-size: 0.9rem;
+    font-weight: bold;
+    background: none;
+    color: inherit;
+    border: none;
+    cursor: pointer;
+    padding-left: 10px;
+}
+
+.comment-like.active {
+    color: rgb(190, 17, 17)
+}

@@ -16,6 +16,9 @@ export default function CommentField({postId, fetchComments}: CommentFieldProps)
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
+        
+        if (!text) return;
+        
         await dataApi.postComment(postId, { text });
         fetchComments();
         setText('');

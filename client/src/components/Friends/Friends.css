@@ -20,5 +20,5 @@
     font-size: 2rem;
     font-weight: bold;
     border-radius: 10px;
-    background-color: rgb(67, 67, 67);
+    border: 2px solid rgb(48, 40, 84)
 }

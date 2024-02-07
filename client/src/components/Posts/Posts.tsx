@@ -9,6 +9,10 @@ import * as dataApi from '../../api/data';
 import { useAuthContext } from '../../hooks/useAuthContext';
 import { useTitle } from '../../hooks/useTitle';
 
+function findPost(postId: string, posts: PostData[]) {
+    return posts.find(post => post._id === postId)
+}
+
 export default function Posts() {
 
     useTitle('Posts');
@@ -16,7 +20,7 @@ export default function Posts() {
     const [posts, setPosts] = useState<PostData[]>([]);
     const [showOverlay, setShowOverlay] = useState(false);
     const [searchParams, setSearchParams] = useSearchParams();
-    const [overlayedPost, setOverlayedPost] = useState<PostData | null>(null);
+    const [overlayedPost, setOverlayedPost] = useState<string | null>();
     const { id } = useParams();
     const showLikedPosts = searchParams.get('liked');
 
@@ -30,10 +34,10 @@ export default function Posts() {
 
     useEffect(() => {
         fetchPosts();
-    }, [showLikedPosts, showOverlay])
+    }, [showLikedPosts])
 
-    const handleShowOverlay = (post: PostData) => {
-        setOverlayedPost(post);
+    const handleShowOverlay = (postId: string) => {
+        setOverlayedPost(postId);
         setShowOverlay(true);
     };
 
@@ -60,7 +64,7 @@ export default function Posts() {
         <section className="posts-section">
             <button className="show-liked-posts-btn" onClick={handleShowLikedPosts}>{showLikedPosts ? 'Liked' : 'All'} Posts</button>
             {posts.map(post => <Post key={post._id} profileId={id!} likePost={handleLikePost} deletePost={handleDeletePost} showOverlayOnCLick={handleShowOverlay} loggedInUserId={loggedInUser!._id} post={post}></Post>)}
-            {showOverlay && <Overlay isOpen={showOverlay} onClose={handleHideOverlay}><FullPost fetchPosts={fetchPosts} post={overlayedPost!} /></Overlay>}
+            {showOverlay && <Overlay isOpen={showOverlay} onClose={handleHideOverlay}><FullPost fetchPosts={fetchPosts} post={findPost(overlayedPost!, posts )} /></Overlay>}
         </section>
     );
 }

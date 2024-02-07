@@ -3,7 +3,7 @@ import Upload from '../../shared/Upload/Upload';
 import { useAuthContext } from '../../../hooks/useAuthContext';
 import * as dataApi from '../../../api/data';
 import './PostForm.css';
-
+import Avatar from '../../UI/Avatar/Avatar';
 interface PostFormProps {
     fetchPosts: () => void;
 }
@@ -49,11 +49,7 @@ export default function PostForm({ fetchPosts }: PostFormProps) {
                     encType="multipart/form-data"
                 >
                     <div className="send-post-input-container">
-                        <img
-                            className="send-post-img user-avatar"
-                            src={user?.profilePicture}
-                            alt="avatar"
-                        />
+                    <Avatar image={user?.profilePicture} withLinkTo={user?._id}/>
                         <textarea
                             onChange={handleTextChange}
                             value={postText}

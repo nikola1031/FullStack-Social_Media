@@ -19,7 +19,10 @@ const userSchema: Schema = new Schema(
         bio: { type: String, default: '' },
         profilePicture: { type: String, default: '' },
         photos: {type: [photoSchema], default: []},
-        friendRequests: {type: [Types.ObjectId], ref: 'User', default: []},
+        friendRequests: {
+            sent: {type: [Types.ObjectId], ref: 'User', default: []},
+            received: {type: [Types.ObjectId], ref: 'User', default: []},
+        },
         friends: { type: [Types.ObjectId], ref: 'User', default: [] },
         followers: { type: [Types.ObjectId], ref: 'User', default: [] },
         following: { type: [Types.ObjectId], ref: 'User', default: [] },

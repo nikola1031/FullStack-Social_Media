@@ -24,14 +24,12 @@
 .my-profile-username {
     margin: 0;
     font-size: 1.8rem;
+    max-width: 20ch;
 }
 
 .my-profile-avatar {
     width: 150px;
     height: 150px;
-    flex: 0 0 auto;
-    border-radius: 50%;
-    margin-right: 20px;
     outline: 3px solid #000
 }
 

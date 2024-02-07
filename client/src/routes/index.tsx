@@ -14,7 +14,6 @@ import ChangePassword from '../components/Profile/ChangePassword/ChangePassword.
 // - Make Friends logic work // Need to make sure proper buttons are visible 
 // }
 // TODO: Finish Home Page {
-// - Allow post deleting and editing for authors // Need to figure out how to edit post in overlay as well
 // - Make photos into a carousell if more than one // Need to fix slow image loading problem due to firebase storage not being a CDN
 // }
 // TODO: Add Error page

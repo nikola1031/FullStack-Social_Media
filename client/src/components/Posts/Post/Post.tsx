@@ -3,36 +3,36 @@ import { PostData } from '../../../types/data';
 import { seeMoreOfPost } from '../../../utils/seeMoreTrimmer';
 import './Post.css';
 import PathConstants from '../../../routes/PathConstants';
+import Avatar from '../../UI/Avatar/Avatar';
 
 interface PostProps {
-    showOverlayOnCLick: (post: PostData) => void;
+    showOverlayOnCLick: (postId: string) => void;
     deletePost: (postId: string, e: React.MouseEvent<HTMLButtonElement>) => void;
     likePost: (postId: string, e: React.MouseEvent<HTMLButtonElement>) => void;
-    post: PostData;
+    post: PostData | undefined;
     loggedInUserId: string;
     profileId: string;
 }
 
 export default function Post({ showOverlayOnCLick, deletePost, likePost, post, profileId, loggedInUserId }: PostProps) {
+
+    if (!post) {
+        throw new Error('Post not found');
+    }
+    
     return (
-        <article className="post-container" onClick={() => showOverlayOnCLick(post)}>
+        <article className="post-container" onClick={() => showOverlayOnCLick(post._id)}>
             <div className="post-wrapper">
                 <img
                     className="post-image"
                     src={post.imageUrls[0] || 'https://picsum.photos/200/300'}
-                    alt="random"
+                    alt="post image"
                 />
                 <p className="post-content">{seeMoreOfPost(post.text, 120)}</p>
             </div>
             <p className="post-owner">
                 Post by{' '}
-                <Link to={`/${PathConstants.Profile}/${post.author._id}`} className="post-owner-link">
-                    <img
-                        className="user-avatar"
-                        src={post.author.profilePicture || 'https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745'}
-                        alt="avatar"
-                    />
-                </Link>
+                <Avatar image={post.author.profilePicture} withLinkTo={post.author._id} />
                 <Link to={`/${PathConstants.Profile}/${post.author._id}`} className="post-owner-link">
                     <span className="post-owner-username">
                         {post.author.username}
