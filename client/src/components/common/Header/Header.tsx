@@ -40,7 +40,7 @@ export default function Header() {
                                 <Link to={PathConstants.Home}>Home</Link>
                             </li>
                             <li>
-                                <Link to={`${PathConstants.Profile}/${user._id}`}>Profile</Link>
+                                <Link to={`${PathConstants.Profile}/${user._id}/posts`}>Profile</Link>
                             </li>
                             <li>
                                 <button className='logout-btn' onClick={handleLogout}>Logout</button>

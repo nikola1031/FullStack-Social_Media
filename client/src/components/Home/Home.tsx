@@ -4,9 +4,10 @@ import './Home.css';
 import PostForm from './PostForm/PostForm';
 import * as dataApi from '../../api/data';
 import { PostData } from '../../types/data';
-import { useAuthContext } from '../../hooks/useAuthContext';
+import { useTitle } from '../../hooks/useTitle';
 
 export default function Home() {
+    useTitle('Home');
     const [posts, setPosts] = useState<PostData[]>([]);
 
     function fetchPosts() {
@@ -19,11 +20,11 @@ export default function Home() {
 
 
     return (
-        <>
+        <div className="home-wrapper">
             <PostForm fetchPosts={fetchPosts} />
             <section className="posts-container">
-                {posts.map(post => <FullPost key={post._id} post={post} />)}
+                {posts.map(post => <FullPost fetchPosts={fetchPosts} key={post._id} post={post} />)}
             </section>
-        </>
+        </div>
     );
 }

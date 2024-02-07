@@ -55,7 +55,7 @@ export default function Upload({ selectedFiles, setSelectedFiles }: UploadProps)
           <div className="upload-icon">&#8679;</div>
         )}
         <p className="file-text">
-          {selectedFiles.length > 0 ? 'Change Photos' : 'Choose Photos'}
+          {!selectedFiles.length && 'Upload Photos'}
         </p>
       </label>
     </div>

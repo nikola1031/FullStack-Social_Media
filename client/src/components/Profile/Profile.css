@@ -1,3 +1,16 @@
+.my-profile {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.my-profile-container {
+    width: 80vw;
+    max-width: 750px;
+}
+
 .my-profile-header-wrapper {
     margin-bottom: 20px;
 }
@@ -10,7 +23,7 @@
 
 .my-profile-username {
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.8rem;
 }
 
 .my-profile-avatar {

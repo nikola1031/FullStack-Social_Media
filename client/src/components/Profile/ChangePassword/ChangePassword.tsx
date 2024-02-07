@@ -1,8 +1,11 @@
 import { useState } from 'react';
 import './ChangePassword.css';
 import * as dataApi from '../../../api/data';
+import { useTitle } from '../../../hooks/useTitle';
 
 export default function ChangePassword() {
+    useTitle('Change Password');
+
     const [password, setPassword] = useState<string>('');
     const [newPassword, setNewPassword] = useState<string>('');
     const [confirmPass, setConfirmPass] = useState<string>('');

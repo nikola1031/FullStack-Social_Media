@@ -5,6 +5,8 @@ import PathConstants from '../../routes/PathConstants';
 import { useAuthContext } from '../../hooks/useAuthContext';
 import * as dataApi from '../../api/data';
 import { UserData } from '../../types/data';
+import { useTitle } from '../../hooks/useTitle';
+import { Link } from 'react-router-dom';
 
 enum FriendStatus {
     Friend = 'friend',
@@ -13,13 +15,16 @@ enum FriendStatus {
 }
 
 export default function Profile() {
-
     const [dropDownActive, setDropDownActive] = useState(false);
     const { id } = useParams();
     const { user: loggedInUser } = useAuthContext();
-    const isProfileOwner = loggedInUser?._id === id;
     const [user, setUser] = useState<UserData>();
     const [friendStatus, setFriendStatus] = useState('');
+    
+    useTitle(`Profile - ${user?.username}`);
+
+    const isProfileOwner = loggedInUser?._id === id;
+    const areAlreadyFiends = user?.friends.some(friend => friend._id === loggedInUser?._id);
     
     useEffect(() => {
         fetchUser();
@@ -33,8 +38,9 @@ export default function Profile() {
         });
     }
 
-    function friendRequest() {
-        dataApi.toggleFriendRequest(id!).then(() => setFriendStatus((prevStatus) => {
+    function friendRequest(id: string) {
+        dataApi.toggleFriendRequest(id!).then((res) => setFriendStatus((prevStatus) => {
+            setUser((prevUser) => ({...prevUser!, friendRequests: res.friendRequests, friends: res.friends}))
             return prevStatus === FriendStatus.Pending ? FriendStatus.None : FriendStatus.Pending;
         }));
     }
@@ -79,12 +85,14 @@ export default function Profile() {
                             alt="profile picture"
                         />
                         <div className='my-profile-username-wrapper'>
-                            {!isProfileOwner && <button onClick={friendRequest} className='friend-button'>
+                            {(!isProfileOwner && !areAlreadyFiends) && <button onClick={() => friendRequest(user!._id)} className='friend-button'>
                                 <i className="fa-solid fa-user-group"></i>
                                 {buttonText()}
                             </button>}
                             <h2 className="my-profile-username">{user?.username}</h2>
-                            <p className="my-profile-friends-count">{user?.friends.length} Friends</p>
+                            <Link to={PathConstants.Friends}>
+                                <p className="my-profile-friends-count">{user?.friends.length} Friends</p>
+                            </Link>
                         </div>
                     </header>
                     <p className="my-profile-bio">
@@ -116,9 +124,9 @@ export default function Profile() {
                         }
                     </ul>
                 </nav>
-            </section>
             <hr className="divider" />
-            <Outlet context={{setUser, toggleFriendship, isProfileOwner, user}}/>
+            </section>
+            <Outlet context={{setUser, toggleFriendship, friendRequest, isProfileOwner, user}}/>
         </div>
     );
 }

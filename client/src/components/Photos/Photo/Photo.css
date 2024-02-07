@@ -3,6 +3,7 @@
     overflow: hidden;
     cursor: pointer;
     min-width: fit-content;
+    max-width: 750px;
 }
 
 .photo-img {

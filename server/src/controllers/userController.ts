@@ -88,24 +88,12 @@ export const toggleSendFriendRequest = async (req: Request, res: Response) => {
     const { userId: otherUserId } = req.params;
 
     try {
-        await userService.toggleFriendshipRequest(userId, otherUserId);
-        res.status(200).json({message: 'Friend request successful'});
+        const result = await userService.toggleFriendshipRequest(userId, otherUserId);
+        res.status(200).json(result);
     } catch (error: any) {
         res.status(400).json({message: error.message})
     }
 }
-
-// export const denyFriendRequest = async (req: Request, res: Response) => {
-//     const userId = req.user!._id;
-//     const otherUserId = req.params.userId;
-
-//     try {
-//         await userService.removeFriendshipRequest(userId, otherUserId);
-//         res.status(200).json({message: 'Friend request removed successfully'});
-//     } catch (error: any) {
-//         res.status(400).json({message: error.message})
-//     }
-// }
 
 export const toggleAddFriend = async (req: Request, res: Response) => {
     const userId = req.user!._id;

@@ -1,5 +1,6 @@
 .post-container {
-  width: 100%;
+  width: 80vw;
+  max-width: 750px;
   display: flex;
   align-items: center;
   flex-direction: column;

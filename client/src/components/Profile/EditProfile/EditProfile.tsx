@@ -4,15 +4,18 @@ import { useAuthContext } from '../../../hooks/useAuthContext';
 import { useOutletContext } from 'react-router-dom';
 import { ProfileContextType } from '../../../types/data';
 import * as dataApi from '../../../api/data';
+import { useTitle } from '../../../hooks/useTitle';
 
 
 export default function EditProfile() {
+    useTitle('Edit Profile');
+    
     const { user, setUser } = useOutletContext<ProfileContextType>();
     const { user: loggedInUser, saveUser } = useAuthContext();
 
-    const [username, setUsername] = useState<string>(user!.username);
+    const [username, setUsername] = useState<string>(loggedInUser!.username);
     const [email, setEmail] = useState<string>(loggedInUser!.email);
-    const [bio, setBio] = useState<string>(user!.bio);
+    const [bio, setBio] = useState<string>(user?.bio);
     const [password, setPassword] = useState<string>('');
 
     const handleSubmit = (e: React.SyntheticEvent) => {

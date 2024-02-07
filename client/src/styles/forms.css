@@ -12,19 +12,20 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: calc(100vh - 130px);
+    height: calc(100vh - 120px);
+    flex-direction: column;
+
 }
 
 .form-container {
-    flex: 0 1 500px;
+    width: 90vw;
     max-width: 500px;
     display: flex;
     flex-direction: column;
     gap: 20px;
     padding: 20px;
     border-radius: 10px;
-    background-color: #000000;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+
 }
 
 .form-group {
@@ -40,10 +41,10 @@
 
 .form-group input, .form-group textarea {
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid #2e3b4f;
     border-radius: 5px;
     font-size: 1rem;
-    background-color: #3a3b3c;
+    background-color: #19222d;
     outline: none;
     resize: vertical;
     color: #fff
@@ -62,4 +63,9 @@
 
 .submit-btn:hover {
     background-color: #0056b3;
+}
+
+.form-link {
+    font-weight: bold;
+    color: #007bff;
 }

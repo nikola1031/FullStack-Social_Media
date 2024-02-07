@@ -3,8 +3,11 @@ import '../../styles/forms.css';
 import * as authApi from '../../api/auth';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../hooks/useAuthContext';
+import { useTitle } from '../../hooks/useTitle';
+import { Link } from 'react-router-dom';
 
 export default function Register() {
+    useTitle('Register');
    
     const [formValues, setFormValues] = useState({
         username: '',
@@ -47,13 +50,14 @@ export default function Register() {
     return (
         <div className="form-wrapper">
             <form onSubmit={handleSubmit} className="form-container">
-                <h2 className="form-title">Register</h2>
+                <h2 className="form-title">Register New Account</h2>
                 <div className="form-group">
                     <label htmlFor="username">Username</label>
                     <input
                         type="text"
                         id="username"
                         name="username"
+                        placeholder="Username"
                         value={formValues.username}
                         onChange={changeHandler}
                         required
@@ -65,6 +69,7 @@ export default function Register() {
                         type="email"
                         id="email"
                         name="email"
+                        placeholder="Email"
                         value={formValues.email}
                         onChange={changeHandler}
                         required
@@ -76,6 +81,7 @@ export default function Register() {
                         type="password"
                         id="password"
                         name="password"
+                        placeholder="Password"
                         value={formValues.password}
                         onChange={changeHandler}
                         required
@@ -87,6 +93,7 @@ export default function Register() {
                         type="password"
                         id="confirmPass"
                         name="confirmPass"
+                        placeholder="Confirm Password"
                         value={formValues.confirmPass}
                         onChange={changeHandler}
                         required
@@ -100,7 +107,7 @@ export default function Register() {
                             id="male"
                             name="gender"
                             value="male"
-                            checked={formValues.gender === 'male'}
+                            checked={formValues.gender === "male"}
                             onChange={changeHandler}
                             required
                         />
@@ -112,7 +119,7 @@ export default function Register() {
                             id="female"
                             name="gender"
                             value="female"
-                            checked={formValues.gender === 'female'}
+                            checked={formValues.gender === "female"}
                             onChange={changeHandler}
                             required
                         />
@@ -123,6 +130,7 @@ export default function Register() {
                     Register
                 </button>
             </form>
+            <p>Already have an account? <Link to={"/login"} className="form-link">Login</Link></p>
         </div>
     );
 }

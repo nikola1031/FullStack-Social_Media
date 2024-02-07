@@ -11,20 +11,11 @@ import EditProfile from '../components/Profile/EditProfile/EditProfile.tsx';
 import ChangePassword from '../components/Profile/ChangePassword/ChangePassword.tsx';
 
 // TODO: Finish Profile Page {
-// - Make Edit Profile and Change Password work
-// - Make Posts and Liked Posts show correct posts and an overlay of post with comments when post is clicked // kinda done
-// - Make Remove from Liked button work
-// - Make Photos show overlay of enlarged photo when photo is clicked // kinda done
-// - Allow deleting of photos
-// - Make Friends go to user's profile page when friend is clicked
-// - Make Friends count point to the friends route
-// - Make Remove Friends button work
+// - Make Friends logic work // Need to make sure proper buttons are visible 
 // }
 // TODO: Finish Home Page {
-// - Allow post deleting and editing for authors
-// - Make username and avatar point to user's profile page
-// - Make clicking on comment username and avatar point to user's profile page
-// - Make comment deleting and editing work and be visible for authors - author part not done
+// - Allow post deleting and editing for authors // Need to figure out how to edit post in overlay as well
+// - Make photos into a carousell if more than one // Need to fix slow image loading problem due to firebase storage not being a CDN
 // }
 // TODO: Add Error page
 

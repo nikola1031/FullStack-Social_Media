@@ -4,6 +4,8 @@ import * as dataApi from '../../../../../api/data';
 import "./Comment.css";
 import { useState } from "react";
 import { useAuthContext } from "../../../../../hooks/useAuthContext";
+import { Link } from "react-router-dom";
+import PathConstants from "../../../../../routes/PathConstants";
 
 interface CommentProps {
     comment: CommentData;
@@ -55,20 +57,22 @@ export default function Comment({comment, postId, fetchComments}: CommentProps) 
                 <img className="user-avatar" src={comment.author.profilePicture} alt="avatar" />
                 <div className="comment-info-container">
                     <div className="comment-info">
-                        <p className="comment-username">{comment.author.username}</p>
+                        <Link to={`/${PathConstants.Profile}/${comment.author._id}`}>
+                            <p className="comment-username">{comment.author.username}</p>
+                        </Link>
                         { isEditing 
                             ? 
                                 (
                                 <form className="comment-edit-form" onSubmit={handleEditComment}>
                                     <textarea className="comment-edit-field" value={updatedComment} onChange={handleChange} placeholder="Write a comment..." />
-                                    <button className="comment-edit-submit-btn" type="submit">Submit</button>
+                                    <button disabled={!updatedComment} className="comment-edit-submit-btn" type="submit">Submit</button>
                                 </form>    
                                 )       
                             : 
                                 (
                                 <div className="comment-content">
                                     <p>{comment.text}</p>
-                                    <div className="comment-likes">{likeCount || 0}<i className="fa-solid fa-heart"></i></div>
+                                    <div className="comment-likes">{likeCount}<i className="fa-solid fa-heart"></i></div>
                                 </div>
                                 )
                         }
@@ -76,8 +80,12 @@ export default function Comment({comment, postId, fetchComments}: CommentProps) 
                     <div className="comment-actions">
                         <time className="comment-time">{formatRelativeTime(comment.createdAt)}</time>
                         <button onClick={handleLikeComment} className={`comment-action comment-like${isLiked ? ' active' : ''}`}>Like</button>
-                        <button onClick={handleDeleteComment} className="comment-action comment-delete">Delete</button>
-                        <button onClick={handleShowEdit} className="comment-action comment-edit">{isEditing ? 'Cancel' : 'Edit'}</button>
+                        {user?._id === comment.author._id &&
+                            <>
+                                <button onClick={handleDeleteComment} className="comment-action comment-delete">Delete</button>
+                                <button onClick={handleShowEdit} className="comment-action comment-edit">{isEditing ? 'Cancel' : 'Edit'}</button>
+                            </>
+                        }
                     </div>
                 </div>
             </div>

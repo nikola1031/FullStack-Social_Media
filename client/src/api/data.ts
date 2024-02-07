@@ -6,6 +6,7 @@ import { Image, Passwords, UserDataDTO } from '../types/data';
 export const getPosts: () => Promise<any[]> = async () => requestApi.get(postsEndpoints.base(), null);
 export const uploadPost: (post: any) => Promise<any> = async (post) => requestApi.post(postsEndpoints.base(), post);
 export const getPostById: (postId: string) => Promise<any> = async (postId) => requestApi.get(postsEndpoints.postById(postId));
+export const updatePost: (postId: string, text: any) => Promise<any> = async (postId, text) => requestApi.put(postsEndpoints.postById(postId), text);
 export const deletePostById: (postId: string) => Promise<any> = async (postId) => requestApi.del(postsEndpoints.postById(postId), null);
 export const getLikedPostsByUser: (userId: string) => Promise<any[]> = async (userId) => requestApi.get(postsEndpoints.likedPosts(userId), null);
 export const getPostsByUser: (userId: string) => Promise<any[]> = async (userId) => requestApi.get(postsEndpoints.postByUser(userId));
@@ -26,7 +27,7 @@ export const deleteProfilePhoto: (url: string) => Promise<{_id: string, photos: 
 export const updatePassword: (data: Passwords) => Promise<void> = async (data) => requestApi.put(userEndpoints.updatePassword(), data);
 export const updateProfilePicture: (url: string) => Promise<void> = async (url) => requestApi.put(userEndpoints.updateProfilePicture(), {profilePicture: url});
 export const updateProfile: (userData: UserDataDTO) => Promise<void> = async (userData) => requestApi.put(userEndpoints.base(), userData);
-export const toggleFriendRequest: (userId: string) => Promise<void> = async (userId) => requestApi.post(userEndpoints.friendRequest(userId), null);
+export const toggleFriendRequest: (userId: string) => Promise<any> = async (userId) => requestApi.post(userEndpoints.friendRequest(userId), null);
 // export const denyFriendRequest: (userId: string) => Promise<void> = async (userId) => requestApi.post(userEndpoints.denyFriendRequest(userId), null);
 export const toggleFriend: (userId: string) => Promise<void> = async (userId) => requestApi.post(userEndpoints.friend(userId), null);
 export const followUser: (userId: string) => Promise<void> = async (userId) => requestApi.post(userEndpoints.followUser(userId), null);

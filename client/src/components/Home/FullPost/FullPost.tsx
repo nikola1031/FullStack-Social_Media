@@ -1,25 +1,58 @@
+import './FullPost.css';
 import { useState } from 'react';
 import { PostData } from '../../../types/data';
 import { formatRelativeTime } from '../../../utils/timeAgoFormatter';
 import CommentSection from './CommentSection/CommentSection';
 import * as dataApi from '../../../api/data';
-import './FullPost.css';
 import { useAuthContext } from '../../../hooks/useAuthContext';
 import { Link } from 'react-router-dom';
+import PathConstants from '../../../routes/PathConstants';
+import Carousell from '../../shared/Carousell/Carousell';
+import Overlay from '../../shared/Overlay/Overlay';
 
 interface FullPostProps {
     post: PostData;
+    fetchPosts: () => void;
 }
 
-export default function FullPost({ post }: FullPostProps) {
+export default function FullPost({ post, fetchPosts }: FullPostProps) {
 
     const { user } = useAuthContext();
-    const [showComments, setShowComments] = useState<boolean>(false);
     const [isLiked, setIsLiked] = useState<boolean>(post.likes.userLikes.includes(user!._id));
+    
     const [likeCount, setLikeCount] = useState<number>(post.likes.userLikes.length);
     const [commentCount, setCommentCount] = useState<number>(post.commentCount);
-    function showCommentsHandler() {
-        setShowComments(!showComments);
+    
+    const [showComments, setShowComments] = useState<boolean>(false);
+    const [showDropdown, setShowDropdown] = useState<boolean>(false);
+    const [showEdit, setShowEdit] = useState<boolean>(false);
+    const [showOverlay, setShowOverlay] = useState<boolean>(false);
+    
+    const [updatedText, setUpdatedText] = useState<string>(post.text);
+
+    const isAuthor = user?._id === post.author._id;
+
+    function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+        setUpdatedText(e.target.value);
+    }
+
+    function handleShowEdit() {
+        setShowEdit(!showEdit);
+        setShowDropdown(false);
+        setUpdatedText(post.text);
+    }
+    
+    function handleCancleEdit() {
+        setShowEdit(false);
+        setUpdatedText(post.text);
+    }
+
+    function handleEditPost(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        dataApi.updatePost(post._id, {text: updatedText}).then(() => {
+            fetchPosts();
+            setShowEdit(false);
+        });
     }
 
     function handleLikePost() {
@@ -29,43 +62,83 @@ export default function FullPost({ post }: FullPostProps) {
         });
     }
 
+    function handleDeletePost() {
+        dataApi.deletePostById(post._id).then(() => {
+            fetchPosts();
+        });
+    }
+
+   
+
     return (
         
         <article className="full-post">
             <section className='full-post-info-container'>
-                <div className="user-info">
-                    <Link to={`/profile/${post.author._id}`}>
-                    <img
-                        className="user-avatar"
-                        src={post.author.profilePicture}
-                        alt="avatar"
-                        />
-                    </Link>
-                    <div className="full-post-info">
-                    <Link to={`/profile/${post.author._id}`}>
-                        <p className="full-post-username">{post.author.username}</p>
-                    </Link>
-                        <time className="full-post-time">
-                            {formatRelativeTime(post.createdAt)}
-                        </time>
+                <div className='full-post-header'>
+                    <div className="user-info">
+                        <Link to={`/${PathConstants.Profile}/${post.author._id}`}>
+                        <img
+                            className="user-avatar"
+                            src={post.author.profilePicture}
+                            alt="avatar"
+                            />
+                        </Link>
+                        <div className="full-post-info">
+                        <Link to={`/${PathConstants.Profile}/${post.author._id}`}>
+                            <p className="full-post-username">{post.author.username}</p>
+                        </Link>
+                            <time className="full-post-time">
+                                {formatRelativeTime(post.createdAt)}
+                            </time>
+                        </div>
                     </div>
+                    { isAuthor &&
+                            <div className='full-post-dropdown-container'>
+                                <button className='full-post-dropdown-button' onClick={() => setShowDropdown(!showDropdown)} >
+                                    <i className="fa-solid fa-ellipsis" />
+                                </button>
+                                {showDropdown && (
+                                    <div className='full-post-dropdown'>
+                                        <button onClick={handleShowEdit} className='full-post-dropdown-item'><i className="fa-solid fa-eraser" />Edit</button>
+                                        <button onClick={handleDeletePost} className='full-post-dropdown-item'><i className="fa-solid fa-trash" />Delete</button>
+                                    </div>
+                                )}
+                            </div>
+                    }
                 </div>
                 <div className="full-post-content">
-                    <p className='full-post-text'>
-                        {post.text}
-                    </p>
-                    {post.imageUrls.map((imageUrl) => (
-                        <img className='full-post-image' key={imageUrl} src={imageUrl} alt="post image" />
-                        ))}
+                    { !showEdit ?
+                        <p className='full-post-text'>
+                            {post.text}
+                        </p>
+                        : 
+                        <form className="full-post-edit-form" onSubmit={handleEditPost}>
+                            <textarea className="full-post-edit-field" value={updatedText} onChange={handleChange} />
+                            <div className="full-post-edit-buttons">
+                                <button disabled={!updatedText} className="full-post-edit-btn" type="submit">Confirm</button>
+                                <button onClick={handleCancleEdit} className="full-post-edit-btn" type="button">Cancel</button>
+                            </div>
+                        </form>
+                    }
+                    {
+                        post.imageUrls.length > 0 &&
+                        ( post.imageUrls.length === 1 
+                        ?
+                            <img className='full-post-image' src={post.imageUrls[0]} alt="post image" />
+                        :   
+                            <Carousell images={post.imageUrls}></Carousell>
+                        )
+                    }
                 </div>
+                
                 <div className="full-post-stats">
                     <p>{likeCount} Likes</p>
-                    <p onClick={showCommentsHandler} className='comment-count'>{commentCount} Comments</p>
+                    <p onClick={() => setShowComments(!showComments)} className='comment-count'>{commentCount} Comments</p>
                 </div>
                 <hr className='divider' />
                 <div className="full-post-buttons">
                     <button onClick={handleLikePost} className={`like-button${isLiked ? ' active' : ''}`}>Like</button>
-                    <button onClick={showCommentsHandler}>Comments</button>
+                    <button onClick={() => setShowComments(!showComments)}>Comments</button>
                 </div>       
             </section>
             {showComments && <CommentSection postId={post._id} setCommentCount={setCommentCount}/>}

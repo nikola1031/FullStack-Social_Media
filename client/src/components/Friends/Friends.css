@@ -1,3 +1,8 @@
+.friends-wrapper {
+    width: 80vw;
+    max-width: 750px;
+}
+
 .friend-requests-section {
     margin-bottom: 20px;
 }
@@ -11,9 +16,9 @@
 
 .friends-heading {
     margin: 0;
-    width: 100%;
     text-align: center;
     font-size: 2rem;
     font-weight: bold;
-    background-color: black;
+    border-radius: 10px;
+    background-color: rgb(67, 67, 67);
 }

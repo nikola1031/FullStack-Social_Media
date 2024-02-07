@@ -1,3 +1,8 @@
+.photos-wrapper {
+    width: 90vw;
+    max-width: 750px;
+}
+
 .photo-form {
     display: flex;
     flex-direction: column;
@@ -6,6 +11,11 @@
 }
 
 .photos {
+   display: flex;
+   justify-content: center;
+}
+
+.photos-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     margin-top: 2rem;

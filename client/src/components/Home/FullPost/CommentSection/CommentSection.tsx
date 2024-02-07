@@ -36,8 +36,6 @@ export default function CommentSection({postId, setCommentCount}: CommentSection
               )
             })}
         </div>
-        <div className="comment-form">
-        </div>
     </section>
   );
 }

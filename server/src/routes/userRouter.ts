@@ -12,7 +12,6 @@ router.put('/profile/password', onlyUsers(), userController.updatePassword);
 router.get('/profile/:userId/photos', userController.getUserPhotos);
 router.get('/profile/:userId', onlyUsers(), userController.getProfile);
 router.post('/friend/:userId/request', onlyUsers(), userController.toggleSendFriendRequest);
-// router.post('/friend/:userId/request/deny', onlyUsers(), userController.denyFriendRequest);
 router.post('/friend/:userId', onlyUsers(), userController.toggleAddFriend);
 router.post('/follow/:userId', onlyUsers(), userController.toggleFollow);
 

@@ -53,7 +53,6 @@ export const editProfilePicture = async (profilePicture: string, userId: string)
 }
 
 export const toggleFriendshipRequest = async (userId: string, otherUserId: string) => {
-    let result; 
 
     if (userId === otherUserId) {
         throw new Error('Cannot request friendship with self');
@@ -70,30 +69,22 @@ export const toggleFriendshipRequest = async (userId: string, otherUserId: strin
     }
 
     if (otherUser.friendRequests.includes(userId) || user.friendRequests.includes(otherUserId)) {
-        result = await Promise.all(
+
+        const [_, result] = await Promise.all(
             [
                 User.updateOne({_id: otherUserId}, {$pull: {friendRequests: userId}}),
-                User.updateOne({_id: otherUserId}, {$pull: {friendRequests: userId}})
+                User.findByIdAndUpdate(userId, {$pull: {friendRequests: otherUserId}}, {new: true})
+                .select('friendRequests friends')
+                .populate('friendRequests friends', 'username profilePicture')
             ]);
+
+            return result;
     } else {
-        result = await User.updateOne({_id: otherUserId}, {$push: {friendRequests: userId}});
+        return await User.findByIdAndUpdate(otherUserId, {$push: {friendRequests: userId}}, {new: true})
+                            .select('friendRequests friends')
+                            .populate('friendRequests friends', 'username profilePicture');
     }
-
-  /*   if (result[0].matchedCount === 0) {
-        throw new Error('User not found');
-    }
-
-    if (result.modifiedCount === 0) {
-        throw new Error('Friend request not added');
-    } */
 }
-
-// export const removeFriendshipRequest = async (userId: string, otherUserId: string) => {
-//     const result = await User.updateOne({_id: userId}, {$pull: {friendRequests: otherUserId}});
-//     if (result.modifiedCount !== 1) {
-//         throw new Error('Remove friendship request operation had no effect. Perform database integrity check')
-//     }
-// }
 
 export const toggleFriendship = async (userId: string, otherUserId: string) => {
     let result;

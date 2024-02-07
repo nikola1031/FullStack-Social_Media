@@ -66,6 +66,7 @@ export type UserDataDTO = {
 export type ProfileContextType = {
     setUser: React.Dispatch<React.SetStateAction<UserData>>
     toggleFriendship: (id: string) => void;
+    friendRequest: (id: string) => void;
     isProfileOwner: boolean;
     user: UserData;
 }

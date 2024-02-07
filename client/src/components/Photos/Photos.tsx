@@ -7,12 +7,16 @@ import * as dataApi from '../../api/data';
 import { useOutletContext } from 'react-router-dom';
 import { Image } from '../../types/data';
 import { ProfileContextType } from '../../types/data';
+import { useTitle } from '../../hooks/useTitle';
+import { useAuthContext } from '../../hooks/useAuthContext';
 
 export default function Photos() {
+    useTitle('Photos')
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const [selectedPhoto, setSelectedPhoto] = useState<Image | null>(null);
     const [showOverlay, setShowOverlay] = useState(false);
     const {setUser, isProfileOwner, user} = useOutletContext<ProfileContextType>();
+    const { saveUser, user: loggedInUser } = useAuthContext();
     
     function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -29,7 +33,10 @@ export default function Photos() {
     function updateProfilePicture() {
         if (!selectedPhoto) return;
         dataApi.updateProfilePicture(selectedPhoto.url).then(() =>{
-            setUser((prev) => ({...prev, profilePicture: selectedPhoto.url}))
+            setUser((prev) => {
+                saveUser({...loggedInUser!, profilePicture: selectedPhoto.url})
+                return {...prev, profilePicture: selectedPhoto.url}
+            });
         });
         
         setSelectedPhoto(null);
@@ -56,34 +63,38 @@ export default function Photos() {
     };
 
     return (
-        <>
+        <div className="photos-wrapper">
             <form onSubmit={handleSubmit} className="photo-form" encType="multipart/form-data">
                 <Upload
                     selectedFiles={selectedFiles}
                     setSelectedFiles={setSelectedFiles}
                 />
-                <button className="photo-upload-button">Confirm Upload</button>
+                { selectedFiles.length > 0 &&
+                    <button className="photo-upload-button">Confirm Upload</button>
+                }
             </form>
             <section className="photos">
-                {user?.photos.map((photo) => (
-                    <Photo photo={photo} key={photo._id} showOverlayOnCLick={handleShowOverlay.bind(null, photo)} />
-                ))}
+                <div className="photos-container">
+                    {user?.photos.map((photo) => (
+                        <Photo photo={photo} key={photo._id} showOverlayOnCLick={handleShowOverlay.bind(null, photo)} />
+                    ))}
 
-                {showOverlay && (
-                    <Overlay
-                        isOpen={showOverlay}
-                        onClose={handleCloseOverlay}
-                    >
-                        <Photo photo={selectedPhoto}/>
-                    {isProfileOwner &&
-                        <>
-                            <button onClick={updateProfilePicture} className="confirm-photo-button">Set as Profile picture</button>
-                            <button onClick={() => deletePhoto(selectedPhoto?.url)} className="delete-photo-button">Delete Photo</button>
-                        </>
-                    }
-                    </Overlay>
-                )}
+                    {showOverlay && (
+                        <Overlay
+                            isOpen={showOverlay}
+                            onClose={handleCloseOverlay}
+                        >
+                            <Photo photo={selectedPhoto}/>
+                        {isProfileOwner &&
+                            <>
+                                <button onClick={updateProfilePicture} className="confirm-photo-button">Set as Profile picture</button>
+                                <button onClick={() => deletePhoto(selectedPhoto?.url)} className="delete-photo-button">Delete Photo</button>
+                            </>
+                        }
+                        </Overlay>
+                    )}
+                </div>
             </section>
-        </>
+        </div>
     );
 }

@@ -3,8 +3,12 @@ import '../../styles/forms.css';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../hooks/useAuthContext';
 import * as authApi from '../../api/auth';
+import { useTitle } from '../../hooks/useTitle';
+import { Link } from 'react-router-dom';
 
 export default function Login() {
+    useTitle('Login');
+
     const [formValues, setFormValues] = useState({
         email: '',
         password: '',
@@ -34,19 +38,22 @@ export default function Login() {
                     navigate('/', { replace: true });
                 }
             })
-            .catch(console.error);
+            .catch((err) => {
+                setFormErrors({email: '', password: ''})
+            });
     };
 
     return (
         <div className="form-wrapper">
             <form onSubmit={handleSubmit} className="form-container">
-                <h2 className="form-title">Login</h2>
+                <h2 className="form-title">Log in to your account</h2>
                 <div className="form-group">
                     <label htmlFor="email">Email</label>
                     <input
                         type="text"
                         id="email"
                         name="email"
+                        placeholder="Email"
                         value={formValues.email}
                         onChange={changeHandler}
                         required
@@ -58,6 +65,7 @@ export default function Login() {
                         type="password"
                         id="password"
                         name="password"
+                        placeholder="Password"
                         value={formValues.password}
                         onChange={changeHandler}
                         required
@@ -67,6 +75,7 @@ export default function Login() {
                     Login
                 </button>
             </form>
+            <p>Don't have an account? <Link className="form-link" to={'/register'}>Register</Link></p>
         </div>
     );
 }
