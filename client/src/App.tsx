@@ -1,8 +1,12 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Layout from './components/Layout';
 import routes from './routes';
+import { useTitle } from './hooks/useTitle';
 
 function App() {
+
+    useTitle('Gather Grid');
+
     const router = createBrowserRouter([
         {
             element: <Layout />,

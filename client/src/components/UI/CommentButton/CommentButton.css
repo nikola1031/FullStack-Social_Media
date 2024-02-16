@@ -5,7 +5,8 @@
     color: inherit;
     border: none;
     cursor: pointer;
-    padding-left: 10px;
+    padding: 0;
+    padding-right: 10px;
 }
 
 .comment-like.active {

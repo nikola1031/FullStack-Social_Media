@@ -8,12 +8,12 @@ export default function Friends() {
     useTitle('Friends');
     const { user, isProfileOwner, toggleFriendship, friendRequest } = useOutletContext<ProfileContextType>();
     return (
-        <div className="friends-wrapper"> 
-            { (isProfileOwner && user.friendRequests.length > 0) &&
+        <div className="friends-wrapper">
+            { (isProfileOwner && user.friendRequests.received.length > 0) &&
                 <section className="friend-requests-section">
                     <h2 className="friends-heading">Friend Requests</h2>
                     <div className="friends-container">
-                        {user?.friendRequests.map((currentUser) => {
+                        {user?.friendRequests.received.map((currentUser) => {
                             return <FriendProfileCard key={currentUser._id} isProfileOwner={isProfileOwner} toggleFriendship={toggleFriendship} denyRequest={friendRequest} user={currentUser} request={true} />
                         })}
                     </div>

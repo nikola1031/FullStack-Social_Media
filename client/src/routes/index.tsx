@@ -11,7 +11,7 @@ import EditProfile from '../components/Profile/EditProfile/EditProfile.tsx';
 import ChangePassword from '../components/Profile/ChangePassword/ChangePassword.tsx';
 
 // TODO: Finish Profile Page {
-// - Make Friends logic work // Need to make sure proper buttons are visible 
+// 
 // }
 // TODO: Finish Home Page {
 // - Make photos into a carousell if more than one // Need to fix slow image loading problem due to firebase storage not being a CDN

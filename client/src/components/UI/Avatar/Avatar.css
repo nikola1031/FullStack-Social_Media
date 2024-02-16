@@ -1,22 +1,23 @@
 .user-avatar {
-    width: 3rem;
-    height: 3rem;
     border-radius: 100%;
     margin-right: 0.5rem;
     object-fit: cover;
 }
 
-.large {
-    width: 10rem;
-    height: 10rem;
+.user-avatar.small {
+    width: 3rem;
+    height: 3rem;
+}
+
+.user-avatar.medium {
+    width: 4rem;
+    height: 4rem;
+}
+
+.user-avatar.large {
+    width: 6rem;
+    height: 6rem;
     outline: 3px solid #000;
     margin-right: 1.5rem;
     margin-top: 1rem;
-}
-
-@media screen and (max-width: 768px) {
-    .user-avatar {
-        width: 5rem;
-        height: 5rem;
-    }
 }

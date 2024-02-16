@@ -9,6 +9,7 @@
     font-size: 0.9rem;
     color: #fff;
     background-color: #3a3b3c;
+    min-width: 200px;
     width: fit-content;
     border-radius: 8px;
     padding: 8px;

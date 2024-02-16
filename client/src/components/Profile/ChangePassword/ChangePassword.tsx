@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import '../../../styles/forms.css';
 import './ChangePassword.css';
 import * as dataApi from '../../../api/data';
 import { useTitle } from '../../../hooks/useTitle';
@@ -20,8 +21,9 @@ export default function ChangePassword() {
             <form onSubmit={handleSubmit} className="form-container">
                 <h2 className="form-title">Update Password</h2>
                 <div className="form-group">
-                    <label htmlFor="password">Old Password</label>
+                    <label className='form-label' htmlFor="password">Old Password</label>
                     <input
+                        className='form-input'
                         type="password"
                         id="password"
                         name="password"
@@ -31,8 +33,9 @@ export default function ChangePassword() {
                     />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="newPassword">New Password</label>
+                    <label className='form-label' htmlFor="newPassword">New Password</label>
                     <input
+                        className='form-input'
                         type="password"
                         id="newPassword"
                         name="newPassword"
@@ -42,8 +45,9 @@ export default function ChangePassword() {
                     />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="confirmPass">Confirm Password</label>
+                    <label className='form-label' htmlFor="confirmPass">Confirm Password</label>
                     <input
+                        className='form-input'
                         type="password"
                         id="confirmPass"
                         name="confirmPass"

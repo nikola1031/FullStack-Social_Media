@@ -52,98 +52,105 @@ export const editProfilePicture = async (profilePicture: string, userId: string)
     return updatedUser;
 }
 
-export const toggleFriendshipRequest = async (userId: string, otherUserId: string) => {
+export const toggleFriendshipRequest = async (loggedInUserId: string, otherUserId: string) => {
 
-    if (userId === otherUserId) {
+    if (loggedInUserId === otherUserId) {
         throw new Error('Cannot request friendship with self');
     }
 
-    const [user, otherUser] = await Promise.all([User.findById(userId), User.findById(otherUserId)])
+    const [loggedInUser, otherUser] = await Promise.all([User.findById(loggedInUserId), User.findById(otherUserId)])
 
-    if (!user || !otherUser) {
+    if (!loggedInUser || !otherUser) {
         throw new Error('User not found');
     }
 
-    if (user.friends.includes(otherUserId)){
+    if (loggedInUser.friends.includes(otherUserId)){
         throw new Error('Users are already friends');
     }
 
-    if (otherUser.friendRequests.includes(userId) || user.friendRequests.includes(otherUserId)) {
-
+    if (loggedInUser.friendRequests.sent.includes(otherUserId) || loggedInUser.friendRequests.received.includes(otherUserId)) {
+         
         const [_, result] = await Promise.all(
             [
-                User.updateOne({_id: otherUserId}, {$pull: {friendRequests: userId}}),
-                User.findByIdAndUpdate(userId, {$pull: {friendRequests: otherUserId}}, {new: true})
-                .select('friendRequests friends')
-                .populate('friendRequests friends', 'username profilePicture')
+                User.updateOne({_id: otherUserId}, {$pull: {'friendRequests.received': loggedInUserId,'friendRequests.sent': loggedInUserId }}),
+                User.findByIdAndUpdate(loggedInUserId, {$pull: {'friendRequests.received': otherUserId,'friendRequests.sent': otherUserId }}, {new: true})
+                    .select('friendRequests.received friendRequests.sent friends')
+                    .populate('friendRequests.received friends', 'username profilePicture')
             ]);
 
             return result;
     } else {
-        return await User.findByIdAndUpdate(otherUserId, {$push: {friendRequests: userId}}, {new: true})
-                            .select('friendRequests friends')
-                            .populate('friendRequests friends', 'username profilePicture');
+        const [_, result] = await Promise.all(
+                [
+                    User.updateOne({_id: otherUserId}, {$push: {'friendRequests.received': loggedInUserId}}),
+                    User.findByIdAndUpdate(loggedInUserId, {$push: {'friendRequests.sent': otherUserId}}, {new: true})
+                        .select('friendRequests.received friendRequests.sent friends')
+                        .populate('friendRequests.received friends', 'username profilePicture')
+                ]
+            );
+
+            return result;
     }
 }
 
-export const toggleFriendship = async (userId: string, otherUserId: string) => {
-    let result;
+export const toggleFriendship = async (loggedInUserId: string, otherUserId: string) => {
     
-    if (userId === otherUserId) {
-        throw new Error('Cannot befriend self');
+    if (loggedInUserId === otherUserId) {
+        throw new Error('Can\'t befriend self');
     }
 
-    const user = await User.findById(userId);
+    const loggedInUser = await User.findById(loggedInUserId);
 
-    if (!user) {
+    if (!loggedInUser) {
         throw new Error('User not found');
     }
 
-    if (user.friends.includes(otherUserId)){
-        result = await Promise.all([
-            User.updateOne({_id: userId}, {$pull: {friends: otherUserId}}),
-            User.updateOne({_id: otherUserId}, {$pull: {friends: userId}}),
+    if (loggedInUser.friends.includes(otherUserId)){
+        const [_, result] = await Promise.all([
+            User.updateOne({_id: otherUserId}, {$pull: {friends: loggedInUserId}}),
+            User.findByIdAndUpdate(loggedInUserId, {$pull: {friends: otherUserId}}, {new: true})
+                .select('friendRequests.received friendRequests.sent friends')
+                .populate('friendRequests.received friends', 'username profilePicture')
         ]);
-    } else {
-        if (!user.friendRequests.includes(otherUserId)) {
-            throw new Error('Friend request must be sent before accepting');
-        }
-        result = await Promise.all([
-            User.updateOne({_id: userId}, {$push: {friends: otherUserId}, $pull: {friendRequests: otherUserId}}),
-            User.updateOne({_id: otherUserId}, {$push: {friends: userId}}),
-        ]);
-    }
+        return result;
 
-    if (result[0].modifiedCount === 0 || result[1].modifiedCount === 0) {
-        throw new Error('Add/Remove friend operation had no effect. Perform database integrity check');
+    } else if (loggedInUser.friendRequests.received.includes(otherUserId)) {
+        const [_, result] = await Promise.all(
+        [
+            User.updateOne({_id: otherUserId}, {$push: {friends: loggedInUserId}, $pull: {'friendRequests.sent': loggedInUserId}}),
+            User.findByIdAndUpdate(loggedInUserId, {$push: {friends: otherUserId}, $pull: {'friendRequests.received': otherUserId}}, {new: true})
+                .select('friendRequests.received friendRequests.sent friends')
+                .populate('friendRequests.received friends', 'username profilePicture')
+        ]);
+        return result
     }
 }
 
-export const toggleFollowUser = async (userId: string, otherUserId: string) => {
-    if (userId === otherUserId) {
+export const toggleFollowUser = async (loggedInUserId: string, otherUserId: string) => {
+    if (loggedInUserId === otherUserId) {
         throw new Error('Can\'t follow self');
     }
 
-    const users = (await User.find({_id: {$in: [userId, otherUserId]}}));
+    const users = (await User.find({_id: {$in: [loggedInUserId, otherUserId]}}));
 
     if (users.length !== 2 || !users[0] || !users[1]) {
         throw new Error('One or more of requested users not found');
     }
 
-    const user = users.find((user) => user._id!.toString() === userId);
+    const loggedInUser = users.find((user) => user._id!.toString() === loggedInUserId);
     const otherUser = users.find((user) => user._id!.toString() === otherUserId);
 
     let result;
 
-    if (user!.following.includes(userId)) {
+    if (loggedInUser!.following.includes(loggedInUserId)) {
         result = await Promise.all([
-            User.updateOne({_id: userId}, {$pull: {following: otherUserId}}),
-            User.updateOne({_id: otherUserId}, {$pull: {followers: userId}}),
+            User.updateOne({_id: loggedInUserId}, {$pull: {following: otherUserId}}),
+            User.updateOne({_id: otherUserId}, {$pull: {followers: loggedInUserId}}),
         ]);
     } else {
         result = await Promise.all([
-            User.updateOne({_id: userId}, {$push: {following: otherUserId}}),
-            User.updateOne({_id: otherUserId}, {$push: {followers: userId}}),
+            User.updateOne({_id: loggedInUserId}, {$push: {following: otherUserId}}),
+            User.updateOne({_id: otherUserId}, {$push: {followers: loggedInUserId}}),
         ]);
     }
 
@@ -171,13 +178,32 @@ export const deletePhoto = async (url: string, userId: string) => {
     return await User.findByIdAndUpdate(userId, {$pull: {photos: { url }}}, {new: true}).select('photos');
 }
 
-export const fetchProfileData = async (userId: string, loggedInUserId: string) => {
-    const fields = `username bio profilePicture photos gender friendRequests friends following followers`;
+export const fetchProfileData = async (loggedInUserId: string, userId: string ) => {
+    const fields = 'username bio profilePicture photos gender friends following followers';
 
     if (userId === loggedInUserId) {
-        return await User.findById(userId).select(`${fields}`)
-        .populate('friends friendRequests', 'username profilePicture');
+        return await User.findById(userId).select(fields + ' friendRequests')
+        .populate('friends friendRequests.received', 'username profilePicture');
     } else {
-        return await User.findById(userId).select(fields).populate('friends friendRequests', 'username profilePicture');
+        return await User.findById(userId).select(fields).populate('friends', 'username profilePicture');
     }
+}
+
+export const fetchFriendStatus: (id1: string, id2: string) => Promise<string>  = async (loggedInUserId: string, otherUserId: string) => {
+
+    const loggedInUser = await User.findById(loggedInUserId).select('friendRequests friends');
+
+    if (loggedInUser!.friendRequests.received.includes(otherUserId)){
+        return 'received';
+    } 
+
+    if (loggedInUser!.friendRequests.sent.includes(otherUserId)) {
+        return 'sent';
+    }
+    
+    if (loggedInUser!.friends.includes(otherUserId)) {
+        return 'friends';
+    }
+    
+    return 'none';
 }

@@ -22,6 +22,7 @@ const userSchema: Schema = new Schema(
         friendRequests: {
             sent: {type: [Types.ObjectId], ref: 'User', default: []},
             received: {type: [Types.ObjectId], ref: 'User', default: []},
+            default: {},
         },
         friends: { type: [Types.ObjectId], ref: 'User', default: [] },
         followers: { type: [Types.ObjectId], ref: 'User', default: [] },

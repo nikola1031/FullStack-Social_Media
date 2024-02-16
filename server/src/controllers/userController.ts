@@ -4,15 +4,26 @@ import { trimmer } from '../utils/trimmer';
 import { deleteImage } from '../services/firebaseStorageService';
 
 export const getProfile = async (req: Request, res: Response) => {
-    const { userId } = req.params;
     const loggedInUserId = req.user!._id;
+    const { userId } = req.params;
     try {
-        const userData = await userService.fetchProfileData(userId, loggedInUserId);
-        res.status(200).json({user: userData});
+        const userData = await userService.fetchProfileData(loggedInUserId, userId);
+        res.status(200).json(userData);
     } catch (error: any) {
         res.status(400).json({message: error.message});
     }
 };
+
+export const getFriendStatus = async (req: Request, res: Response) => {
+    const loggedInUserId = req.user!._id;
+    const { userId } = req.params;
+    try {
+        const result = await userService.fetchFriendStatus(loggedInUserId, userId);
+        res.status(200).json(result);
+    } catch (error: any) {
+        res.status(400).json({message: error.message});
+    }
+}
 
 export const updateProfile = async (req: Request, res: Response) => {
     const trimmedBody = trimmer(req.body);
@@ -84,35 +95,35 @@ export const getUserPhotos = async (req: Request, res: Response) => {
 }
 
 export const toggleSendFriendRequest = async (req: Request, res: Response) => {
-    const userId = req.user!._id;
-    const { userId: otherUserId } = req.params;
+    const { userId } = req.params;
+    const loggedInUserId = req.user!._id;
 
     try {
-        const result = await userService.toggleFriendshipRequest(userId, otherUserId);
-        res.status(200).json(result);
+        const updatedUser = await userService.toggleFriendshipRequest(loggedInUserId, userId);
+        res.status(200).json(updatedUser);
     } catch (error: any) {
         res.status(400).json({message: error.message})
     }
 }
 
 export const toggleAddFriend = async (req: Request, res: Response) => {
-    const userId = req.user!._id;
-    const otherUserId = req.params.userId;
+    const { userId } = req.params;
+    const loggedInUserId = req.user!._id;
 
     try {
-        await userService.toggleFriendship(userId, otherUserId);
-        res.status(200).json({message: 'Add/Remove friend successful'});
+        const updatedUser = await userService.toggleFriendship(loggedInUserId, userId);
+        res.status(200).json(updatedUser);
     } catch (error: any) {
         res.status(400).json({message: error.message})
     }
 }
 
 export const toggleFollow = async (req: Request, res: Response) => {
-    const userId = req.user!._id;
-    const otherUserId = req.params.userId;
+    const { userId } = req.params;
+    const loggedInUserId = req.user!._id;
     
     try {
-        await userService.toggleFollowUser(userId, otherUserId);
+        await userService.toggleFollowUser(loggedInUserId, userId);
         res.status(200).json({message: 'User followed successfully'});
     } catch (error: any) {
         res.status(400).json({message: error.message});

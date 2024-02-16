@@ -1,7 +1,6 @@
 import './FullPost.css';
 import { useState } from 'react';
 import { PostData } from '../../../types/data';
-import { formatRelativeTime } from '../../../utils/timeAgoFormatter';
 import CommentSection from './CommentSection/CommentSection';
 import * as dataApi from '../../../api/data';
 import { useAuthContext } from '../../../hooks/useAuthContext';
@@ -80,6 +79,7 @@ export default function FullPost({ post, fetchPosts }: FullPostProps) {
     return (
         
         <article className="full-post">
+
             <section className='full-post-info-container'>
                 <div className='full-post-header'>
                     <div className="user-info">

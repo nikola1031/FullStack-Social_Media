@@ -63,7 +63,9 @@ export default function Comment({comment, postId, fetchComments}: CommentProps) 
 
     return (
             <div className="comment">
-                <Avatar image={comment.author.profilePicture} withLinkTo={comment.author._id} />
+                <div>
+                    <Avatar image={comment.author.profilePicture} withLinkTo={comment.author._id} size="small"/>
+                </div>
                 <div className="comment-info-container">
                     <div className="comment-info">
                         <Link to={`/${PathConstants.Profile}/${comment.author._id}`}>
@@ -86,15 +88,17 @@ export default function Comment({comment, postId, fetchComments}: CommentProps) 
                                 )
                         }
                     </div>
-                    <div className="comment-actions">
+                    <div className="comment-actions-container">
                         <Time time={comment.createdAt} />
-                        <CommentActionButton onClickHandler={handleLikeComment} isLiked={isLiked} />
-                        {isAuthor &&
-                            <>
-                                <CommentActionButton onClickHandler={handleDeleteComment} />
-                                <CommentActionButton onClickHandler={handleShowEdit} isEditing={isEditing} />
-                            </>
-                        }
+                        <div className="comment-actions">
+                            <CommentActionButton onClickHandler={handleLikeComment} isLiked={isLiked} />
+                            {isAuthor &&
+                                <>
+                                    <CommentActionButton onClickHandler={handleDeleteComment} />
+                                    <CommentActionButton onClickHandler={handleShowEdit} isEditing={isEditing} />
+                                </>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>

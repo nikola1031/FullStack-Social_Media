@@ -29,9 +29,9 @@
 }
 
 .send-post-input {
-    padding-left: 0.5rem;
-    padding-top: 0.5rem;
-    width: 100%;
+    padding: 1rem;
+    width: 80%;
+    min-height: 80px;
     border-radius: 10px;
     outline: none;
     background-color: #3a3b3c;
@@ -54,4 +54,10 @@
 .send-post-btn:hover {
     background-color: #f0f0f04d;
     transition: background-color 0.2s ease-in-out;
+}
+
+@media screen and (max-width: 750px) {
+    .send-post {
+        border-radius: 0;
+    }
 }

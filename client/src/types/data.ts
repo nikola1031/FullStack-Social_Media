@@ -27,6 +27,11 @@ export type Friend = {
     profilePicture: string;
 }
 
+export type FriendRequests = {
+    received: Friend[]
+    sent: string[]
+}
+
 export type LoggedInUserData = {
     _id: string;
     username: string;
@@ -50,7 +55,7 @@ export type UserData = {
     profilePicture: string;
     photos: Image[];
     gender: 'male' | 'female';
-    friendRequests: Friend[];
+    friendRequests: FriendRequests;
     friends: Friend[];
     following: string[];
     followers: string[];
@@ -76,3 +81,12 @@ export type Passwords = {
     newPassword: string;
     confirmPass: string;
 }
+
+export enum FriendStatusEnum {
+    Friend = 'friends',
+    Sent = 'sent',
+    Received = 'received',
+    None = 'none',
+}
+
+export type FriendStatus = 'friends' | 'sent' | 'received' | 'none';

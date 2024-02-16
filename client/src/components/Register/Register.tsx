@@ -52,8 +52,9 @@ export default function Register() {
             <form onSubmit={handleSubmit} className="form-container">
                 <h2 className="form-title">Register New Account</h2>
                 <div className="form-group">
-                    <label htmlFor="username">Username</label>
+                    <label className='form-label' htmlFor="username">Username</label>
                     <input
+                        className='form-input'
                         type="text"
                         id="username"
                         name="username"
@@ -64,8 +65,9 @@ export default function Register() {
                     />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="email">Email</label>
+                    <label className='form-label' htmlFor="email">Email</label>
                     <input
+                        className='form-input'
                         type="email"
                         id="email"
                         name="email"
@@ -76,8 +78,9 @@ export default function Register() {
                     />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="password">Password</label>
+                    <label className='form-label' htmlFor="password">Password</label>
                     <input
+                        className='form-input'
                         type="password"
                         id="password"
                         name="password"
@@ -88,8 +91,9 @@ export default function Register() {
                     />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="confirmPass">Confirm Password</label>
+                    <label className='form-label' htmlFor="confirmPass">Confirm Password</label>
                     <input
+                        className='form-input'
                         type="password"
                         id="confirmPass"
                         name="confirmPass"

@@ -28,7 +28,7 @@ export const userEndpoints = {
     getProfilePhotos: (userId: string) => `/users/profile/${userId}/photos`,
     deletePhoto: () => `/users/profile/photos`,
     friendRequest: (userId: string) => `/users/friend/${userId}/request`,
-    // denyFriendRequest: (userId: string) => `/users/friend/${userId}/request/deny`,
+    friendStatus: (userId: string) => `/users/friend/${userId}/status`,
     friend: (userId: string) => `/users/friend/${userId}`,
     followUser: (userId: string) => `/users/follow/${userId}`
 };

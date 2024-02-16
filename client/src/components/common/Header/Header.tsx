@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import * as authApi from '../../../api/auth';
 import { useAuthContext } from '../../../hooks/useAuthContext';
+import { NavLink } from 'react-router-dom';
 
 export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -36,23 +37,23 @@ export default function Header() {
                 <ul className={isMenuOpen ? 'nav-active' : ''}>
                     {user ? (
                         <>
-                            <li>
-                                <Link to={PathConstants.Home}>Home</Link>
+                            <li className='nav-item'>
+                                <NavLink end className='nav-link' to={PathConstants.Home}>Home</NavLink>
                             </li>
-                            <li>
-                                <Link to={`${PathConstants.Profile}/${user._id}/posts`}>Profile</Link>
+                            <li className='nav-item'>
+                                <NavLink className='nav-link' to={`${PathConstants.Profile}/${user._id}`}>Profile</NavLink>
                             </li>
-                            <li>
+                            <li className='nav-item'>
                                 <button className='logout-btn' onClick={handleLogout}>Logout</button>
                             </li>
                         </>
                     ) : (
                         <>
-                            <li>
-                                <Link to={PathConstants.Login}>Login</Link>
+                            <li className='nav-item'>
+                                <NavLink end className='nav-link' to={PathConstants.Login}>Login</NavLink>
                             </li>
-                            <li>
-                                <Link to={PathConstants.Register}>Register</Link>
+                            <li className='nav-item'>
+                                <NavLink end className='nav-link' to={PathConstants.Register}>Register</NavLink>
                             </li>
                         </>
                     )}

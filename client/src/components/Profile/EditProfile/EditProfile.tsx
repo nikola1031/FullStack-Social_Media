@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import './EditProfile.css';
+import '../../../styles/forms.css';
 import { useAuthContext } from '../../../hooks/useAuthContext';
 import { useOutletContext } from 'react-router-dom';
 import { ProfileContextType } from '../../../types/data';
@@ -34,8 +35,9 @@ export default function EditProfile() {
             <form onSubmit={handleSubmit} className="form-container">
                 <h2 className="form-title">Edit Profile</h2>
                 <div className="form-group">
-                    <label htmlFor="username">Username</label>
+                    <label className='form-label' htmlFor="username">Username</label>
                     <input
+                        className='form-input'
                         type="text"
                         id="username"
                         name="username"
@@ -45,8 +47,9 @@ export default function EditProfile() {
                     />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="email">Email</label>
+                    <label className='form-label' htmlFor="email">Email</label>
                     <input
+                        className='form-input'
                         type="email"
                         id="email"
                         name="email"
@@ -56,8 +59,9 @@ export default function EditProfile() {
                     />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="bio">Bio</label>
+                    <label className='form-label' htmlFor="bio">Bio</label>
                     <textarea
+                        className='form-input'
                         id="bio"
                         name="bio"
                         value={bio}
@@ -67,8 +71,9 @@ export default function EditProfile() {
                 </div>
                 {loggedInUser?.email !== email ? (
                     <div className="form-group">
-                        <label htmlFor="password">Password</label>
+                        <label className='form-label' htmlFor="password">Password</label>
                         <input
+                            className='form-input'
                             type="password"
                             id="password"
                             name="password"

@@ -17,13 +17,13 @@
 
 .my-profile-header {
     display: flex;
-    margin-bottom: 20px;
-    align-items: end;
+    margin: 1rem 0;
+    align-items: start;
 }
 
 .my-profile-username {
     margin: 0;
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     max-width: 20ch;
 }
 
@@ -78,6 +78,7 @@
 .friend-button {
     background-color: #2c3230;
     color: #fff;
+    margin-top: 0.5rem;
     border-radius: 10px;
     padding: 10px 20px;
     font-weight: bold;
@@ -123,7 +124,7 @@
     .my-profile-nav {
         width: 60%;
         display: none;
-        background-color: #2c3230;
+        background-color: #2d3a51;
         border-radius: 10px;
         padding: 15px 0;
     }

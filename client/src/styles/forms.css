@@ -14,7 +14,6 @@
     align-items: center;
     height: calc(100vh - 120px);
     flex-direction: column;
-
 }
 
 .form-container {
@@ -34,20 +33,24 @@
     gap: 5px;
 }
 
-.form-group label {
+.form-label {
     font-size: 1rem;
     font-weight: 600;
 }
 
-.form-group input, .form-group textarea {
+.form-input {
     padding: 10px;
-    border: 1px solid #2e3b4f;
+    border: 2px solid #2e3b4f;
     border-radius: 5px;
     font-size: 1rem;
     background-color: #19222d;
     outline: none;
     resize: vertical;
     color: #fff
+}
+
+.form-input:focus, .form-input:hover {
+    border-color: rgba(158, 6, 158, 0.742)
 }
 
 .submit-btn {
