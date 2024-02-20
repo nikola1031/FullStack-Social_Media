@@ -1,13 +1,11 @@
 import { useState } from 'react';
 import './CommentField.css';
-import * as dataApi from '../../../../../api/data';
 
 interface CommentFieldProps {
-    postId: string;
-    fetchComments: () => void;
+    createComment: (text: string) => void
 }
 
-export default function CommentField({postId, fetchComments}: CommentFieldProps) {
+export default function CommentField({ createComment }: CommentFieldProps) {
     const [text, setText] = useState('');
 
     function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
@@ -16,11 +14,9 @@ export default function CommentField({postId, fetchComments}: CommentFieldProps)
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        
         if (!text) return;
         
-        await dataApi.postComment(postId, { text });
-        fetchComments();
+        createComment(text);
         setText('');
     }
 

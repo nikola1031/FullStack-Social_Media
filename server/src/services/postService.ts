@@ -13,9 +13,12 @@ export const savePost = async ({text, images, author}: IPost) => {
     try {
         const imageUrls = await savePhotos(images, author);
         await User.updateOne({_id: author }, { $push: { photos: { $each: imageUrls.map(url => ({url})) } } });
-
         const newPost = new Post({text, imageUrls, author})
-        await newPost.save();
+        await newPost.save()
+        await newPost.populate({
+            path: 'author',
+            select: 'username profilePicture'
+        })
 
         return newPost;
     } catch (error) {
@@ -50,7 +53,10 @@ export const getPosts = async (userId: string | null = null, liked: any) => {
 
 export const editPost = async (text: string, postId: string) => {
     try {
-        const updatedPost = await Post.findByIdAndUpdate(postId, { text }, { new: true, runValidators: true });
+        const updatedPost = await Post.findByIdAndUpdate(postId, { text }, { new: true, runValidators: true }).populate({
+            path: 'author',
+            select: 'username profilePicture'
+        });
         return updatedPost;
     } catch (error) {
         throw error;

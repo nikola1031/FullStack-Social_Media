@@ -3,6 +3,11 @@
     height: 100%;
     position: relative;
     overflow: hidden;
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .carousell-wrapper img {

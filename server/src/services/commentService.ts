@@ -9,6 +9,10 @@ export const saveComment = async (text: string, _postId: string, author: string)
     try {
         const newComment = new Comment({text, _postId, author});
         await Promise.all([newComment.save(), adjustCommentCount(_postId, 1)])
+        await newComment.populate({
+            path: 'author',
+            select: 'username profilePicture'
+        })
         return newComment;
     } catch (error) {
         throw error;
@@ -26,7 +30,11 @@ export const getComments = async (_postId: string) => {
 
 export const editComment = async (text: string, commentId: string) => {
     try {
-        const updatedComment = await Comment.findByIdAndUpdate(commentId, {text}, {new: true, runValidators: true});
+        const updatedComment = await Comment.findByIdAndUpdate(commentId, {text}, {new: true, runValidators: true})
+        .populate({
+            path: 'author',
+            select: 'username profilePicture'
+        });
         return updatedComment;
     } catch (error) {
         throw error;

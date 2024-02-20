@@ -1,0 +1,14 @@
+.error-container {
+    padding: 10px;
+    text-align: center;
+}
+
+.error-message {
+    font-size: 32px;
+    color: rgba(158, 6, 158, 0.742);
+}
+
+.fa-triangle-exclamation {
+    font-size: 32px;
+    color: rgb(137, 9, 9);
+}

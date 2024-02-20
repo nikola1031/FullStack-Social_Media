@@ -12,7 +12,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: calc(100vh - 120px);
     flex-direction: column;
 }
 
@@ -21,7 +20,7 @@
     max-width: 500px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 15px;
     padding: 20px;
     border-radius: 10px;
 
@@ -54,6 +53,9 @@
 }
 
 .submit-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding: 10px;
     background-color: #007bff;
     color: white;
@@ -71,4 +73,22 @@
 .form-link {
     font-weight: bold;
     color: #007bff;
+}
+
+.error-msg {
+    color: red;
+    font-size: 0.8rem;
+}
+
+.error-msg-main {
+    color: red;
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+.input-error {
+    border-color: red;
+    &&:hover, &&:focus {
+        border-color: red;
+    }
 }

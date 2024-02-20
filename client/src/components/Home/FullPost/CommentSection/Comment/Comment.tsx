@@ -1,5 +1,4 @@
 import { CommentData } from "../../../../../types/data";
-import { formatRelativeTime } from "../../../../../utils/timeAgoFormatter";
 import * as dataApi from '../../../../../api/data';
 import "./Comment.css";
 import { useState } from "react";
@@ -8,15 +7,16 @@ import { Link } from "react-router-dom";
 import PathConstants from "../../../../../routes/PathConstants";
 import Avatar from "../../../../UI/Avatar/Avatar";
 import Time from "../../../../UI/Time/Time";
-import CommentActionButton from "../../../../UI/CommentButton/CommentButton";
+import CommentActionButton from "../../../../UI/CommentActionButton/CommentActionButton";
 
 interface CommentProps {
     comment: CommentData;
     postId: string;
-    fetchComments: () => void;
+    updateComment: (commentId: string, updatedComment: string) => void;
+    deleteComment: (commentId: string) => void;
 }
 
-export default function Comment({comment, postId, fetchComments}: CommentProps) {
+export default function Comment({comment, postId, deleteComment, updateComment}: CommentProps) {
     const { user } = useAuthContext();
     const [likeCount, setLikeCount] = useState<number>(comment.likes.userLikes.length);
     const [isLiked, setIsLiked] = useState<boolean>(() => comment.likes.userLikes.includes(user!._id))
@@ -36,9 +36,7 @@ export default function Comment({comment, postId, fetchComments}: CommentProps) 
     }
 
     function handleDeleteComment() {
-        dataApi.deleteCommentById(postId, comment._id).then(() => {
-            fetchComments();
-        })
+        deleteComment(comment._id);
     }
 
     function handleShowEdit() {
@@ -46,19 +44,14 @@ export default function Comment({comment, postId, fetchComments}: CommentProps) 
         setUpdatedComment(comment.text);
     }
     
-    function handleEditComment(e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault();
-
+    function handleEditComment() {
         if(!updatedComment || updatedComment === comment.text) {
             setIsEditing(false);
             return;
         }
 
-        dataApi.updateComment(postId, {text: updatedComment}, comment._id).then(() => {
-            setUpdatedComment('');
-            setIsEditing(false);
-            fetchComments();
-        })
+        updateComment(comment._id, updatedComment)
+        setIsEditing(false);
     }
 
     return (
@@ -74,10 +67,9 @@ export default function Comment({comment, postId, fetchComments}: CommentProps) 
                         { isEditing 
                             ? 
                                 (
-                                <form className="comment-edit-form" onSubmit={handleEditComment}>
+                                <div className="comment-edit-form" onSubmit={handleEditComment}>
                                     <textarea className="comment-edit-field" value={updatedComment} onChange={handleChange} placeholder="Write a comment..." />
-                                    <button disabled={!updatedComment} className="comment-edit-submit-btn" type="submit">Submit</button>
-                                </form>    
+                                </div>    
                                 )       
                             : 
                                 (
@@ -91,11 +83,14 @@ export default function Comment({comment, postId, fetchComments}: CommentProps) 
                     <div className="comment-actions-container">
                         <Time time={comment.createdAt} />
                         <div className="comment-actions">
-                            <CommentActionButton onClickHandler={handleLikeComment} isLiked={isLiked} />
+                            <CommentActionButton type="like" onClickHandler={handleLikeComment} isLiked={isLiked}>Like</CommentActionButton>
                             {isAuthor &&
                                 <>
-                                    <CommentActionButton onClickHandler={handleDeleteComment} />
-                                    <CommentActionButton onClickHandler={handleShowEdit} isEditing={isEditing} />
+                                    <CommentActionButton type="delete" onClickHandler={handleDeleteComment}>Delete</CommentActionButton>
+                                    <CommentActionButton type="edit" onClickHandler={handleShowEdit}>{isEditing ? 'Cancel' : 'Edit'}</CommentActionButton>
+                                    {isEditing &&
+                                        <CommentActionButton type="submit" onClickHandler={handleEditComment} disabled={!updatedComment} >Submit</CommentActionButton>
+                                    }
                                 </>
                             }
                         </div>

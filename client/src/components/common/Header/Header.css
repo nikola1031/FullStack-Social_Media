@@ -32,6 +32,7 @@
     border-radius: 10px;
     padding: 10px;
     text-align: center;
+    transition: background-color 250ms ease;
 }
 
 .nav-link.active {
@@ -42,9 +43,17 @@
     background-color: #73757682;
 }
 
+.logout-btn {
+    border: none;
+    border-radius: 4px;
+    background-color: #fff;
+    cursor: pointer;
+    transition: background-color 250ms ease;
+}
+
 .logout-btn:hover {
     background-color: rgb(170, 46, 46);
-    color: #fff
+    color: #fff;
 }
 
 .logo {
@@ -70,12 +79,6 @@
     cursor: pointer;
 }
 
-.logout-btn {
-    border: none;
-    border-radius: 4px;
-    background-color: #fff;
-    cursor: pointer;
-}
 
 /* Responsive styles */
 @media screen and (max-width: 1000px) {

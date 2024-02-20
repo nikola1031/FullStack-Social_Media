@@ -1,40 +1,31 @@
 import Comment from "./Comment/Comment";
 import CommentField from "./CommentField/CommentField";
 import "./CommentSection.css";
-import * as dataApi from '../../../../api/data';
-import { useEffect, useState } from "react";
-import { CommentData } from "../../../../types/data";
+import Loader from "../../../UI/Loader/Loader";
+import { useComments } from "../../../../hooks/useComments";
+import ErrorMessage from "../../../UI/ErrorMessage/ErrorMessage";
 
 interface CommentSectionProps {
   postId: string;
-  setCommentCount: (count: number) => void;
+  setCommentCount: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export default function CommentSection({postId, setCommentCount}: CommentSectionProps) {
   
-  const [comments, setComments] = useState<CommentData[]>([]);
-
-  function fetchComments() {
-      dataApi.getComments(postId).then(comments => {
-          setComments(comments);
-          setCommentCount(comments.length);
-      });
-  }
-  
-  useEffect(() => {
-    fetchComments();
-  }, [])
+  const { comments, isLoading, error, updateComment, deleteComment, createComment } = useComments(postId, setCommentCount); 
 
   return (
     <section className="comment-section">
         <hr className="divider" />
-            <CommentField postId={postId} fetchComments={fetchComments} />
+            <CommentField createComment={createComment} />
         <div className="comment-area">
-            {comments.map(comment => {
-              return (
-                <Comment key={comment._id} comment={comment} postId={postId} fetchComments={fetchComments}/>
-              )
-            })}
+            {!isLoading && error && <ErrorMessage error={error} />}
+            {!isLoading && !error ? 
+                comments.map(comment => (
+                    <Comment key={comment._id} comment={comment} postId={postId} updateComment={updateComment} deleteComment={deleteComment}/>
+                )) :
+                  <Loader />
+              }
         </div>
     </section>
   );

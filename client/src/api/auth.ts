@@ -1,18 +1,28 @@
 import { LoggedInUserData } from '../types/data';
 import { authEndpoints } from './ENDPOINTS';
 import * as requestApi from './helpers/fetcher';
+import { LoginDetails, RegisterDetails } from '../types/data';
 
-type LoginData = {
-    email: string;
-    password: string;
-}
+export const login: (data: LoginDetails) => Promise<LoggedInUserData> = async (data) => {
+    try {
+        return requestApi.post(authEndpoints.login(), data);
+    } catch (error) {
+        throw error;        
+    }
+};
 
-type RegisterData = LoginData & {
-    username: string;
-    confirmPass: string;
-    gender: string;
-}
+export const register: (data: RegisterDetails) => Promise<LoggedInUserData> = async (data) => {
+    try {
+        return requestApi.post(authEndpoints.register(), data)
+    } catch (error) {
+        throw error;        
+    }
+};
 
-export const login: (data: LoginData) => Promise<LoggedInUserData> = async (data) => requestApi.post(authEndpoints.login(), data);
-export const register: (data: RegisterData) => Promise<LoggedInUserData> = async (data) => requestApi.post(authEndpoints.register(), data);
-export const logout: () => Promise<void> = async () => requestApi.get(authEndpoints.logout(), null);
+export const logout: () => Promise<void> = async () => {
+    try {
+        requestApi.get(authEndpoints.logout(), null)
+    } catch (error) {
+        throw error;        
+    }
+};

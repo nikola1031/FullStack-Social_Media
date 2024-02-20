@@ -1,80 +1,65 @@
-import { ChangeEvent, useState } from 'react';
 import '../../styles/forms.css';
-import { useNavigate } from 'react-router-dom';
-import { useAuthContext } from '../../hooks/useAuthContext';
-import * as authApi from '../../api/auth';
 import { useTitle } from '../../hooks/useTitle';
 import { Link } from 'react-router-dom';
+import { useLogin } from './useLogin';
+import Loader from '../UI/Loader/Loader';
+import { useForm } from '../../hooks/useForm';
+import { validateEmpty } from '../../utils/validators';
 
 export default function Login() {
     useTitle('Login');
 
-    const [formValues, setFormValues] = useState({
+    const { login, error, isLoading } = useLogin();
+    const { values, errors, hadleChange, setValidators, checkFormValidity } = useForm({
         email: '',
         password: '',
     });
 
-    const [formErrors, setFormErrors] = useState({
-        email: '',
-        password: '',
-    })
-
-    const navigate = useNavigate();
-    const { saveUser } = useAuthContext();
-
-    function changeHandler(e: ChangeEvent<HTMLInputElement>) {
-        setFormValues((oldValues) => ({...oldValues, [e.target.name]: e.target.value}));
-    }
-
     const handleSubmit = (e: React.SyntheticEvent) => {
         e.preventDefault();
-
-        const { email, password } = formValues;
-        authApi
-            .login({ email, password })
-            .then((user) => {
-                if (user) {
-                    saveUser(user);
-                    navigate('/', { replace: true });
-                }
-            })
-            .catch((err) => {
-                setFormErrors({email: '', password: ''})
-            });
+        if (!checkFormValidity()) return;
+        const { email, password } = values;
+        login({email, password});
     };
 
     return (
         <div className="form-wrapper">
             <form onSubmit={handleSubmit} className="form-container">
                 <h2 className="form-title">Log in to your account</h2>
+                {error && <p className="error-msg-main">{error}</p>}
                 <div className="form-group">
                     <label className='form-label' htmlFor="email">Email</label>
                     <input
-                        className='form-input'
+                        className={`form-input ${Object.values(errors.email).some(error => error) ? 'input-error' : ''}`}
                         type="text"
                         id="email"
                         name="email"
                         placeholder="Email"
-                        value={formValues.email}
-                        onChange={changeHandler}
-                        required
+                        value={values.email}
+                        onChange={hadleChange}
+                        onBlur={(e) => setValidators([validateEmpty()], e)}
+                        
                     />
+                    {errors.email && <p className="error-msg">{errors.email.empty}</p>}
+                    
                 </div>
                 <div className="form-group">
                     <label className='form-label' htmlFor="password">Password</label>
                     <input
-                        className='form-input'
+                        className={`form-input ${Object.values(errors.password).some(error => error) ? 'input-error' : ''}`}
                         type="password"
                         id="password"
                         name="password"
                         placeholder="Password"
-                        value={formValues.password}
-                        onChange={changeHandler}
+                        value={values.password}
+                        onChange={hadleChange}
+                        onBlur={(e) => setValidators([validateEmpty()], e)}
                         required
                     />
+                    {errors.password && <p className="error-msg">{errors.password.empty?.toString()}</p>}
                 </div>
-                <button type="submit" className="submit-btn">
-                    Login
+                <button type="submit" disabled={isLoading} className="submit-btn">
+                    {isLoading ? <Loader size='small' /> : 'Login'}
                 </button>
             </form>
             <p>Don't have an account? <Link className="form-link" to={'/register'}>Register</Link></p>

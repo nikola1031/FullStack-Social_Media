@@ -68,6 +68,17 @@ export type UserDataDTO = {
     password: string;
 }
 
+export type LoginDetails = {
+    email: string;
+    password: string;
+}
+
+export type RegisterDetails = LoginDetails & {
+    username: string;
+    gender: string;
+    confirmPass?: string;
+}
+
 export type ProfileContextType = {
     setUser: React.Dispatch<React.SetStateAction<UserData>>
     toggleFriendship: (id: string) => void;

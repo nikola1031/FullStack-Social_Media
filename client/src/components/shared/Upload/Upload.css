@@ -25,9 +25,11 @@
 }
 
 .file-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   position: relative;
   overflow: hidden;
-  display: inline-block;
   cursor: pointer;
   border: 2px solid #3498db;
   border-radius: 8px;

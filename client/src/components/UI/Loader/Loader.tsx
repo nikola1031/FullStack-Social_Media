@@ -12,6 +12,8 @@ export default function Loader({size = 'medium'}: LoaderProps) {
     }
     
   return (
-    <div style={{width: sizes[size], height: sizes[size] }} className="loader"></div>
+    <div className='loader-container'>
+      <div style={{width: sizes[size], height: sizes[size] }} className="loader"></div>
+    </div>
   )
 }
