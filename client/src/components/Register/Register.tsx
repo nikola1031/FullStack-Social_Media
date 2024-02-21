@@ -27,8 +27,8 @@ export default function Register() {
     function handleSubmit (e: React.SyntheticEvent) {
         e.preventDefault();
         if (!checkFormValidity()) return;
-        const { username, email, password, gender } = values;
-        register({ username, email, password, gender });
+        const { username, email, password, confirmPass, gender } = values;
+        register({ username, email, password, confirmPass, gender });
     };
 
     return (
@@ -49,8 +49,8 @@ export default function Register() {
                         onBlur={(e) => setValidators([validateEmpty(), validateLength(3, 16), validatePattern(VALIDATION_PATTERNS.username)], e)}
                         required
                         />
-                    {errors.username && Object.values(errors.username).map(error => {
-                            return <p key={error} className="error-msg">{error}</p>
+                    {errors.username && Object.entries(errors.username).map(([key, error]) => {
+                            return <p key={key} className="error-msg">{error}</p>
                         })}
                 </div>
                 <div className="form-group">
@@ -66,8 +66,8 @@ export default function Register() {
                         onBlur={(e) => setValidators([validateEmpty(), validatePattern(VALIDATION_PATTERNS.email)], e)}
                         required
                     />
-                    {errors.email && Object.values(errors.email).map(error => {
-                            return <p key={error} className="error-msg">{error}</p>
+                    {errors.email && Object.entries(errors.email).map(([key, error]) => {
+                            return <p key={key} className="error-msg">{error}</p>
                         })}
                 </div>
                 <div className="form-group">
@@ -83,14 +83,13 @@ export default function Register() {
                         onBlur={(e) => setValidators(
                             [
                                 validateEmpty(), 
-                                // validatePasswords(values.confirmPass), 
                                 validateLength(8, 40), 
                                 validatePattern(VALIDATION_PATTERNS.password)
                             ], e)}
                         required
                     />
-                    {errors.password && Object.values(errors.password).map(error => {
-                            return <p key={error} className="error-msg">{error}</p>
+                    {errors.password && Object.entries(errors.password).map(([key, error]) => {
+                            return <p key={key} className="error-msg">{error}</p>
                         })}
                 </div>
                 <div className="form-group">
@@ -106,8 +105,8 @@ export default function Register() {
                         onBlur={(e) => setValidators([validatePasswords(values.password)], e)}
                         required
                     />
-                    {errors.confirmPass && Object.values(errors.confirmPass).map(error => {
-                            return <p key={error} className="error-msg">{error}</p>
+                    {errors.confirmPass && Object.entries(errors.confirmPass).map(([key, error]) => {
+                            return <p key={key} className="error-msg">{error}</p>
                         })}
                 </div>
                 <div className="form-group">

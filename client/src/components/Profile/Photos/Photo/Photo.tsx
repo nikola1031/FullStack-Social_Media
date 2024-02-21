@@ -1,5 +1,5 @@
 import './Photo.css';
-import { Image } from '../../../types/data';
+import { Image } from '../../../../types/data';
 interface PhotoProps {
     photo: Image | null;
     showOverlayOnCLick?: () => void;

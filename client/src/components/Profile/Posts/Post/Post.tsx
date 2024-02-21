@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
-import { PostData } from '../../../types/data';
-import { seeMoreOfPost } from '../../../utils/seeMoreTrimmer';
+import { PostData } from '../../../../types/data';
+import { seeMoreOfPost } from '../../../../utils/seeMoreTrimmer';
 import './Post.css';
-import PathConstants from '../../../routes/PathConstants';
-import Avatar from '../../UI/Avatar/Avatar';
+import PathConstants from '../../../../routes/PathConstants';
+import Avatar from '../../../UI/Avatar/Avatar';
 
 interface PostProps {
     showOverlayOnCLick: (postId: string) => void;

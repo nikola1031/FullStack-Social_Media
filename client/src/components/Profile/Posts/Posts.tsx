@@ -2,12 +2,12 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import Post from './Post/Post';
 import './Posts.css';
 import { useEffect, useState } from 'react';
-import Overlay from '../shared/Overlay/Overlay';
-import FullPost from '../Home/FullPost/FullPost';
-import { PostData } from '../../types/data';
-import * as dataApi from '../../api/data';
-import { useAuthContext } from '../../hooks/useAuthContext';
-import { useTitle } from '../../hooks/useTitle';
+import Overlay from '../../shared/Overlay/Overlay';
+import FullPost from '../../Home/FullPost/FullPost';
+import { PostData } from '../../../types/data';
+import * as dataApi from '../../../api/data';
+import { useAuthContext } from '../../../hooks/useAuthContext';
+import { useTitle } from '../../../hooks/useTitle';
 
 function findPost(postId: string, posts: PostData[]) {
     return posts.find(post => post._id === postId)

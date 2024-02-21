@@ -5,12 +5,12 @@ export const createPost = async (req: Request, res: Response) => {
     const author = req.user!._id!;
     const { text } = req.body;
     const images = (req.files as Express.Multer.File[]) || [];
-
-    if (!text) {
-        throw new Error('Cannot post without text');
-    }
-
+    
     try {
+
+        if (!text) {
+            throw new Error('Cannot post without text');
+        }
         const newPost = await postService.savePost({text, images, author})
         res.status(201).json(newPost);
     } catch (error: any) {

@@ -1,14 +1,14 @@
-import Overlay from '../shared/Overlay/Overlay';
-import Upload from '../shared/Upload/Upload';
+import Overlay from '../../shared/Overlay/Overlay';
+import Upload from '../../shared/Upload/Upload';
 import Photo from './Photo/Photo';
 import './Photos.css';
 import { useState } from 'react';
-import * as dataApi from '../../api/data';
+import * as dataApi from '../../../api/data';
 import { useOutletContext } from 'react-router-dom';
-import { Image } from '../../types/data';
-import { ProfileContextType } from '../../types/data';
-import { useTitle } from '../../hooks/useTitle';
-import { useAuthContext } from '../../hooks/useAuthContext';
+import { Image } from '../../../types/data';
+import { ProfileContextType } from '../../../types/data';
+import { useTitle } from '../../../hooks/useTitle';
+import { useAuthContext } from '../../../hooks/useAuthContext';
 
 export default function Photos() {
     useTitle('Photos')

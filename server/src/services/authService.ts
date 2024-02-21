@@ -18,9 +18,10 @@ async function login(email: string, password: string): Promise<IUserData> {
 }
 
 async function register(email: string, username: string, password: string, gender: 'male' | 'female'): Promise<IUserData> {
-    const oldUser = await User.findOne({email, username});
-    
-    if (oldUser) {
+    const existingEmail = await User.findOne({email});
+    const existingUsername = await User.findOne({username});
+
+    if (existingEmail || existingUsername) {
         throw new Error('User already exists');
     }
 

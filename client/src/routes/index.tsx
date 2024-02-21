@@ -4,9 +4,9 @@ import Home from '../components/Home/Home.tsx';
 import Register from '../components/Register/Register.tsx';
 import Login from '../components/Login/Login.tsx';
 import Friends from '../components/Friends/Friends.tsx';
-import Posts from '../components/Posts/Posts.tsx';
+import Posts from '../components/Profile/Posts/Posts.tsx';
 import Profile from '../components/Profile/Profile.tsx';
-import Photos from '../components/Photos/Photos.tsx';
+import Photos from '../components/Profile/Photos/Photos.tsx';
 import EditProfile from '../components/Profile/EditProfile/EditProfile.tsx';
 import ChangePassword from '../components/Profile/ChangePassword/ChangePassword.tsx';
 

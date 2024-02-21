@@ -38,7 +38,6 @@ function validatePattern(patternValidator: ValidationPatternObject) {
 
 function validatePasswords(password: string) {
     return function (name: string, otherPassword: string, setErrors: React.Dispatch<React.SetStateAction<Record<string, object>>>) {
-        console.log(password === otherPassword)
         if (password !== otherPassword) {
             return setErrors((prevErrors) => ({ ...prevErrors, [name]: { ...prevErrors[name], match: 'Passwords do not match' } }));
         }
