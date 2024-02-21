@@ -1,10 +1,10 @@
-import '../../styles/forms.css';
-import { useTitle } from '../../hooks/useTitle';
+import '../../../styles/Forms.css';
+import { useTitle } from '../../../hooks/useTitle';
 import { Link } from 'react-router-dom';
-import { useForm } from '../../hooks/useForm';
+import { useForm } from '../../../hooks/useForm';
 import { useRegister } from './useRegister';
-import { validateEmpty, validateLength, validatePasswords, validatePattern } from '../../utils/validators';
-import { VALIDATION_PATTERNS } from '../../Constants';
+import { validateEmpty, validateLength, validatePasswords, validatePattern } from '../../../utils/validators';
+import { VALIDATION_PATTERNS } from '../../../Constants';
 
 export default function Register() {
     useTitle('Register');

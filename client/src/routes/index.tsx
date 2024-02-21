@@ -1,8 +1,8 @@
 import { RouteObject } from 'react-router-dom';
 import PathConstants from './PathConstants.ts';
 import Home from '../components/Home/Home.tsx';
-import Register from '../components/Register/Register.tsx';
-import Login from '../components/Login/Login.tsx';
+import Register from '../components/auth/Register/Register.tsx';
+import Login from '../components/auth/Login/Login.tsx';
 import Friends from '../components/Friends/Friends.tsx';
 import Posts from '../components/Profile/Posts/Posts.tsx';
 import Profile from '../components/Profile/Profile.tsx';

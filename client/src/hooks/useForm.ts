@@ -6,8 +6,8 @@ type ErrorTypes = {
     empty?: string;
     match?: string;
 }
-// errors = {username: {length: 'Username is too short', pattern: 'Username is invalid'}}
-// values = {username: "KonImperator", password: "123456"}
+// errors = {username: {length: 'Username is too short', empty: 'Username field cannot be empty'}}
+// values = {username: "KonImperator", password: "12345"}
 
 export function useForm(defaultValues: Record<string, string>) {
     const defaultErrors = Object.keys(defaultValues).reduce((prev, curr) =>({...prev, [curr]: {}  }), {});

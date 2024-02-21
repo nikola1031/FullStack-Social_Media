@@ -1,10 +1,10 @@
-import '../../styles/forms.css';
-import { useTitle } from '../../hooks/useTitle';
+import '../../../styles/Forms.css';
+import { useTitle } from '../../../hooks/useTitle';
 import { Link } from 'react-router-dom';
 import { useLogin } from './useLogin';
-import Loader from '../UI/Loader/Loader';
-import { useForm } from '../../hooks/useForm';
-import { validateEmpty } from '../../utils/validators';
+import Loader from '../../UI/Loader/Loader';
+import { useForm } from '../../../hooks/useForm';
+import { validateEmpty } from '../../../utils/validators';
 
 export default function Login() {
     useTitle('Login');

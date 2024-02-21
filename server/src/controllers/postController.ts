@@ -7,7 +7,7 @@ export const createPost = async (req: Request, res: Response) => {
     const images = (req.files as Express.Multer.File[]) || [];
     
     try {
-
+        
         if (!text) {
             throw new Error('Cannot post without text');
         }
