@@ -1,33 +1,36 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CommentData } from "../types/data";
-import * as dataApi from '../api/data';
+import { useApiComments } from '../api/useApiComments';
+import { timeoutMessage } from "../utils/timeoutMessage";
 
 export function useComments(postId: string, setCommentCount: React.Dispatch<React.SetStateAction<number>>) {
     const [comments, setComments] = useState<CommentData[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState<null | string>(null);
+    const timeoutId = useRef();
+    const commentsApi = useApiComments();
 
     useEffect(() => {
        fetchComments();
     }, [postId])
 
     function fetchComments() {
-        setIsLoading(true);
+        setLoading(true);
         setError(null);
 
-        dataApi.getComments(postId)
+        commentsApi.getComments(postId)
         .then(comments => {
             setCommentCount(comments.length)
             return setComments(comments)
         })
-        .catch((error: {message: string}) => setError(error.message))
-        .finally(() => setIsLoading(false));
+        .catch((error: {message: string}) => timeoutMessage(setError, error.message, timeoutId))
+        .finally(() => setLoading(false));
     }
 
     function createComment(text: string) {
         setError(null);
 
-        dataApi.postComment(postId, { text })
+        commentsApi.postComment(postId, { text })
         .then((comment) => setComments((prevComments) => ([...prevComments, comment])))
         .catch((error: {message: string}) => setError(error.message));
         setCommentCount(prevCount => prevCount + 1);
@@ -36,7 +39,7 @@ export function useComments(postId: string, setCommentCount: React.Dispatch<Reac
     function updateComment(commentId: string, updatedComment: string) {
         setError(null);
 
-        dataApi.updateComment(postId, {text: updatedComment}, commentId)
+        commentsApi.updateComment(postId, {text: updatedComment}, commentId)
         .then(comment => setComments((prevComments) => {
             const commentIndex = prevComments.findIndex(c => c._id === commentId);
             const newComments = [...prevComments];
@@ -49,11 +52,16 @@ export function useComments(postId: string, setCommentCount: React.Dispatch<Reac
     function deleteComment(commentId: string) {
         setError(null);
 
-        dataApi.deleteCommentById(postId, commentId).then(() => {
+        commentsApi.deleteCommentById(postId, commentId).then(() => {
             setComments((prevComments) => prevComments.filter(c => c._id !== commentId));
             setCommentCount(prevCount => prevCount - 1);
         }).catch((error: {message: string}) => setError(error.message));
     }
 
-    return { comments, isLoading, error, updateComment, deleteComment, createComment, fetchComments }
+    async function likeComment(postId: string, commentId: string) {
+        const data = await commentsApi.likeComment(postId, commentId);
+        return data.likeCount;
+    }
+
+    return { comments, loading, error, updateComment, deleteComment, createComment, fetchComments, likeComment }
 }

@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
-import { login as authApiLogin } from '../../../api/auth';
-import { useAuthContext } from '../../../hooks/useAuthContext';
+import { useUserAuth } from '../../../api/useUserAuth';
+import { useAuthContext } from '../../../hooks/auth/useAuthContext';
 import { useNavigate } from 'react-router-dom';
 import { timeoutMessage } from '../../../utils/timeoutMessage';
 
@@ -14,6 +14,7 @@ export function useLogin() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const timeoutId = useRef<number | undefined>();
     const navigate = useNavigate();
+    const { login: apiLogin } = useUserAuth();
     const { saveUser } = useAuthContext();
     
     async function login(data: LoginData) {
@@ -21,14 +22,14 @@ export function useLogin() {
         setIsLoading(true);
         
         try {
-            const user = await authApiLogin(data);
+            const user = await apiLogin(data);
             if (user) {
                 saveUser(user);
                 navigate('/', { replace: true });
             }
-
             timeoutMessage(setError,'Login failed - try again later', timeoutId);
         } catch (error: any) {
+            console.log(error)
             timeoutMessage(setError, error.message, timeoutId);
         } finally {
             setIsLoading(false);

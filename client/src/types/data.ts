@@ -36,6 +36,7 @@ export type LoggedInUserData = {
     _id: string;
     username: string;
     email: string;
+    bio: string;
     gender: 'male' | 'female';
     role: 'user' | 'admin';
     accessToken: string;

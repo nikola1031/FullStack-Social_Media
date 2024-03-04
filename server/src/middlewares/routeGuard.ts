@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express";
 function onlyGuests() {
     return function (req: Request, res: Response, next: NextFunction) {
         if (req.user) {
-            res.status(401).json({message: 'Guest route cannot be reached'})
+            res.status(401).json({message: 'You are already logged in. Please log out to switch accounts.'})
             return;
         }
         next();

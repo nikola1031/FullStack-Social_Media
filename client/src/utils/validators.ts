@@ -1,5 +1,3 @@
-import { capitalize } from "./capitalize";
-
 type ValidationPatternObject = {
     pattern: RegExp,
     message: string
@@ -9,7 +7,7 @@ type ValidationPatternObject = {
 function validateEmpty() {
     return function (name: string, value: string, setErrors: React.Dispatch<React.SetStateAction<Record<string, object>>>) {
         if (value.length === 0) {
-            return setErrors((prevErrors) => ({ ...prevErrors, [name]: {...prevErrors[name], empty: `${capitalize(name)} field cannot be empty`}}));
+            return setErrors((prevErrors) => ({ ...prevErrors, [name]: {...prevErrors[name], empty: `Field cannot be empty`}}));
         }
 
         setErrors((prevErrors) =>({ ...prevErrors, [name]: { ...prevErrors[name], empty: '' } }));
@@ -19,7 +17,7 @@ function validateEmpty() {
 function validateLength(min: number, max: number) {
     return function (name: string, value: string, setErrors: React.Dispatch<React.SetStateAction<Record<string, object>>>) {
         if (value.length < min || value.length > max ) {
-            return setErrors((prevErrors) => ({ ...prevErrors, [name]: {...prevErrors[name], length: `${capitalize(name)} must be at between ${min} and ${max} characters long`}}));
+            return setErrors((prevErrors) => ({ ...prevErrors, [name]: {...prevErrors[name], length: `Field must be at between ${min} and ${max} characters long`}}));
         }
 
         setErrors((prevErrors) =>({ ...prevErrors, [name]: { ...prevErrors[name], length: '' } }));

@@ -1,14 +1,15 @@
 import { useState } from 'react';
 import Upload from '../../shared/Upload/Upload';
-import { useAuthContext } from '../../../hooks/useAuthContext';
-import * as dataApi from '../../../api/data';
+import { useAuthContext } from '../../../hooks/auth/useAuthContext';
 import './PostForm.css';
 import Avatar from '../../UI/Avatar/Avatar';
+import Loader from '../../UI/Loader/Loader';
 interface PostFormProps {
-    fetchPosts: () => void;
+    createPost: (post: FormData) => Promise<void>;
+    loading: boolean;
 }
 
-export default function PostForm({ fetchPosts }: PostFormProps) {
+export default function PostForm({ createPost, loading }: PostFormProps) {
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const [postText, setPostText] = useState<string>('');
     const { user } = useAuthContext();
@@ -31,14 +32,8 @@ export default function PostForm({ fetchPosts }: PostFormProps) {
         });
 
         formData.append('text', postText);
-        
-        if (user) {
-            resetForm();
-            await dataApi.uploadPost(formData);
-            fetchPosts();
-        } else {
-            throw new Error('Please login before posting');
-        }
+        resetForm();
+        await createPost(formData);
     }
 
     return (
@@ -61,7 +56,8 @@ export default function PostForm({ fetchPosts }: PostFormProps) {
                         selectedFiles={selectedFiles}
                         setSelectedFiles={setSelectedFiles}
                     />
-                    <button className="send-post-btn">Post</button>
+                    {loading ? <Loader /> : <button className="send-post-btn">Post</button>}
+                    
                 </form>
             </section>
     )

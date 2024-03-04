@@ -3,32 +3,51 @@ import PathConstants from './PathConstants.ts';
 import Home from '../components/Home/Home.tsx';
 import Register from '../components/auth/Register/Register.tsx';
 import Login from '../components/auth/Login/Login.tsx';
-import Friends from '../components/Friends/Friends.tsx';
+import Friends from '../components/Profile/Friends/Friends.tsx';
 import Posts from '../components/Profile/Posts/Posts.tsx';
 import Profile from '../components/Profile/Profile.tsx';
 import Photos from '../components/Profile/Photos/Photos.tsx';
 import EditProfile from '../components/Profile/EditProfile/EditProfile.tsx';
 import ChangePassword from '../components/Profile/ChangePassword/ChangePassword.tsx';
 
-// TODO: Finish Profile Page {
-// 
-// }
-// TODO: Finish Home Page {
-// - Make photos into a carousell if more than one // Need to fix slow image loading problem due to firebase storage not being a CDN
-// }
-// TODO: Add Error page
+import { Navigate } from 'react-router-dom';
+import { useAuthContext } from '../hooks/auth/useAuthContext.ts';
+
+const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
+    const { user } = useAuthContext();
+
+    if (!user) {
+        return <Navigate to="/login" />;
+    }
+
+    return children;
+};
+
+const PublicRoute = ({ children }: { children: React.ReactNode }) => {
+    const { user } = useAuthContext();
+
+    if (user) {
+        return <Navigate to="/" />;
+    }
+
+    return children;
+};
 
 const routes: RouteObject[] = [
-    { path: PathConstants.Home, element: <Home /> },
-    { path: PathConstants.Register, element: <Register /> },
-    { path: PathConstants.Login, element: <Login /> },
-    { path: `${PathConstants.Profile}/:id`, element: <Profile />, children: [
-        { path: PathConstants.Posts, element: <Posts /> },
-        { path: PathConstants.Photos, element: <Photos /> },
-        { path: PathConstants.Friends, element: <Friends /> },
-        { path: PathConstants.Edit, element: <EditProfile /> },
-        { path: PathConstants.ChangePassword, element: <ChangePassword /> },
-    ] },
-];
+    { path:PathConstants.Home, element: <PrivateRoute><Home /></PrivateRoute> },
+    { path: PathConstants.Register, element: <PublicRoute><Register /></PublicRoute> },
+    { path: PathConstants.Login, element: <PublicRoute><Login /></PublicRoute> },
+    {
+      path: `${PathConstants.Profile}/:id`,
+      element: <PrivateRoute><Profile /></PrivateRoute>,
+      children: [
+        { path: PathConstants.Posts, element: <PrivateRoute><Posts /></PrivateRoute> },
+        { path: PathConstants.Photos, element: <PrivateRoute><Photos /></PrivateRoute> },
+        { path: PathConstants.Friends, element: <PrivateRoute><Friends /></PrivateRoute> },
+        { path: PathConstants.Edit, element: <PrivateRoute><EditProfile /></PrivateRoute> },
+        { path: PathConstants.ChangePassword, element: <PrivateRoute><ChangePassword /></PrivateRoute> },
+      ],
+    },
+  ];
 
 export default routes;

@@ -55,3 +55,12 @@
     background-color: #f0f0f04d;
     transition: background-color 0.2s ease-in-out;
 }
+
+@media screen and (max-width: 640px) {
+    .post-image {
+        width: 80px;
+        height: 80px;
+        flex: 0 0 80px;
+    }
+    
+}

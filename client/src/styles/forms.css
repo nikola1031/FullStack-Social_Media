@@ -45,11 +45,12 @@
     background-color: #19222d;
     outline: none;
     resize: vertical;
-    color: #fff
+    color: #fff;
 }
 
-.form-input:focus, .form-input:hover {
-    border-color: rgba(158, 6, 158, 0.742)
+.form-input:focus,
+.form-input:hover {
+    border-color: rgba(158, 6, 158, 0.742);
 }
 
 .submit-btn {
@@ -88,7 +89,15 @@
 
 .input-error {
     border-color: red;
-    &&:hover, &&:focus {
+
+    &&:hover,
+    &&:focus {
         border-color: red;
     }
+}
+
+.success-msg-main {
+    color: green;
+    font-size: 1.2rem;
+    text-align: center;
 }

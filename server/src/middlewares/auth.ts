@@ -18,7 +18,7 @@ export function auth() {
             next();
         } catch (error: any) {
             if (error instanceof jwt.TokenExpiredError) {
-                return res.status(401).json({message: 'Token expired or is invalid. Please log in'});
+                return res.status(403).json({message: 'Token expired or is invalid. Please log in'});
             } else {
                 return res.status(400).json({message: error.message});
             }

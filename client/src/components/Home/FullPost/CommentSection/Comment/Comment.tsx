@@ -1,8 +1,7 @@
 import { CommentData } from "../../../../../types/data";
-import * as dataApi from '../../../../../api/data';
 import "./Comment.css";
 import { useState } from "react";
-import { useAuthContext } from "../../../../../hooks/useAuthContext";
+import { useAuthContext } from "../../../../../hooks/auth/useAuthContext";
 import { Link } from "react-router-dom";
 import PathConstants from "../../../../../routes/PathConstants";
 import Avatar from "../../../../UI/Avatar/Avatar";
@@ -14,12 +13,13 @@ interface CommentProps {
     postId: string;
     updateComment: (commentId: string, updatedComment: string) => void;
     deleteComment: (commentId: string) => void;
+    likeComment: (postId: string, commentId: string) => Promise<number>;
 }
 
-export default function Comment({comment, postId, deleteComment, updateComment}: CommentProps) {
+export default function Comment({comment, postId, deleteComment, updateComment, likeComment}: CommentProps) {
     const { user } = useAuthContext();
     const [likeCount, setLikeCount] = useState<number>(comment.likes.userLikes.length);
-    const [isLiked, setIsLiked] = useState<boolean>(() => comment.likes.userLikes.includes(user!._id))
+    const [isLiked, setIsLiked] = useState<boolean>(() => comment.likes.userLikes.includes(user!._id));
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [updatedComment, setUpdatedComment] = useState<string>('');
     const isAuthor = user?._id === comment.author._id
@@ -29,9 +29,9 @@ export default function Comment({comment, postId, deleteComment, updateComment}:
     }
 
     function handleLikeComment() {
-        dataApi.likeComment(postId, comment._id).then(data => {
+        likeComment(postId, comment._id).then(likeCount => {
             setIsLiked(!isLiked)
-            setLikeCount(data.likeCount);
+            setLikeCount(likeCount);
         });
     }
 

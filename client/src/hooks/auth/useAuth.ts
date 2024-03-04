@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useUser } from './useUser';
-import { LoggedInUserData } from '../types/data';
+import { LoggedInUserData } from '../../types/data';
 
 // used in AuthContext.tsx
 
@@ -21,6 +21,8 @@ export function useAuth() {
         if (user) {
             storeUser(user);
             setUser(user);
+        } else {
+            setUser(null);
         }
     }, []);
 
@@ -31,7 +33,10 @@ export function useAuth() {
 
     function logoutUser() {
         removeUser();
-        setUser(null);
+        setUser(() => {
+            console.log(user)
+            return null
+        });
     }
 
     return {

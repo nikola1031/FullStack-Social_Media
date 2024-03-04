@@ -1,5 +1,5 @@
 import { useLocalStorage } from './useLocalStorage';
-import { LoggedInUserData } from '../types/data';
+import { LoggedInUserData } from '../../types/data';
 
 // Used in useAuth.ts
 

@@ -7,6 +7,10 @@ body, html {
     font-family: Roboto, Arial, Helvetica, sans-serif;
 }
 
+.preserve-line-breaks {
+    white-space: pre-line;
+}
+
 #root {
     display: flex;
     flex-direction: column;

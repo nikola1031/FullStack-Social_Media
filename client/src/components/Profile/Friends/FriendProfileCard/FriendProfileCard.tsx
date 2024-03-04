@@ -1,7 +1,7 @@
 import './FriendProfileCard.css';
-import { Friend } from '../../../types/data'
+import { Friend } from '../../../../types/data';
 import { Link } from 'react-router-dom';
-import PathConstants from '../../../routes/PathConstants';
+import PathConstants from '../../../../routes/PathConstants';
 type FriendProfileCardProps = {
     request?: boolean;
     user: Friend;

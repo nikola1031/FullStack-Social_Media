@@ -22,7 +22,7 @@ export default function Overlay ({ isOpen, onClose, children }: PropsWithChildre
     e.stopPropagation();
   };
 
-  return isOpen ?
+  return isOpen &&
     (
       <div className="overlay">
         <div className="backdrop" onClick={onClose}>
@@ -34,5 +34,5 @@ export default function Overlay ({ isOpen, onClose, children }: PropsWithChildre
           </div>
         </div>
       </div>
-    ) : null;
+    )
 };

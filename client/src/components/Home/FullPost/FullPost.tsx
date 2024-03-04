@@ -2,34 +2,37 @@ import './FullPost.css';
 import { useState } from 'react';
 import { PostData } from '../../../types/data';
 import CommentSection from './CommentSection/CommentSection';
-import * as dataApi from '../../../api/data';
-import { useAuthContext } from '../../../hooks/useAuthContext';
+import { useAuthContext } from '../../../hooks/auth/useAuthContext';
 import { Link } from 'react-router-dom';
 import PathConstants from '../../../routes/PathConstants';
 import Carousell from '../../shared/Carousell/Carousell';
 import Avatar from '../../UI/Avatar/Avatar';
 import Time from '../../UI/Time/Time';
+import Modal from '../../UI/Modal/Modal';
 
 interface FullPostProps {
     post: PostData | undefined;
-    fetchPosts: () => void;
+    updatePost: (post: PostData, text: string) => void;
+    deletePost: (post: PostData) => void;
+    likePost: (postId: string) => Promise<number>
 }
 
-export default function FullPost({ post, fetchPosts }: FullPostProps) {
+export default function FullPost({ post, updatePost, deletePost, likePost}: FullPostProps) {
 
     if (!post) {
-        throw new Error('Post not found');
+        return null;
     }
 
     const { user } = useAuthContext();
-    const [isLiked, setIsLiked] = useState<boolean>(post.likes.userLikes.includes(user!._id));
+    const [isLiked, setIsLiked] = useState(post.likes.userLikes.includes(user!._id));
     
-    const [likeCount, setLikeCount] = useState<number>(post.likes.userLikes.length);
-    const [commentCount, setCommentCount] = useState<number>(post.commentCount);
+    const [likeCount, setLikeCount] = useState(post.likes.userLikes.length);
+    const [commentCount, setCommentCount] = useState(post.commentCount);
     
-    const [showComments, setShowComments] = useState<boolean>(false);
-    const [showDropdown, setShowDropdown] = useState<boolean>(false);
-    const [showEdit, setShowEdit] = useState<boolean>(false);
+    const [showComments, setShowComments] = useState(false);
+    const [showDropdown, setShowDropdown] = useState(false);
+    const [showEdit, setShowEdit] = useState(false);
+    const [showModal, setShowModal] = useState(false);
     
     const [updatedText, setUpdatedText] = useState<string>(post.text);
 
@@ -56,30 +59,26 @@ export default function FullPost({ post, fetchPosts }: FullPostProps) {
             setShowEdit(false);
             return;
         }
-
-        dataApi.updatePost(post!._id, {text: updatedText}).then(() => {
-            fetchPosts();
-            setShowEdit(false);
-        });
+        updatePost(post!, updatedText)
+        setShowEdit(false);
     }
 
     function handleLikePost() {
-        dataApi.likePost(post!._id).then((data) => {
+        likePost(post!._id).then((likeCount) => {
+            setLikeCount(likeCount);
             setIsLiked(!isLiked);
-            setLikeCount(data.likeCount);
         });
     }
 
     function handleDeletePost() {
-        dataApi.deletePostById(post!._id).then(() => {
-            fetchPosts();
-        });
+        setShowModal(true);
     }
 
     return (
         
         <article className="full-post">
 
+            {showModal && <Modal show={showModal} action={deletePost.bind(null, post)} onClose={() => setShowModal(false)}></Modal>}
             <section className='full-post-info-container'>
                 <div className='full-post-header'>
                     <div className="user-info">
@@ -107,7 +106,7 @@ export default function FullPost({ post, fetchPosts }: FullPostProps) {
                 </div>
                 <div className="full-post-content">
                     { !showEdit ?
-                        <p className='full-post-text'>
+                        <p className='full-post-text preserve-line-breaks'>
                             {post.text}
                         </p>
                         : 

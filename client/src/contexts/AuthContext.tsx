@@ -1,6 +1,6 @@
 import { createContext } from 'react';
 import { LoggedInUserData } from '../types/data';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../hooks/auth/useAuth';
 
 interface IAuthContext {
     user: LoggedInUserData | null;

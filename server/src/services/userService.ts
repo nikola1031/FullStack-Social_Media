@@ -9,16 +9,11 @@ export const editProfile = async (data: ProfileData, userId: string) => {
         throw new Error('User not found');
     }
     
-    const isEmailUpdating = data.email !== user.email;
-    
-    if (isEmailUpdating && !(await comparePasswords(data.password!, user.password))) {
+    if (!(await comparePasswords(data.password!, user.password))) {
         throw new Error('Incorrect password');
     }
 
-    if (isEmailUpdating) {
-        user.email = data.email;
-    }
-
+    user.email = data.email
     user.bio = data.bio;
     user.username = data.username;
 

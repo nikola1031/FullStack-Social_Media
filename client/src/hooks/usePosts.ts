@@ -1,20 +1,25 @@
-import { useEffect, useState } from "react";
-import * as dataApi from '../api/data'
+import { useEffect, useRef, useState } from "react";
+import { useApiPosts} from '../api/useApiPosts'
 import { PostData } from "../types/data";
-import { useAuthContext } from "./useAuthContext";
+import { useAuthContext } from "./auth/useAuthContext";
+import { timeoutMessage } from "../utils/timeoutMessage";
+import { successMessages } from "../Constants";
 
-export function usePosts() {
+export function usePosts(userId?: string) {
     const [posts, setPosts] = useState<PostData[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [success, setSuccess] = useState<null | string>(null);
     const [error, setError] = useState<null | string>(null);
+    const timeoutId = useRef();
     const { user } = useAuthContext();
+    const postsApi = useApiPosts();
 
     useEffect(() => {
        fetchPosts();
     }, [])
 
     async function fetchPosts() {
-        setIsLoading(true);
+        setLoading(true);
         setError(null);
 
         try {
@@ -22,18 +27,18 @@ export function usePosts() {
                 throw new Error('You must be logged in to see posts');
             }
     
-            const posts = await dataApi.getPosts()
+            const posts = await (userId ? postsApi.getPostsByUser(userId) : postsApi.getPosts());
             setPosts(posts)
         } catch (error: any) {
-            setError(error.message)
+            timeoutMessage(setError, error.message, timeoutId);
         } finally {
-            setIsLoading(false);
+            setLoading(false);
         }
     }
 
     async function createPost(post: FormData) {
         setError(null);
-
+        setLoading(true);
         try {
             if (!user) {
                 throw new Error('You must be logged in to create a post');
@@ -43,13 +48,13 @@ export function usePosts() {
                 throw new Error('Text is required');
             }
     
-            const newPost = await dataApi.uploadPost(post)
-            console.log(newPost)
-            setPosts((prevPosts) => ([...prevPosts, newPost]))
+            const newPost = await postsApi.uploadPost(post);
+            setPosts((prevPosts) => ([newPost, ...prevPosts]));
+            timeoutMessage(setSuccess, successMessages.postCreated, timeoutId);
         } catch (error: any) {
-            setError(error.message)
+            timeoutMessage(setError, error.message, timeoutId);
         } finally {
-            setIsLoading(false);
+            setLoading(false);
         }
 
     }
@@ -69,19 +74,17 @@ export function usePosts() {
                 throw new Error('You are not authorized to update this post');
             }
 
-            const updatedPost = await dataApi.updatePost(post._id, {text})
-            console.log(updatedPost)
+            const updatedPost = await postsApi.updatePost(post._id, {text})
+
             setPosts((prevPosts) => {
                 const postIndex = prevPosts.findIndex(p => p._id === post._id);
                 const newPosts = [...prevPosts];
                 newPosts[postIndex] = updatedPost;
                 return newPosts;
             })
-            
+            timeoutMessage(setSuccess, successMessages.postUpdated, timeoutId)
         } catch (error: any) {
-            setError(error.message)
-        } finally {
-            setIsLoading(false);
+            timeoutMessage(setError, error.message, timeoutId);
         }
 
     }
@@ -98,17 +101,20 @@ export function usePosts() {
             }
             
             if (user._id !== post.author._id) {
-                throw new Error('You are not authorized to update this post');
+                throw new Error('You are not authorized to delete this post');
             }
-            await dataApi.deletePostById(post._id)
-            setPosts((prevPosts) => prevPosts.filter(p => p._id !== post._id))
-            
+            await postsApi.deletePostById(post._id);
+            setPosts((prevPosts) => prevPosts.filter(p => p._id !== post._id));
+            timeoutMessage(setSuccess, successMessages.postDeleted, timeoutId);
         } catch (error: any) {
-            setError(error.message)
-        } finally {
-            setIsLoading(false);
+           timeoutMessage(setError, error.message, timeoutId);
         }
     }
 
-    return { posts, isLoading, error, fetchPosts, createPost, updatePost, deletePost }
+    async function likePost(postId: string) {
+        const data = await postsApi.likePost(postId);
+        return data.likeCount;
+    }
+
+    return { posts, loading, error, success, fetchPosts, createPost, updatePost, deletePost, likePost }
 }   

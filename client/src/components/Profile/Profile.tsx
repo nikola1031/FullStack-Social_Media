@@ -2,21 +2,25 @@ import { NavLink, Outlet, useParams } from 'react-router-dom';
 import './Profile.css';
 import { useEffect, useState } from 'react';
 import PathConstants from '../../routes/PathConstants';
-import { useAuthContext } from '../../hooks/useAuthContext';
-import * as dataApi from '../../api/data';
+import { useAuthContext } from '../../hooks/auth/useAuthContext';
 import { UserData } from '../../types/data';
 import { useTitle } from '../../hooks/useTitle';
 import { Link } from 'react-router-dom';
 import Avatar from '../UI/Avatar/Avatar';
 
 import { FriendStatusEnum, FriendStatus } from '../../types/data';
+import { useClickOutside } from '../../hooks/useClickOutside';
+import { useApiUsers } from '../../api/useApiUser';
 
 export default function Profile() {
     const { user: loggedInUser } = useAuthContext();
     const [dropDownActive, setDropDownActive] = useState(false);
     const [user, setUser] = useState<UserData>();
     const [friendStatus, setFriendStatus] = useState<FriendStatus>(FriendStatusEnum.None);
-    
+    const userApi = useApiUsers();
+
+    const ref = useClickOutside(() => setDropDownActive(false))
+
     const { id } = useParams();
     useTitle(`Profile - ${user?.username}`);
     
@@ -33,16 +37,17 @@ export default function Profile() {
         const alreadyFriends = user?.friends.some(friend => friend._id === loggedInUser?._id);
         if (alreadyFriends) return setFriendStatus(FriendStatusEnum.Friend);
 
-        dataApi.getFriendStatus(id!)
+        userApi.getFriendStatus(id!)
         .then((status) => setFriendStatus(status));
     }
 
     function fetchUser() {
-        dataApi.getProfileById(id!).then(setUser);
+        userApi.getProfileById(id!)
+        .then(setUser)
     }
 
     function friendRequest(id: string) {
-        dataApi.toggleFriendRequest(id!).then((res) => setFriendStatus((prevStatus) => {
+        userApi.toggleFriendRequest(id!).then((res) => setFriendStatus((prevStatus) => {
             setUser((prevUser) => ({...prevUser!, friendRequests: res.friendRequests, friends: res.friends}))
             if (prevStatus === FriendStatusEnum.Sent || prevStatus === FriendStatusEnum.Received){
                 return FriendStatusEnum.None;
@@ -52,7 +57,7 @@ export default function Profile() {
     }
 
     function toggleFriendship(id: string) {
-        dataApi.toggleFriend(id).then((res) => setFriendStatus((prevStatus) => {
+        userApi.toggleFriend(id).then((res) => setFriendStatus((prevStatus) => {
             setUser((prevUser) => ({...prevUser!, friendRequests: res.friendRequests, friends: res.friends }))
             return prevStatus === FriendStatusEnum.Friend ? FriendStatusEnum.None : FriendStatusEnum.Friend;
         }))
@@ -89,7 +94,7 @@ export default function Profile() {
                     </p>
                 </div>
                 <hr className='divider' />
-                <nav className="my-profile-nav-container">
+                <nav ref={ref} className="my-profile-nav-container">
                     <button className='my-profile-nav-button' onClick={() => setDropDownActive(!dropDownActive)}>Menu<i className="fa-solid fa-caret-down"></i></button>
                     <ul className={`my-profile-nav${dropDownActive ? ' my-profile-nav-active' : ''}`}>
                         <li className="my-profile-nav-item">

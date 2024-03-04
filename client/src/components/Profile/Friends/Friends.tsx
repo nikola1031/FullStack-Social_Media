@@ -1,12 +1,14 @@
 import { useOutletContext } from 'react-router-dom';
 import FriendProfileCard from './FriendProfileCard/FriendProfileCard';
 import './Friends.css';
-import { ProfileContextType } from '../../types/data';
-import { useTitle } from '../../hooks/useTitle';
+import { ProfileContextType } from '../../../types/data';
+import { useTitle } from '../../../hooks/useTitle';
 
 export default function Friends() {
     useTitle('Friends');
     const { user, isProfileOwner, toggleFriendship, friendRequest } = useOutletContext<ProfileContextType>();
+
+    // TODO:  FIX FRIENDS RELOADING
     return (
         <div className="friends-wrapper">
             { (isProfileOwner && user.friendRequests.received.length > 0) &&

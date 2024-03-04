@@ -13,8 +13,18 @@ async function login(email: string, password: string): Promise<IUserData> {
         throw new Error('Wrong email or password');
     }
 
-    const accessToken = jwt.sign({email, username: existingUser.username, _id: existingUser._id, gender: existingUser.gender, role: existingUser.role}, SECRET!, {expiresIn: '2h'});
-    return { email, profilePicture: existingUser.profilePicture || '', username: existingUser.username, _id: existingUser._id as string, gender: existingUser.gender, role: existingUser.role, accessToken };
+    const userData = {
+        email, 
+        username: existingUser.username, 
+        bio: existingUser.bio, 
+        gender: existingUser.gender, 
+        role: existingUser.role,
+        profilePicture: existingUser.profilePicture || '', 
+        _id: existingUser._id as string
+    }
+    // email bio username gender gender role profilePicture id
+    const accessToken = jwt.sign(userData, SECRET!, {expiresIn: '2h'});
+    return { ...userData, accessToken };
 }
 
 async function register(email: string, username: string, password: string, gender: 'male' | 'female'): Promise<IUserData> {
@@ -28,8 +38,18 @@ async function register(email: string, username: string, password: string, gende
     const hashedPassword = await hashPassword(password);
     const user = await User.create({email, username, password: hashedPassword, gender});
 
-    const accessToken = jwt.sign({email, username, _id: user._id, role: user.role, gender}, SECRET!, {expiresIn: '2h'});
-    return { email, profilePicture: '', username, role: user.role, _id: user._id as string, gender, accessToken };
+    const userData = {
+        email, 
+        username, 
+        bio: user.bio, 
+        gender: user.gender, 
+        role: user.role,
+        profilePicture: user.profilePicture || '', 
+        _id: user._id as string
+    }
+
+    const accessToken = jwt.sign(userData, SECRET!, {expiresIn: '2h'});
+    return { ...userData, accessToken };
 }
 
 function logout() {}

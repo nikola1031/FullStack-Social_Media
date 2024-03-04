@@ -2,23 +2,25 @@ import PathConstants from '../../../routes/PathConstants';
 import './Header.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import * as authApi from '../../../api/auth';
-import { useAuthContext } from '../../../hooks/useAuthContext';
+import { useAuthContext } from '../../../hooks/auth/useAuthContext';
 import { NavLink } from 'react-router-dom';
+import { useClickOutside } from '../../../hooks/useClickOutside';
 
 export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const { user, logoutUser } = useAuthContext();
+    const { user } = useAuthContext();
     const navigate = useNavigate();
+    const { logoutUser } = useAuthContext();
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
 
+    const ref = useClickOutside(() => setIsMenuOpen(false));
+
     function handleLogout() {
         if (user) {
             try {
-                // authApi.logout(user.accessToken);
                 logoutUser();
                 navigate('/login');
             } catch (error) {
@@ -28,7 +30,7 @@ export default function Header() {
     }
 
     return (
-        <header className="header">
+        <header  ref={ref} className="header">
             <Link to={PathConstants.Home}>
                 <img className="logo" src="/images/logo.png" alt="" />
             </Link>
