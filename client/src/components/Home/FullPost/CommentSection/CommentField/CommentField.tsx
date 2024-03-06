@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import './CommentField.css';
+import styles from './CommentField.module.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 
 interface CommentFieldProps {
     createComment: (text: string) => void
@@ -21,9 +23,11 @@ export default function CommentField({ createComment }: CommentFieldProps) {
     }
 
     return (
-        <form className="comment-form" onSubmit={handleSubmit}>
-            <textarea className="comment-field" value={text} onChange={handleChange} placeholder="Write a comment..." />
-            <button className='comment-button' type='submit'><i className="fa-solid fa-paper-plane"></i></button>
+        <form className={styles["comment-form"]} onSubmit={handleSubmit}>
+            <textarea className={styles["comment-field"]} value={text} onChange={handleChange} placeholder="Write a comment..." />
+            <button className={styles['comment-button']} type='submit'>
+                <FontAwesomeIcon icon={faPaperPlane} />
+            </button>
         </form>
     );
 }

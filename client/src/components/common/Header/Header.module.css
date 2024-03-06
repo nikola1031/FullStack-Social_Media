@@ -35,6 +35,11 @@
     transition: background-color 250ms ease;
 }
 
+.icon {
+    font-size: 1.2rem;
+    margin-right: 0.3rem;
+}
+
 .nav-link.active {
     color: rgba(158, 6, 158, 0.742);
 }

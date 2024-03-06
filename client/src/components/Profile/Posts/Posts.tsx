@@ -1,6 +1,6 @@
+import styles from './Posts.module.css';
 import { useParams } from 'react-router-dom';
 import Post from './Post/Post';
-import './Posts.css';
 import { useState } from 'react';
 import Overlay from '../../shared/Overlay/Overlay';
 import FullPost from '../../Home/FullPost/FullPost';
@@ -44,10 +44,16 @@ export default function Posts() {
         <>
             {success && <Toast message={success} type='success' />}
             {error && <Toast message={error} type='error' />}
-            <section className="posts-section">
-                {posts.map(post => <Post key={post._id} profileId={id!} likePost={handleLikePost} deletePost={deletePost} showOverlayOnCLick={handleShowOverlay} loggedInUserId={loggedInUser!._id} post={post}></Post>)}
-                {showOverlay && <Overlay isOpen={showOverlay} onClose={handleHideOverlay}><FullPost updatePost={updatePost} deletePost={deletePost} likePost={likePost} post={findPost(overlayedPost!, posts )} /></Overlay>}
-            </section>
+            {posts.length > 0 ?
+                <section className={styles["posts-section"]}>
+                    {posts.map(post => <Post key={post._id} profileId={id!} likePost={handleLikePost} deletePost={deletePost} showOverlayOnCLick={handleShowOverlay} loggedInUserId={loggedInUser!._id} post={post}></Post>)}
+                    {showOverlay && <Overlay isOpen={showOverlay} onClose={handleHideOverlay}><FullPost updatePost={updatePost} deletePost={deletePost} likePost={likePost} post={findPost(overlayedPost!, posts )} /></Overlay>}
+                </section>
+                :
+                <section className={styles["posts-section"]}>
+                    <h2>No posts yet</h2>
+                </section>
+            }
         </>
     );
 }

@@ -1,5 +1,7 @@
 import { PropsWithChildren, useEffect } from 'react';
-import './Overlay.css';
+import styles from './Overlay.module.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
 type OverlayProps = {
   isOpen: boolean;
@@ -24,11 +26,13 @@ export default function Overlay ({ isOpen, onClose, children }: PropsWithChildre
 
   return isOpen &&
     (
-      <div className="overlay">
-        <div className="backdrop" onClick={onClose}>
-          <div className='overlay-container'>
-              <div className='overlay-content' onClick={handleOverlayClick}>
-                <button className='close-button' onClick={onClose}><i className="fa-solid fa-x"></i></button>
+      <div className={styles["overlay"]}>
+        <div className={styles["backdrop"]} onClick={onClose}>
+          <div className={styles['overlay-container']}>
+              <div className={styles['overlay-content']} onClick={handleOverlayClick}>
+                <button className={styles['close-button']} onClick={onClose}>
+                  <span><FontAwesomeIcon icon={faXmark}></FontAwesomeIcon></span>
+                </button>
                 {children}
               </div>
           </div>

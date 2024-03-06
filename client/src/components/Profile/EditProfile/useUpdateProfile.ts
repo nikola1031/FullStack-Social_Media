@@ -26,7 +26,7 @@ export function useUpdateProfile() {
             saveUser({...loggedInUser!, email, username});
             timeoutMessage(setSuccess, successMessages.profileUpdate, timeoutId);
         } catch (error: any) {
-            setError(error.message)
+            timeoutMessage(setError, error.message, timeoutId);
         } finally {
             setLoading(false);
         }

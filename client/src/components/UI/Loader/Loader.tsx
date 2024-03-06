@@ -1,4 +1,4 @@
-import './Loader.css';
+import styles from './Loader.module.css';
 
 interface LoaderProps {
     size?: 'small' | 'medium' | 'large';
@@ -12,8 +12,8 @@ export default function Loader({size = 'medium'}: LoaderProps) {
     }
     
   return (
-    <div className='loader-container'>
-      <div style={{width: sizes[size], height: sizes[size] }} className="loader"></div>
+    <div className={styles["loader-container"]}>
+      <div style={{width: sizes[size], height: sizes[size] }} className={styles["loader"]}></div>
     </div>
   )
 }

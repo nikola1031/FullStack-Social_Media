@@ -1,5 +1,4 @@
-import '../../../styles/forms.css';
-import './ChangePassword.css';
+import formStyles from '../../../styles/forms.module.css';
 import { useTitle } from '../../../hooks/useTitle';
 import { useForm } from '../../../hooks/useForm';
 import { useChangePassword } from './useChangePassword';
@@ -34,15 +33,15 @@ export default function ChangePassword() {
     };
 
     return (
-        <section className="form-positioner">
-            <form onSubmit={handleSubmit} className="form-container">
-                <h2 className="form-title">Update Password</h2>
+        <section className={formStyles["form-positioner"]}>
+            <form onSubmit={handleSubmit} className={formStyles["form-container"]}>
+                <h2 className={formStyles["form-title"]}>Update Password</h2>
                 {success && <Toast message={success} type='success'/>}
                 {error && <Toast message={error} type='error'/>}
-                <div className="form-group">
-                    <label className='form-label' htmlFor="password">Old Password</label>
+                <div className={formStyles["form-group"]}>
+                    <label className={formStyles['form-label']} htmlFor="password">Old Password</label>
                     <input
-                        className={`form-input ${Object.values(errors.password).some(error => error) ? 'input-error' : ''}`}
+                        className={`${formStyles["form-input"]} ${Object.values(errors.password).some(error => error) ? formStyles['input-error'] : ''}`}
                         type="password"
                         id="password"
                         name="password"
@@ -52,13 +51,15 @@ export default function ChangePassword() {
                         required
                     />
                     {errors.password && Object.entries(errors.password).map(([key, error]) => {
-                            return <p key={key} className="error-msg">{error}</p>
+                        if (error) {
+                            return <p key={key} className={formStyles["error-msg"]}>{error}</p>
+                        }
                         })}
                 </div>
-                <div className="form-group">
-                    <label className='form-label' htmlFor="newPassword">New Password</label>
+                <div className={formStyles["form-group"]}>
+                    <label className={formStyles['form-label']} htmlFor="newPassword">New Password</label>
                     <input
-                       className={`form-input ${Object.values(errors.newPassword).some(error => error) || errors.confirmPass.match ? 'input-error' : ''}`}
+                        className={`${formStyles["form-input"]} ${Object.values(errors.newPassword).some(error => error) || errors.confirmPass.match ? formStyles['input-error'] : ''}`}
                         type="password"
                         id="newPassword"
                         name="newPassword"
@@ -72,13 +73,15 @@ export default function ChangePassword() {
                         required
                     />
                     {errors.newPassword && Object.entries(errors.newPassword).map(([key, error]) => {
-                            return <p key={key} className="error-msg">{error}</p>
+                            if (error) {
+                                return <p key={key} className={formStyles["error-msg"]}>{error}</p>
+                            }
                         })}
                 </div>
-                <div className="form-group">
-                    <label className='form-label' htmlFor="confirmPass">Confirm Password</label>
+                <div className={formStyles["form-group"]}>
+                    <label className={formStyles['form-label']} htmlFor="confirmPass">Confirm Password</label>
                     <input
-                        className={`form-input ${Object.values(errors.confirmPass).some(error => error) ? 'input-error' : ''}`}
+                        className={`${formStyles["form-input"]} ${Object.values(errors.confirmPass).some(error => error) ? formStyles['input-error'] : ''}`}
                         type="password"
                         id="confirmPass"
                         name="confirmPass"
@@ -88,10 +91,12 @@ export default function ChangePassword() {
                         required
                     />
                     {errors.confirmPass && Object.entries(errors.confirmPass).map(([key, error]) => {
-                            return <p key={key} className="error-msg">{error}</p>
+                            if (error) {
+                                return <p key={key} className={formStyles["error-msg"]}>{error}</p>
+                            }
                         })}
                 </div>
-                <button disabled={loading} type="submit" className="submit-btn">
+                <button disabled={loading} type="submit" className={formStyles["submit-btn"]}>
                     {loading ? <Loader size='small'/> : 'Update'}
                 </button>
             </form>

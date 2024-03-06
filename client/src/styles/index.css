@@ -17,6 +17,13 @@ body, html {
     min-height: 100vh;  
 }
 
+.divider {
+    opacity: 0.5;
+    border-width: 0.05rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
 main {
     flex: 1;
     /* padding: 1rem 26% 0 26%; */

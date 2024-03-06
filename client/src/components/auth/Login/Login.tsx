@@ -1,4 +1,4 @@
-import '../../../styles/Forms.css';
+import formStyles from '../../../styles/forms.module.css';
 import { useTitle } from '../../../hooks/useTitle';
 import { Link } from 'react-router-dom';
 import { useLogin } from './useLogin';
@@ -23,14 +23,14 @@ export default function Login() {
     };
 
     return (
-        <div className="form-wrapper">
-            <form onSubmit={handleSubmit} className="form-container">
-                <h2 className="form-title">Log in to your account</h2>
-                {error && <p className="error-msg-main">{error}</p>}
-                <div className="form-group">
-                    <label className='form-label' htmlFor="email">Email</label>
+        <div className={formStyles["form-wrapper"]}>
+            <form onSubmit={handleSubmit} className={formStyles["form-container"]}>
+                <h2 className={formStyles["form-title"]}>Log in to your account</h2>
+                {error && <p className={formStyles["error-msg-main"]}>{error}</p>}
+                <div className={formStyles["form-group"]}>
+                    <label className={formStyles["form-label"]} htmlFor="email">Email</label>
                     <input
-                        className={`form-input ${Object.values(errors.email).some(error => error) ? 'input-error' : ''}`}
+                        className={`${formStyles["form-input"]} ${Object.values(errors.email).some(error => error) ? formStyles["input-error"] : ''}`}
                         type="text"
                         id="email"
                         name="email"
@@ -40,13 +40,13 @@ export default function Login() {
                         onBlur={(e) => setValidators([validateEmpty()], e)}
                         
                     />
-                    {errors.email && <p className="error-msg">{errors.email.empty}</p>}
+                    {errors.email && <p className={formStyles["error-msg"]}>{errors.email.empty}</p>}
                     
                 </div>
-                <div className="form-group">
-                    <label className='form-label' htmlFor="password">Password</label>
+                <div className={formStyles["form-group"]}>
+                    <label className={formStyles["form-label"]} htmlFor="password">Password</label>
                     <input
-                        className={`form-input ${Object.values(errors.password).some(error => error) ? 'input-error' : ''}`}
+                        className={`${formStyles["form-input"]} ${Object.values(errors.password).some(error => error) ? formStyles["input-error"] : ''}`}
                         type="password"
                         id="password"
                         name="password"
@@ -56,13 +56,13 @@ export default function Login() {
                         onBlur={(e) => setValidators([validateEmpty()], e)}
                         required
                     />
-                    {errors.password && <p className="error-msg">{errors.password.empty?.toString()}</p>}
+                    {errors.password && <p className={formStyles["error-msg"]}>{errors.password.empty?.toString()}</p>}
                 </div>
-                <button type="submit" disabled={isLoading} className="submit-btn">
+                <button type="submit" disabled={isLoading} className={formStyles["submit-btn"]}>
                     {isLoading ? <Loader size='small' /> : 'Login'}
                 </button>
             </form>
-            <p>Don't have an account? <Link className="form-link" to={'/register'}>Register</Link></p>
+            <p>Don't have an account? <Link className={formStyles["form-link"]} to={'/register'}>Register</Link></p>
         </div>
     );
 }

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import './Avatar.css';
+import styles from './Avatar.module.css';
 import PathConstants from '../../../routes/PathConstants';
 
 interface AvatarProps {
@@ -19,13 +19,13 @@ export default function Avatar({image, withLinkTo, size = 'medium'}: AvatarProps
     withLinkTo ?
         <Link to={`/${PathConstants.Profile}/${withLinkTo}`}>
             <img
-                className={`user-avatar ${sizeClasses[size] || ''}`}
+                className={`${styles["user-avatar"]} ${styles[sizeClasses[size]] || ''}`}
                 src={image || '/assets/default_avatar.jpg'}
                 alt="avatar"
             />
         </Link> :
         <img
-            className={`user-avatar ${sizeClasses[size] || ''}`}
+            className={`${styles["user-avatar"]} ${styles[sizeClasses[size]] || ''}`}
             src={image || '/assets/default_avatar.jpg'}
             alt="avatar"
         />

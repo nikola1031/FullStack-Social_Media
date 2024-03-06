@@ -30,16 +30,16 @@
     gap: 50px;
 }
 
-.modal-header h1, .modal-body h3 {
+.modal-h1, .modal-h3 {
     margin: 0;
     margin-bottom: 0.5rem;
 }
 
-.modal-header h1 {
+.modal-h1 {
     color: #333333;
 }
 
-.modal-body h3 {
+.modal-h3 {
     color: #666666;
 }
 

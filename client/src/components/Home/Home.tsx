@@ -1,6 +1,5 @@
-import { useEffect } from 'react';
+import styles from './Home.module.css';
 import FullPost from './FullPost/FullPost';
-import './Home.css';
 import PostForm from './PostForm/PostForm';
 import { useTitle } from '../../hooks/useTitle';
 import Toast from '../UI/Toast/Toast';
@@ -19,9 +18,9 @@ export default function Home() {
                 ? 
                     <Loader size='large' />
                 :
-                    <div className="home-wrapper">
+                    <div className={styles["home-wrapper"]}>
                         <PostForm loading={loading} createPost={createPost} />
-                        <section className="posts-container">
+                        <section className={styles["posts-container"]}>
                             {posts.map(post => <FullPost updatePost={updatePost} deletePost={deletePost} likePost={likePost} key={post._id} post={post} />)}
                         </section>
                     </div>

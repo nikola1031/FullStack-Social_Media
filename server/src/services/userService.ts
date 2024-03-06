@@ -60,7 +60,7 @@ export const toggleFriendshipRequest = async (loggedInUserId: string, otherUserI
     }
 
     if (loggedInUser.friends.includes(otherUserId)){
-        throw new Error('Users are already friends');
+        throw new Error('You are already friends');
     }
 
     if (loggedInUser.friendRequests.sent.includes(otherUserId) || loggedInUser.friendRequests.received.includes(otherUserId)) {
@@ -69,8 +69,8 @@ export const toggleFriendshipRequest = async (loggedInUserId: string, otherUserI
             [
                 User.updateOne({_id: otherUserId}, {$pull: {'friendRequests.received': loggedInUserId,'friendRequests.sent': loggedInUserId }}),
                 User.findByIdAndUpdate(loggedInUserId, {$pull: {'friendRequests.received': otherUserId,'friendRequests.sent': otherUserId }}, {new: true})
-                    .select('friendRequests.received friendRequests.sent friends')
-                    .populate('friendRequests.received friends', 'username profilePicture')
+                    .select('friendRequests.received friendRequests.sent')
+                    .populate('friendRequests.received', 'username profilePicture')
             ]);
 
             return result;
@@ -79,8 +79,8 @@ export const toggleFriendshipRequest = async (loggedInUserId: string, otherUserI
                 [
                     User.updateOne({_id: otherUserId}, {$push: {'friendRequests.received': loggedInUserId}}),
                     User.findByIdAndUpdate(loggedInUserId, {$push: {'friendRequests.sent': otherUserId}}, {new: true})
-                        .select('friendRequests.received friendRequests.sent friends')
-                        .populate('friendRequests.received friends', 'username profilePicture')
+                        .select('friendRequests.received friendRequests.sent')
+                        .populate('friendRequests.received', 'username profilePicture')
                 ]
             );
 

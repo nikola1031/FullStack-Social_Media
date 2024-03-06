@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Upload from '../../shared/Upload/Upload';
 import { useAuthContext } from '../../../hooks/auth/useAuthContext';
-import './PostForm.css';
+import styles from './PostForm.module.css';
 import Avatar from '../../UI/Avatar/Avatar';
 import Loader from '../../UI/Loader/Loader';
 interface PostFormProps {
@@ -37,18 +37,18 @@ export default function PostForm({ createPost, loading }: PostFormProps) {
     }
 
     return (
-        <section className="send-post">
+        <section className={styles["send-post"]}>
                 <form
                     onSubmit={handleSubmit}
-                    className="send-post-form"
+                    className={styles["send-post-form"]}
                     encType="multipart/form-data"
                 >
-                    <div className="send-post-input-container">
+                    <div className={styles["send-post-input-container"]}>
                     <Avatar image={user?.profilePicture} withLinkTo={user?._id}/>
                         <textarea
                             onChange={handleTextChange}
                             value={postText}
-                            className="send-post-input"
+                            className={styles["send-post-input"]}
                             placeholder="What's on your mind?"
                         />
                     </div>
@@ -56,7 +56,7 @@ export default function PostForm({ createPost, loading }: PostFormProps) {
                         selectedFiles={selectedFiles}
                         setSelectedFiles={setSelectedFiles}
                     />
-                    {loading ? <Loader /> : <button className="send-post-btn">Post</button>}
+                    {loading ? <Loader /> : <button className={styles["send-post-btn"]}>Post</button>}
                     
                 </form>
             </section>

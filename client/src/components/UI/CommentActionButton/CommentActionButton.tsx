@@ -1,4 +1,4 @@
-import './CommentActionButton.css';
+import styles from './CommentActionButton.module.css';
 
 interface CommentActionButtonProps {
     onClickHandler: () => void;
@@ -10,7 +10,7 @@ interface CommentActionButtonProps {
 
 export default function CommentActionButton({onClickHandler, type, isLiked, children, disabled = false}: CommentActionButtonProps) {
 
-    const className = `comment-action${type ==='like' ? ' comment-like' : ''} ${isLiked ? 'active' : ''}`;
+    const className = `${styles["comment-action"]} ${type ==='like' ? styles["comment-like"] : ''} ${isLiked ? styles["active"] : ''}`;
 
     return (
         <button disabled={disabled} onClick={onClickHandler} className={className}>

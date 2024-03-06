@@ -43,12 +43,15 @@ export function usePosts(userId?: string) {
             if (!user) {
                 throw new Error('You must be logged in to create a post');
             }
-    
+            
             if (!post.get('text')) {
                 throw new Error('Text is required');
             }
-    
+            
+            console.log('posting')
             const newPost = await postsApi.uploadPost(post);
+            console.log('Not posting')
+            
             setPosts((prevPosts) => ([newPost, ...prevPosts]));
             timeoutMessage(setSuccess, successMessages.postCreated, timeoutId);
         } catch (error: any) {

@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import { apiBaseUrl, siteBaseUrl } from '../Constants';
-import { useAuth } from '../hooks/auth/useAuth';
+import { apiBaseUrl } from '../Constants';
+import { useAuthContext } from '../hooks/auth/useAuthContext';
 
 type Method = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
@@ -13,7 +13,7 @@ interface Options {
 export function useFetch() {
     // Can make it generic and add types for the object :?
     const navigate = useNavigate();
-    const { logoutUser } = useAuth();
+    const { logoutUser } = useAuthContext();
     
     async function request(
         method: Method,
@@ -26,7 +26,7 @@ export function useFetch() {
             if (!response.ok) {
                 if (response.status === 403) {
                     logoutUser();
-                    navigate(siteBaseUrl + '/login');
+                    navigate('/login');
                     return
                 }
                 const error = await response.json();

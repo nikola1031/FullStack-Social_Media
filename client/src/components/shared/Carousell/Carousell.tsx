@@ -1,5 +1,7 @@
+import styles from './Carousell.module.css';
+import { faChevronCircleLeft, faChevronCircleRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
-import './Carousell.css';
 
 interface CarousellProps {
   images: string[];
@@ -19,13 +21,17 @@ export default function Carousell({ images }: CarousellProps) {
     }
 
     return (
-        <div className="carousell-wrapper">
-            <img className="carousell-image" src={images[currentIndex]} alt="post image" />
-            <button onClick={moveLeft} className="carousell-button carousell-left">
-                <i className="fa-solid fa-circle-chevron-left"></i>
+        <div className={styles["carousell-wrapper"]}>
+            <img className={styles["carousell-image"]} src={images[currentIndex]} alt="post image" />
+            <button onClick={moveLeft} className={`${styles["carousell-button"]} ${styles["carousell-left"]}`}>
+                <span className={styles["carousell-arrow-left"]}>
+                    <FontAwesomeIcon icon={faChevronCircleLeft} />
+                </span>
             </button>
-            <button onClick={moveRight} className="carousell-button carousell-right">
-                <i className="fa-solid fa-circle-chevron-right"></i>
+            <button onClick={moveRight} className={`${styles["carousell-button"]} ${styles["carousell-right"]}`}>
+                <span className={styles["carousell-arrow-right"]}>
+                    <FontAwesomeIcon icon={faChevronCircleRight} />
+                </span>
             </button>
         </div>
     )

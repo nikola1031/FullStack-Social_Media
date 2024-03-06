@@ -1,5 +1,5 @@
 import { formatRelativeTime } from "../../../utils/timeAgoFormatter";
-import "./Time.css";
+import styles from "./Time.module.css";
 
 interface TimeProps {
     time: string
@@ -7,7 +7,7 @@ interface TimeProps {
 
 export default function Time({time}: TimeProps) {
   return (
-    <time className="time">
+    <time className={styles["time"]}>
         {formatRelativeTime(time)}
     </time>
   )

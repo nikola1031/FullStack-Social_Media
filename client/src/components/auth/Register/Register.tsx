@@ -1,4 +1,4 @@
-import '../../../styles/Forms.css';
+import formStyles from '../../../styles/forms.module.css';
 import { useTitle } from '../../../hooks/useTitle';
 import { Link } from 'react-router-dom';
 import { useForm } from '../../../hooks/useForm';
@@ -32,14 +32,14 @@ export default function Register() {
     };
 
     return (
-        <div className="form-wrapper">
-            <form onSubmit={handleSubmit} className="form-container">
-                <h2 className="form-title">Register New Account</h2>
-                {error && <p className="error-msg-main">{error}</p>}
-                <div className="form-group">
-                    <label className='form-label' htmlFor="username">Username</label>
+        <div className={formStyles["form-wrapper"]}>
+            <form onSubmit={handleSubmit} className={formStyles["form-container"]}>
+                <h2 className={formStyles["form-title"]}>Register New Account</h2>
+                {error && <p className={formStyles["error-msg-main"]}>{error}</p>}
+                <div className={formStyles["form-group"]}>
+                    <label className={formStyles["form-label"]} htmlFor="username">Username</label>
                     <input
-                        className={`form-input ${Object.values(errors.username).some(error => error) ? 'input-error' : ''}`}
+                        className={`${formStyles["form-input"]} ${Object.values(errors.username).some(error => error) ? formStyles["input-error"] : ''}`}
                         type="text"
                         id="username"
                         name="username"
@@ -48,15 +48,17 @@ export default function Register() {
                         onChange={hadleChange}
                         onBlur={(e) => setValidators([validateEmpty(), validateLength(3, 16), validatePattern(VALIDATION_PATTERNS.username)], e)}
                         required
-                        />
+                    />
                     {errors.username && Object.entries(errors.username).map(([key, error]) => {
-                            return <p key={key} className="error-msg">{error}</p>
-                        })}
+                        if (error) {
+                            return <p key={key} className={formStyles["error-msg"]}>{error}</p>
+                        }
+                    })}
                 </div>
-                <div className="form-group">
-                    <label className='form-label' htmlFor="email">Email</label>
+                <div className={formStyles["form-group"]}>
+                    <label className={formStyles["form-label"]} htmlFor="email">Email</label>
                     <input
-                        className={`form-input ${Object.values(errors.email).some(error => error) ? 'input-error' : ''}`}
+                        className={`${formStyles["form-input"]} ${Object.values(errors.email).some(error => error) ? formStyles["input-error"] : ''}`}
                         type="email"
                         id="email"
                         name="email"
@@ -67,13 +69,15 @@ export default function Register() {
                         required
                     />
                     {errors.email && Object.entries(errors.email).map(([key, error]) => {
-                            return <p key={key} className="error-msg">{error}</p>
-                        })}
+                        if (error) {
+                            return <p key={key} className={formStyles["error-msg"]}>{error}</p>
+                        }
+                    })}
                 </div>
-                <div className="form-group">
-                    <label className='form-label' htmlFor="password">Password</label>
+                <div className={formStyles["form-group"]}>
+                    <label className={formStyles["form-label"]} htmlFor="password">Password</label>
                     <input
-                        className={`form-input ${Object.values(errors.password).some(error => error) || errors.confirmPass.match ? 'input-error' : ''}`}
+                        className={`${formStyles["form-input"]} ${Object.values(errors.password).some(error => error) || errors.confirmPass.match ? formStyles["input-error"] : ''}`}
                         type="password"
                         id="password"
                         name="password"
@@ -82,20 +86,22 @@ export default function Register() {
                         onChange={hadleChange}
                         onBlur={(e) => setValidators(
                             [
-                                validateEmpty(), 
-                                validateLength(8, 40), 
+                                validateEmpty(),
+                                validateLength(8, 40),
                                 validatePattern(VALIDATION_PATTERNS.password)
                             ], e)}
                         required
                     />
                     {errors.password && Object.entries(errors.password).map(([key, error]) => {
-                            return <p key={key} className="error-msg">{error}</p>
-                        })}
+                        if (error) {
+                            return <p key={key} className={formStyles["error-msg"]}>{error}</p>
+                        }
+                    })}
                 </div>
-                <div className="form-group">
-                    <label className='form-label' htmlFor="confirmPass">Confirm Password</label>
+                <div className={formStyles["form-group"]}>
+                    <label className={formStyles["form-label"]} htmlFor="confirmPass">Confirm Password</label>
                     <input
-                        className={`form-input ${Object.values(errors.confirmPass).some(error => error) ? 'input-error' : ''}`}
+                        className={`${formStyles["form-input"]} ${Object.values(errors.confirmPass).some(error => error) ? formStyles["input-error"] : ''}`}
                         type="password"
                         id="confirmPass"
                         name="confirmPass"
@@ -106,12 +112,14 @@ export default function Register() {
                         required
                     />
                     {errors.confirmPass && Object.entries(errors.confirmPass).map(([key, error]) => {
-                            return <p key={key} className="error-msg">{error}</p>
-                        })}
+                        if (error) {
+                            return <p key={key} className={formStyles["error-msg"]}>{error}</p>
+                        }
+                    })}
                 </div>
-                <div className="form-group">
+                <div className={formStyles["form-group"]}>
                     <label>Gender</label>
-                    <div className="radio-group">
+                    <div className={formStyles["radio-group"]}>
                         <input
                             type="radio"
                             id="male"
@@ -123,7 +131,7 @@ export default function Register() {
                         />
                         <label htmlFor="male">Male</label>
                     </div>
-                    <div className="radio-group">
+                    <div className={formStyles["radio-group"]}>
                         <input
                             type="radio"
                             id="female"
@@ -136,11 +144,11 @@ export default function Register() {
                         <label htmlFor="female">Female</label>
                     </div>
                 </div>
-                <button type="submit" disabled={isLoading} className="submit-btn">
+                <button type="submit" disabled={isLoading} className={formStyles["submit-btn"]}>
                     Register
                 </button>
             </form>
-            <p>Already have an account? <Link to={"/login"} className="form-link">Login</Link></p>
+            <p>Already have an account? <Link to={"/login"} className={formStyles["form-link"]}>Login</Link></p>
         </div>
     );
 }

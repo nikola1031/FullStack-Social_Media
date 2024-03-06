@@ -5,7 +5,7 @@ export function useApiPosts() {
     const { get, post, put, del } = useFetch()
 
     const getPosts: () => Promise<any[]> = async () => get(postsEndpoints.base(), null);
-    const uploadPost: (post: any) => Promise<any> = async (post) => post(postsEndpoints.base(), post);
+    const uploadPost: (newPost: any) => Promise<any> = async (newPost) => post(postsEndpoints.base(), newPost);
     const updatePost: (postId: string, text: any) => Promise<any> = async (postId, text) => put(postsEndpoints.postById(postId), text);
     const deletePostById: (postId: string) => Promise<any> = async (postId) => del(postsEndpoints.postById(postId), null);
     const getPostsByUser: (userId: string) => Promise<any[]> = async (userId) => get(postsEndpoints.postByUser(userId));

@@ -1,5 +1,8 @@
 import { useState } from 'react';
-import './Toast.css'
+import styles from './Toast.module.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleCheck, faCircleExclamation, faCircleXmark, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
+
 
 interface ToastProps {
     message: string | null;
@@ -19,24 +22,28 @@ export default function Toast({message, type = 'info'}: ToastProps) {
         'info': 'Info'
     }
 
-    const iconTypeClass = {
-        'error': 'fa-triangle-exclamation',
-        'success': 'fa-circle-check',
-        'info': 'fa-circle-exclamation'
+    const iconType = {
+        'error': {class: 'triangle-exclamation', element: faTriangleExclamation},
+        'success': {class: 'circle-check', element: faCircleCheck},
+        'info': {class: 'circle-exclamation', element: faCircleExclamation}
     }
 
     return (
         showToast && 
-        <div className={`toast${showToast && ' show'}`} aria-live='assertive'>
-            <div className='icon-wrapper'>
-                <i className={`fa-solid ${iconTypeClass[type]}`} />
+        <div className={`${styles.toast}${showToast ? ` ${styles.show}` : ''}`} aria-live='assertive'>
+            <div className={styles['icon-wrapper']}>
+                <span className={styles[iconType[type].class]}>
+                    <FontAwesomeIcon icon={iconType[type].element} />
+                </span>
             </div>
-            <div className='message-wrapper'>
-                <p className='toast-type'>{messageTitles[type]}</p>
-                <p className={`toast-message ${type}`}>{message}</p>
+            <div className={styles['message-wrapper']}>
+                <p className={styles['toast-type']}>{messageTitles[type]}</p>
+                <p className={`${styles['toast-message']} ${styles[type]}`}>{message}</p>
             </div>
-            <button onClick={closeToast} className="toast-close">
-                <i className="fa-regular fa-circle-xmark" />
+            <button onClick={closeToast} className={styles['toast-close']}>
+                <span className={styles['circle-xmark']}>
+                    <FontAwesomeIcon icon={faCircleXmark} />
+                </span>
             </button>
         </div>
     )

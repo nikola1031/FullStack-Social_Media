@@ -13,21 +13,9 @@
     justify-content: space-between;
 }
 
-.full-post-header .fa-ellipsis {
-    font-size: 1.5rem;
-    cursor: pointer;
-    padding: 4px 6px;
-    border-radius: 100%;
-    
-    &&:hover {
-        background-color: #b1abab42;
-        transition: background-color 0.2s ease-in;
-    }
-}
-
 .full-post-dropdown-container {
     position: relative;
-    z-index: 10000;
+    z-index: 100;
 }
 
 .full-post-dropdown-button {
@@ -63,9 +51,22 @@
         }
 }
 
-.fa-eraser, .fa-trash {
+.icon:not(.ellipsis) {
     margin-right: 0.5rem;;
 }
+
+.ellipsis {
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 4px 9px;
+    border-radius: 100%;
+    
+    &&:hover {
+        background-color: #b1abab42;
+        transition: background-color 0.2s ease-in;
+    }
+}
+
 
 .full-post-edit-form {
     display: flex;
@@ -76,8 +77,9 @@
 
 .full-post-edit-field {
     width: 100%;
+    min-height: 100px;
     background-color: #3a3b3c;
-    padding: 0.5rem 0 0.5rem 0.5rem;
+    padding: 0.5rem;
     border: none;
     outline: none;
     color: #fff;
@@ -107,7 +109,7 @@
 }
 
 .full-post-text {
-    margin: 0.5rem 0;
+    margin: 1rem 0;
 
 }
 
@@ -131,13 +133,6 @@
 
 .comment-count {
     cursor: pointer;
-}
-
-.divider {
-    opacity: 0.5;
-    border-width: 0.05rem;
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
 }
 
 .full-post-buttons {

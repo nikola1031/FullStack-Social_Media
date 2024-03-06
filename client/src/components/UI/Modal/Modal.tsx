@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import './Modal.css';
+import styles from './Modal.module.css';
 
 interface ModalProps {
     show: boolean;
@@ -32,20 +32,20 @@ export default function Modal({show, action, onClose}: ModalProps) {
     return (
         show &&
         (
-            <div className='modal-overlay' onClick={onClose}>
-                <div role='dialog' autoFocus className='modal-container' onClick={handleModalClick}>
-                    <header className='modal-header'>
-                        <h1>Delete Action</h1>
-                    </header>
-                    <div className='modal-body'>
-                        <h3>Are you sure you want to do this?</h3>
-                    </div>
-                    <div className='modal-buttons'>
-                        <button onClick={handleOnAction} className='delete-btn'>Delete</button>
-                        <button onClick={onClose} className='cancel-btn'>Cancel</button>
-                    </div>
+        <div className={styles['modal-overlay']} onClick={onClose}>
+            <div role='dialog' autoFocus className={styles['modal-container']} onClick={handleModalClick}>
+                <header className={styles['modal-header']}>
+                    <h1 className={styles['modal-h1']}>Delete Action</h1>
+                </header>
+                <div className={styles['modal-body']}>
+                    <h3 className={styles['modal-h3']}>Are you sure you want to do this?</h3>
+                </div>
+                <div className={styles['modal-buttons']}>
+                    <button onClick={handleOnAction} className={styles['delete-btn']}>Delete</button>
+                    <button onClick={onClose} className={styles['cancel-btn']}>Cancel</button>
                 </div>
             </div>
+        </div>
         )
     )
 }

@@ -1,5 +1,5 @@
+import styles from "./Comment.module.css";
 import { CommentData } from "../../../../../types/data";
-import "./Comment.css";
 import { useState } from "react";
 import { useAuthContext } from "../../../../../hooks/auth/useAuthContext";
 import { Link } from "react-router-dom";
@@ -7,6 +7,9 @@ import PathConstants from "../../../../../routes/PathConstants";
 import Avatar from "../../../../UI/Avatar/Avatar";
 import Time from "../../../../UI/Time/Time";
 import CommentActionButton from "../../../../UI/CommentActionButton/CommentActionButton";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHeart } from "@fortawesome/free-solid-svg-icons";
+
 
 interface CommentProps {
     comment: CommentData;
@@ -55,47 +58,58 @@ export default function Comment({comment, postId, deleteComment, updateComment, 
     }
 
     return (
-            <div className="comment">
-                <div>
-                    <Avatar image={comment.author.profilePicture} withLinkTo={comment.author._id} size="small"/>
-                </div>
-                <div className="comment-info-container">
-                    <div className="comment-info">
-                        <Link to={`/${PathConstants.Profile}/${comment.author._id}`}>
-                            <p className="comment-username">{comment.author.username}</p>
-                        </Link>
-                        { isEditing 
-                            ? 
-                                (
-                                <div className="comment-edit-form" onSubmit={handleEditComment}>
-                                    <textarea className="comment-edit-field" value={updatedComment} onChange={handleChange} placeholder="Write a comment..." />
-                                </div>    
-                                )       
-                            : 
-                                (
-                                <div className="comment-content">
-                                    <p>{comment.text}</p>
-                                    <div className="comment-likes">{likeCount}<i className="fa-solid fa-heart"></i></div>
-                                </div>
-                                )
-                        }
-                    </div>
-                    <div className="comment-actions-container">
-                        <Time time={comment.createdAt} />
-                        <div className="comment-actions">
-                            <CommentActionButton type="like" onClickHandler={handleLikeComment} isLiked={isLiked}>Like</CommentActionButton>
-                            {isAuthor &&
-                                <>
-                                    <CommentActionButton type="delete" onClickHandler={handleDeleteComment}>Delete</CommentActionButton>
-                                    <CommentActionButton type="edit" onClickHandler={handleShowEdit}>{isEditing ? 'Cancel' : 'Edit'}</CommentActionButton>
-                                    {isEditing &&
-                                        <CommentActionButton type="submit" onClickHandler={handleEditComment} disabled={!updatedComment} >Submit</CommentActionButton>
-                                    }
-                                </>
-                            }
+        <div className={styles["comment"]}>
+            <div>
+                <Avatar image={comment.author.profilePicture} withLinkTo={comment.author._id} size="small"/>
+            </div>
+        <div className={styles["comment-info-container"]}>
+            <div className={styles["comment-info"]}>
+                <Link to={`/${PathConstants.Profile}/${comment.author._id}`}>
+                    <p className={styles["comment-username"]}>{comment.author.username}</p>
+                </Link>
+                {isEditing 
+                    ? 
+                    (
+                        <form className={styles["comment-edit-form"]} onSubmit={handleEditComment}>
+                            <textarea className={styles["comment-edit-field"]} value={updatedComment} onChange={handleChange} placeholder="Write a comment..." />
+                        </form>    
+                    )       
+                    : 
+                    (
+                        <div className={styles["comment-content"]}>
+                            <p>{comment.text}</p>
+                            <div className={styles["comment-likes"]}>
+                                <span>
+                                    {likeCount}
+                                </span>
+                                <span className={styles["heart"]}>
+                                    <FontAwesomeIcon icon={faHeart} />
+                                </span>
+                            </div>
                         </div>
-                    </div>
+                    )
+                }
+            </div>
+            <div className={styles["comment-actions-container"]}>
+                <Time time={comment.createdAt} />
+                <div className={styles["comment-actions"]}>
+                    <CommentActionButton type="like" onClickHandler={handleLikeComment} isLiked={isLiked}>Like</CommentActionButton>
+                    {isAuthor &&
+                        <>
+                            {!isEditing &&
+                                <CommentActionButton type="delete" onClickHandler={handleDeleteComment}>Delete</CommentActionButton>
+                            }
+                            
+                            <CommentActionButton type="edit" onClickHandler={handleShowEdit}>{isEditing ? 'Cancel' : 'Edit'}</CommentActionButton>
+                            
+                            {isEditing &&
+                                <CommentActionButton type="submit" onClickHandler={handleEditComment}>Confirm</CommentActionButton>
+                            }
+                        </>
+                    }
                 </div>
             </div>
+        </div>
+    </div>
     );
 }

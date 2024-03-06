@@ -75,6 +75,14 @@
     display: none;
 }
 
+.icon {
+    margin-top: 6px;
+}
+
+.button-content {
+    margin-right: 0.2rem;
+}
+
 .friend-button {
     background-color: #2c3230;
     color: #fff;
@@ -110,7 +118,9 @@
     }
 
     .my-profile-nav-button {
-        display: block;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         margin: 0 auto;
         color: inherit;
         background-color: transparent;
@@ -122,6 +132,7 @@
     }
 
     .my-profile-nav {
+        z-index: 100;
         width: 60%;
         display: none;
         background-color: #2d3a51;

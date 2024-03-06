@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react';
 
 export function useClickOutside(handler: () => void) {
-    const ref = useRef<HTMLElement>(null);
+    // Using HTMLElement as a type causes ts errors due to some legacy(?) attributes
+    const ref = useRef<any>(null);
 
     useEffect(() => {
         function handleClickOutside(e: MouseEvent) {

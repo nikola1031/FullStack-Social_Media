@@ -1,5 +1,4 @@
-import './EditProfile.css';
-import '../../../styles/forms.css';
+import formStyles from '../../../styles/forms.module.css';
 import { useAuthContext } from '../../../hooks/auth/useAuthContext';
 import { useTitle } from '../../../hooks/useTitle';
 import { useForm } from '../../../hooks/useForm';
@@ -43,15 +42,15 @@ export default function EditProfile() {
     };
 
     return (
-        <section className="form-positioner">
-            <form onSubmit={handleSubmit} className="form-container">
-                <h2 className="form-title">Edit Profile</h2>
+        <section className={formStyles["form-positioner"]}>
+            <form onSubmit={handleSubmit} className={formStyles["form-container"]}>
+                <h2 className={formStyles["form-title"]}>Edit Profile</h2>
                 {success && <Toast message={success} type='success'/>}
                 {error && <Toast message={error} type='error'/>}
-                <div className="form-group">
-                    <label className='form-label' htmlFor="username">Username</label>
+                <div className={formStyles["form-group"]}>
+                    <label className={formStyles['form-label']} htmlFor="username">Username</label>
                     <input
-                        className={`form-input ${Object.values(errors.username).some(error => error) ? 'input-error' : ''}`}
+                        className={`${formStyles["form-input"]} ${Object.values(errors.username).some(error => error) ? formStyles['input-error'] : ''}`}
                         type="text"
                         id="username"
                         name="username"
@@ -62,17 +61,19 @@ export default function EditProfile() {
                                 validateEmpty(), 
                                 validateLength(3, 16), 
                                 validatePattern(VALIDATION_PATTERNS.username)
-                        ], e)}
+                            ], e)}
                         required
                     />
                     {errors.username && Object.entries(errors.username).map(([key, error]) => {
-                            return <p key={key} className="error-msg">{error}</p>
+                        if (error) {
+                            return <p key={key} className={formStyles["error-msg"]}>{error}</p>
+                        }
                         })}
                 </div>
-                <div className="form-group">
-                    <label className='form-label' htmlFor="email">Email</label>
+                <div className={formStyles["form-group"]}>
+                    <label className={formStyles['form-label']} htmlFor="email">Email</label>
                     <input
-                        className={`form-input ${Object.values(errors.email).some(error => error) ? 'input-error' : ''}`}
+                        className={`${formStyles["form-input"]} ${Object.values(errors.email).some(error => error) ? formStyles['input-error'] : ''}`}
                         type="email"
                         id="email"
                         name="email"
@@ -84,13 +85,15 @@ export default function EditProfile() {
                         required
                     />
                     {errors.email && Object.entries(errors.email).map(([key, error]) => {
-                            return <p key={key} className="error-msg">{error}</p>
+                            if (error) {
+                                return <p key={key} className={formStyles["error-msg"]}>{error}</p>
+                            }
                         })}
                 </div>
-                <div className="form-group">
-                    <label className='form-label' htmlFor="bio">Bio</label>
+                <div className={formStyles["form-group"]}>
+                    <label className={formStyles['form-label']} htmlFor="bio">Bio</label>
                     <textarea
-                        className={`form-input ${Object.values(errors.bio).some(error => error) ? 'input-error' : ''}`}
+                        className={`${formStyles["form-input"]} ${Object.values(errors.bio).some(error => error) ? formStyles['input-error'] : ''}`}
                         id="bio"
                         name="bio"
                         value={values.bio}
@@ -99,27 +102,30 @@ export default function EditProfile() {
                         required
                     />
                     {errors.bio && Object.entries(errors.bio).map(([key, error]) => {
-                            return <p key={key} className="error-msg">{error}</p>
+                            if (error) {
+                                return <p key={key} className={formStyles["error-msg"]}>{error}</p>
+                            }
                         })}
                 </div>
-                    <div className="form-group">
-                        <label className='form-label' htmlFor="password">Confirm Password</label>
-                        <input
-                            className={`form-input ${Object.values(errors.password).some(error => error) ? 'input-error' : ''}`}
-                            type="password"
-                            id="password"
-                            name="password"
-                            placeholder='Enter password to confirm changes'
-                            value={values.password}
-                            onChange={hadleChange}
-                            onBlur={(e) => setValidators([validateEmpty()], e)}
-                        />
-                        {errors.password && Object.entries(errors.password).map(([key, error]) => {
-                            return <p key={key} className="error-msg">{error}</p>
+                <div className={formStyles["form-group"]}>
+                    <label className={formStyles['form-label']} htmlFor="password">Confirm Password</label>
+                    <input
+                        className={`${formStyles["form-input"]} ${Object.values(errors.password).some(error => error) ? formStyles['input-error'] : ''}`}
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder='Enter password to confirm changes'
+                        value={values.password}
+                        onChange={hadleChange}
+                        onBlur={(e) => setValidators([validateEmpty()], e)}
+                    />
+                    {errors.password && Object.entries(errors.password).map(([key, error]) => {
+                            if (error) {
+                                return <p key={key} className={formStyles["error-msg"]}>{error}</p>
+                            }
                         })}
-                    </div>
-
-                <button disabled={loading} type="submit" className="submit-btn">
+                </div>
+                <button disabled={loading} type="submit" className={formStyles["submit-btn"]}>
                     {loading ? <Loader size='small' /> : 'Update'}
                 </button>
             </form>

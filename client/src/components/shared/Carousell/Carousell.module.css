@@ -34,23 +34,21 @@
   opacity: 1;
 }
 
-.fa-circle-chevron-left, .fa-circle-chevron-right {
+.carousell-arrow-left, .carousell-arrow-right {
+    position: absolute;
+    top: 50%;
     font-size: 2rem;
     padding: 5px 4px;
     color: rgb(90, 91, 90);
 }
 
-.fa-circle-chevron-left {
-    top: 50%;
+.carousell-arrow-left {
     left: 5%;
-    position: absolute;
     transform: translate(-50%, -50%);
 }
 
-.fa-circle-chevron-right {
-    top: 50%;
+.carousell-arrow-right {
     right: 5%;
-    position: absolute;
     transform: translate(50%, -50%);
 }
 
@@ -59,15 +57,15 @@
         opacity: 1;
     }
 
-    .fa-circle-chevron-left, .fa-circle-chevron-right {
+    .carousell-arrow-left, .carousell-arrow-right {
         color: rgb(196, 200, 196);
     }
 
-    .fa-circle-chevron-left {
+    .carousell-arrow-left {
         left: 8%;
     }
 
-    .fa-circle-chevron-right {
+    .carousell-arrow-right {
         right: 8%;
     }
 }

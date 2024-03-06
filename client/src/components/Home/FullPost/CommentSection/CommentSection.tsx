@@ -1,6 +1,6 @@
+import styles from "./CommentSection.module.css";
 import Comment from "./Comment/Comment";
 import CommentField from "./CommentField/CommentField";
-import "./CommentSection.css";
 import Loader from "../../../UI/Loader/Loader";
 import { useComments } from "../../../../hooks/useComments";
 import Toast from "../../../UI/Toast/Toast";
@@ -15,10 +15,10 @@ export default function CommentSection({postId, setCommentCount}: CommentSection
   const { comments, loading, error, updateComment, deleteComment, createComment, likeComment } = useComments(postId, setCommentCount); 
 
   return (
-    <section className="comment-section">
+    <section className={styles["comment-section"]}>
         <hr className="divider" />
         <CommentField createComment={createComment} />
-        <div className="comment-area">
+        <div className={styles["comment-area"]}>
             {!loading && error && <Toast message={error} type="error"/>}
             {loading ? 
                 <Loader />

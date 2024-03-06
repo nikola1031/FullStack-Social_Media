@@ -31,25 +31,25 @@
     height: 100%;
 }
 
-.fa-triangle-exclamation,
-.fa-circle-check,
-.fa-circle-exclamation {
+.triangle-exclamation,
+.circle-check,
+.circle-exclamation {
     font-size: 1.5rem;
 }
 
-.fa-circle-check {
+.circle-check {
     color: #63E6BE;
 }
 
-.fa-triangle-exclamation {
+.triangle-exclamation {
     color: #F8BBD0;
 }
 
-.fa-circle-exclamation {
+.circle-exclamation {
     color: #21859c;
 }
 
-.fa-circle-xmark {
+.circle-xmark {
     font-size: 24px;
 }
 
