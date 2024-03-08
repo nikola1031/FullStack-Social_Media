@@ -1,28 +1,57 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.removePost = exports.editPost = exports.getPosts = exports.savePost = void 0;
+exports.likePost = exports.removePost = exports.editPost = exports.getPosts = exports.savePost = void 0;
 const Comment_1 = require("../models/Comment");
-const Like_1 = require("../models/Like");
 const Post_1 = require("../models/Post");
-const types_1 = require("./types/types");
-const validators_1 = require("../validators/validators");
-const savePost = async ({ text, imageUrls, _ownerId }) => {
-    const newPost = new Post_1.Post({ text, imageUrls: (0, validators_1.filterImageUrls)(imageUrls), _ownerId });
-    await newPost.save();
-    return newPost;
+const User_1 = require("../models/User");
+const serviceHelpers_1 = require("./helpers/serviceHelpers");
+const savePost = async ({ text, images, author }) => {
+    try {
+        const imageUrls = await (0, serviceHelpers_1.savePhotos)(images, author);
+        await User_1.User.updateOne({ _id: author }, { $push: { photos: { $each: imageUrls.map(url => ({ url })) } } });
+        const newPost = new Post_1.Post({ text, imageUrls, author });
+        await newPost.save();
+        await newPost.populate({
+            path: 'author',
+            select: 'username profilePicture'
+        });
+        return newPost;
+    }
+    catch (error) {
+        throw error;
+    }
 };
 exports.savePost = savePost;
-const getPosts = async (userId) => {
-    if (userId) {
-        return await Post_1.Post.find({ _ownerId: userId });
+const getPosts = async (userId = null, liked) => {
+    if (liked) {
+        return await Post_1.Post.find({ 'likes.userLikes': userId }).populate({
+            path: 'author',
+            select: 'username profilePicture'
+        }).sort({ createdAt: 'desc' });
     }
-    const posts = await Post_1.Post.find({});
-    return posts;
+    if (userId) {
+        return await Post_1.Post.find({ author: userId }).populate({
+            path: 'author',
+            select: 'username profilePicture'
+        }).sort({ createdAt: 'desc' });
+    }
+    return await Post_1.Post.find(liked ? { 'likes.userLikes': userId } : {}).populate({
+        path: 'author',
+        select: 'username profilePicture'
+    }).sort({ createdAt: 'desc' });
 };
 exports.getPosts = getPosts;
 const editPost = async (text, postId) => {
-    const updatedPost = await Post_1.Post.findByIdAndUpdate(postId, { text }, { new: true, runValidators: true });
-    return updatedPost;
+    try {
+        const updatedPost = await Post_1.Post.findByIdAndUpdate(postId, { text }, { new: true, runValidators: true }).populate({
+            path: 'author',
+            select: 'username profilePicture'
+        });
+        return updatedPost;
+    }
+    catch (error) {
+        throw error;
+    }
 };
 exports.editPost = editPost;
 const removePost = async (_postId) => {
@@ -30,16 +59,22 @@ const removePost = async (_postId) => {
     if (postDeletion.deletedCount === 0) {
         throw new Error('Delete operation had no effect. Perform database integrity check');
     }
-    const commentDeletion = await Comment_1.Comment.deleteMany({ _postId });
-    if (commentDeletion.deletedCount === 0) {
-        return;
-    }
-    const commentIds = await Comment_1.Comment.distinct('_id', { _postId });
-    await Like_1.Like.deleteMany({
-        $or: [
-            { _targetId: _postId, targetType: types_1.TargetType.Post },
-            { _targetId: { $in: commentIds }, targetType: types_1.TargetType.Comment }
-        ]
-    });
+    await Comment_1.Comment.deleteMany({ _postId });
 };
 exports.removePost = removePost;
+const likePost = async (postId, userId) => {
+    try {
+        const post = await Post_1.Post.findById(postId);
+        if (!post) {
+            throw new Error("Post not found");
+        }
+        // pushing or pulling from array, and adjusting post count by +1 or -1
+        const action = post.likes.userLikes.includes(userId) ? '$pull' : '$push';
+        return await Post_1.Post.findByIdAndUpdate(postId, { [action]: { 'likes.userLikes': userId } }, { new: true, runValidators: true });
+    }
+    catch (error) {
+        throw error;
+    }
+};
+exports.likePost = likePost;
+//# sourceMappingURL=postService.js.map

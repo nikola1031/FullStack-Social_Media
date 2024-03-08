@@ -19,7 +19,3 @@ function App() {
 }
 
 export default App;
-
-// Do router stuff in the App
-// Top level element will be rendered as a layout, everything under will be a child rendered in the outlet
-// main.tsx renders the App and nothing else

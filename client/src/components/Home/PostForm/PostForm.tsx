@@ -44,7 +44,7 @@ export default function PostForm({ createPost, loading }: PostFormProps) {
                     encType="multipart/form-data"
                 >
                     <div className={styles["send-post-input-container"]}>
-                    <Avatar image={user?.profilePicture} withLinkTo={user?._id}/>
+                    <Avatar image={user?.profilePicture} size='large' withLinkTo={user?._id}/>
                         <textarea
                             onChange={handleTextChange}
                             value={postText}

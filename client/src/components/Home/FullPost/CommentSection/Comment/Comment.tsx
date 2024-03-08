@@ -1,5 +1,5 @@
 import styles from "./Comment.module.css";
-import { CommentData } from "../../../../../types/data";
+import { Comment as CommentType } from "../../../../../types/data";
 import { useState } from "react";
 import { useAuthContext } from "../../../../../hooks/auth/useAuthContext";
 import { Link } from "react-router-dom";
@@ -12,7 +12,7 @@ import { faHeart } from "@fortawesome/free-solid-svg-icons";
 
 
 interface CommentProps {
-    comment: CommentData;
+    comment: CommentType;
     postId: string;
     updateComment: (commentId: string, updatedComment: string) => void;
     deleteComment: (commentId: string) => void;

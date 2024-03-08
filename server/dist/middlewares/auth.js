@@ -21,7 +21,7 @@ function auth() {
         }
         catch (error) {
             if (error instanceof jsonwebtoken_1.default.TokenExpiredError) {
-                return res.status(401).json({ message: 'Token expired or is invalid. Please log in' });
+                return res.status(403).json({ message: 'Token expired or is invalid. Please log in' });
             }
             else {
                 return res.status(400).json({ message: error.message });
@@ -33,3 +33,4 @@ exports.auth = auth;
 function validateToken(token) {
     return jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
 }
+//# sourceMappingURL=auth.js.map

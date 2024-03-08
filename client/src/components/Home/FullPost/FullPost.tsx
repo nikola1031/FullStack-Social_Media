@@ -1,6 +1,6 @@
 import styles from './FullPost.module.css';
 import { useState } from 'react';
-import { PostData } from '../../../types/data';
+import { Post } from '../../../types/data';
 import CommentSection from './CommentSection/CommentSection';
 import { useAuthContext } from '../../../hooks/auth/useAuthContext';
 import { Link } from 'react-router-dom';
@@ -15,9 +15,9 @@ import { faComment, faThumbsUp, faTrash, faEraser, faEllipsis } from '@fortaweso
 
 
 interface FullPostProps {
-    post: PostData | undefined;
-    updatePost: (post: PostData, text: string) => void;
-    deletePost: (post: PostData) => void;
+    post: Post | undefined;
+    updatePost: (post: Post, text: string) => void;
+    deletePost: (post: Post) => void;
     likePost: (postId: string) => Promise<number>
 }
 

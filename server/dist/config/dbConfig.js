@@ -19,3 +19,4 @@ async function initDB() {
     }
 }
 exports.initDB = initDB;
+//# sourceMappingURL=dbConfig.js.map

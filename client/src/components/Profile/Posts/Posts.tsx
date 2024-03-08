@@ -4,13 +4,13 @@ import Post from './Post/Post';
 import { useState } from 'react';
 import Overlay from '../../shared/Overlay/Overlay';
 import FullPost from '../../Home/FullPost/FullPost';
-import { PostData } from '../../../types/data';
+import { Post as PostType } from '../../../types/data';
 import { useAuthContext } from '../../../hooks/auth/useAuthContext';
 import { useTitle } from '../../../hooks/useTitle';
 import { usePosts } from '../../../hooks/usePosts';
 import Toast from '../../UI/Toast/Toast';
 
-function findPost(postId: string, posts: PostData[]) {
+function findPost(postId: string, posts: PostType[]) {
     return posts.find(post => post._id === postId);
 }
 

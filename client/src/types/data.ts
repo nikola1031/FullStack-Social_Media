@@ -1,4 +1,4 @@
-type BaseData = {
+type BaseEntityData = {
     _id: string;
     text: string;
     likes: {
@@ -12,24 +12,17 @@ type BaseData = {
     createdAt: string;
 };
 
-export type PostData = BaseData & {
+export type Post = BaseEntityData & {
     imageUrls: string[];
     commentCount: number;
 };
 
-export type CommentData = BaseData & {
+export type Comment = BaseEntityData & {
     _postId: string;
 };
 
-export type Friend = {
-    _id: string;
-    username: string;
-    profilePicture: string;
-}
-
-export type FriendRequests = {
-    received: Friend[]
-    sent: string[]
+export type ServerMessage = {
+    message: string;
 }
 
 export type LoggedInUserData = {
@@ -47,6 +40,16 @@ export type Image = {
     _id: string;
     url: string;
     dateAdded: string;
+}
+
+export type UserImages = {
+    _id: string;
+    photos: Image[];
+}
+
+export type UserProfilePicture = {
+    _id: string;
+    profilePicture: string;
 }
 
 export type UserData = {
@@ -92,6 +95,22 @@ export type Passwords = {
     password: string;
     newPassword: string;
     confirmPass: string;
+}
+
+export type Friend = {
+    _id: string;
+    username: string;
+    profilePicture: string;
+}
+
+export type FriendRequests = {
+    received: Friend[];
+    sent: string[];
+}
+
+export type FriendData = {
+    friendRequests: FriendRequests;
+    friends: Friend[];
 }
 
 export enum FriendStatusEnum {

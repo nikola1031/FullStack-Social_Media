@@ -18,7 +18,10 @@ export const editProfile = async (data: ProfileData, userId: string) => {
     user.username = data.username;
 
     await user.save();
-    return user;
+    return user.populate(
+        'friendRequests.received friendRequests.sent friends', 
+        'username profilePicture'
+    );
 }
 
 export const editPassword = async (passwords: Passwords, userId: string) => {
@@ -175,13 +178,16 @@ export const deletePhoto = async (url: string, userId: string) => {
 
 export const fetchProfileData = async (loggedInUserId: string, userId: string ) => {
     const fields = 'username bio profilePicture photos gender friends following followers';
+    let user;
 
     if (userId === loggedInUserId) {
-        return await User.findById(userId).select(fields + ' friendRequests')
+        user = await User.findById(userId).select(fields + ' friendRequests')
         .populate('friends friendRequests.received', 'username profilePicture');
     } else {
-        return await User.findById(userId).select(fields).populate('friends', 'username profilePicture');
-    }
+        user = await User.findById(userId).select(fields).populate('friends', 'username profilePicture');
+    }z
+    user!.photos.reverse(); // easiest way to get the newest photos first
+    return user;
 }
 
 export const fetchFriendStatus: (id1: string, id2: string) => Promise<string>  = async (loggedInUserId: string, otherUserId: string) => {

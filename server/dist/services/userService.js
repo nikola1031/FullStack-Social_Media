@@ -1,26 +1,21 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fetchProfileData = exports.fetchPhotos = exports.uploadPhotos = exports.toggleFollowUser = exports.toggleFriendship = exports.removeFriendshipRequest = exports.toggleFriendshipRequest = exports.editProfilePicture = exports.editPassword = exports.editProfile = void 0;
+exports.fetchFriendStatus = exports.fetchProfileData = exports.deletePhoto = exports.fetchPhotos = exports.uploadPhotos = exports.toggleFollowUser = exports.toggleFriendship = exports.toggleFriendshipRequest = exports.editProfilePicture = exports.editPassword = exports.editProfile = void 0;
 const User_1 = require("../models/User");
 const serviceHelpers_1 = require("./helpers/serviceHelpers");
-function hasEmailAndPassword(data) {
-    return data && typeof data.email === 'string' && typeof data.password === 'string';
-}
 const editProfile = async (data, userId) => {
     const user = await User_1.User.findById(userId);
     if (!user) {
         throw new Error('User not found');
     }
-    if (hasEmailAndPassword(data) && !(await (0, serviceHelpers_1.comparePasswords)(data.password, user.password))) {
+    if (!(await (0, serviceHelpers_1.comparePasswords)(data.password, user.password))) {
         throw new Error('Incorrect password');
     }
-    if (hasEmailAndPassword(data)) {
-        user.email = data.email;
-    }
-    data.bio ? user.bio = data.bio : null;
-    data.username ? user.username = data.username : null;
+    user.email = data.email;
+    user.bio = data.bio;
+    user.username = data.username;
     await user.save();
-    return user;
+    return user.populate('friendRequests.received friendRequests.sent friends', 'username profilePicture');
 };
 exports.editProfile = editProfile;
 const editPassword = async (passwords, userId) => {
@@ -39,93 +34,93 @@ const editPassword = async (passwords, userId) => {
 };
 exports.editPassword = editPassword;
 const editProfilePicture = async (profilePicture, userId) => {
-    const updatedUser = await User_1.User.findByIdAndUpdate(userId, { profilePicture }, { new: true });
+    const updatedUser = await User_1.User.findByIdAndUpdate(userId, { profilePicture }, { new: true }).select('profilePicture');
     if (!updatedUser) {
         throw new Error('Profile picture update failed. Invalid user');
     }
     return updatedUser;
 };
 exports.editProfilePicture = editProfilePicture;
-const toggleFriendshipRequest = async (userId, otherUserId) => {
-    let result;
-    if (userId === otherUserId) {
+const toggleFriendshipRequest = async (loggedInUserId, otherUserId) => {
+    if (loggedInUserId === otherUserId) {
         throw new Error('Cannot request friendship with self');
     }
-    const [user, otherUser] = await Promise.all([User_1.User.findById(userId), User_1.User.findById(otherUserId)]);
-    if (!user || !otherUser) {
+    const [loggedInUser, otherUser] = await Promise.all([User_1.User.findById(loggedInUserId), User_1.User.findById(otherUserId)]);
+    if (!loggedInUser || !otherUser) {
         throw new Error('User not found');
     }
-    if (user.friends.includes(otherUserId)) {
-        throw new Error('Users are already friends');
+    if (loggedInUser.friends.includes(otherUserId)) {
+        throw new Error('You are already friends');
     }
-    if (otherUser.friendRequests.includes(userId)) {
-        result = await User_1.User.updateOne({ _id: otherUserId }, { $pull: { friendRequests: userId } });
+    if (loggedInUser.friendRequests.sent.includes(otherUserId) || loggedInUser.friendRequests.received.includes(otherUserId)) {
+        const [_, result] = await Promise.all([
+            User_1.User.updateOne({ _id: otherUserId }, { $pull: { 'friendRequests.received': loggedInUserId, 'friendRequests.sent': loggedInUserId } }),
+            User_1.User.findByIdAndUpdate(loggedInUserId, { $pull: { 'friendRequests.received': otherUserId, 'friendRequests.sent': otherUserId } }, { new: true })
+                .select('friendRequests.received friendRequests.sent')
+                .populate('friendRequests.received', 'username profilePicture')
+        ]);
+        return result;
     }
     else {
-        result = await User_1.User.updateOne({ _id: otherUserId }, { $push: { friendRequests: userId } });
-    }
-    if (result.matchedCount === 0) {
-        throw new Error('User not found');
-    }
-    if (result.modifiedCount === 0) {
-        throw new Error('Friend request not added');
+        const [_, result] = await Promise.all([
+            User_1.User.updateOne({ _id: otherUserId }, { $push: { 'friendRequests.received': loggedInUserId } }),
+            User_1.User.findByIdAndUpdate(loggedInUserId, { $push: { 'friendRequests.sent': otherUserId } }, { new: true })
+                .select('friendRequests.received friendRequests.sent')
+                .populate('friendRequests.received', 'username profilePicture')
+        ]);
+        return result;
     }
 };
 exports.toggleFriendshipRequest = toggleFriendshipRequest;
-const removeFriendshipRequest = async (userId, otherUserId) => {
-    const result = await User_1.User.updateOne({ _id: userId }, { $pull: { friendRequests: otherUserId } });
-    if (result.modifiedCount !== 1) {
-        throw new Error('Remove friendship request operation had no effect. Perform database integrity check');
+const toggleFriendship = async (loggedInUserId, otherUserId) => {
+    if (loggedInUserId === otherUserId) {
+        throw new Error('Can\'t befriend self');
     }
-};
-exports.removeFriendshipRequest = removeFriendshipRequest;
-const toggleFriendship = async (userId, otherUserId) => {
-    let result;
-    if (userId === otherUserId) {
-        throw new Error('Cannot befriend self');
-    }
-    const user = await User_1.User.findById(userId);
-    if (!user) {
+    const loggedInUser = await User_1.User.findById(loggedInUserId);
+    if (!loggedInUser) {
         throw new Error('User not found');
     }
-    if (user.friends.includes(otherUserId)) {
-        result = await Promise.all([
-            User_1.User.updateOne({ _id: userId }, { $pull: { friends: otherUserId } }),
-            User_1.User.updateOne({ _id: otherUserId }, { $pull: { friends: userId } }),
+    if (loggedInUser.friends.includes(otherUserId)) {
+        const [_, result] = await Promise.all([
+            User_1.User.updateOne({ _id: otherUserId }, { $pull: { friends: loggedInUserId } }),
+            User_1.User.findByIdAndUpdate(loggedInUserId, { $pull: { friends: otherUserId } }, { new: true })
+                .select('friendRequests.received friendRequests.sent friends')
+                .populate('friendRequests.received friends', 'username profilePicture')
         ]);
+        return result;
     }
-    else {
-        result = await Promise.all([
-            User_1.User.updateOne({ _id: userId }, { $push: { friends: otherUserId } }),
-            User_1.User.updateOne({ _id: otherUserId }, { $push: { friends: userId }, $pull: { friendRequests: userId } }),
+    else if (loggedInUser.friendRequests.received.includes(otherUserId)) {
+        const [_, result] = await Promise.all([
+            User_1.User.updateOne({ _id: otherUserId }, { $push: { friends: loggedInUserId }, $pull: { 'friendRequests.sent': loggedInUserId } }),
+            User_1.User.findByIdAndUpdate(loggedInUserId, { $push: { friends: otherUserId }, $pull: { 'friendRequests.received': otherUserId } }, { new: true })
+                .select('friendRequests.received friendRequests.sent friends')
+                .populate('friendRequests.received friends', 'username profilePicture')
         ]);
-    }
-    if (result[0].modifiedCount === 0 || result[1].modifiedCount === 0) {
-        throw new Error('Add/Remove friend operation had no effect. Perform database integrity check');
+        return result;
     }
 };
 exports.toggleFriendship = toggleFriendship;
-const toggleFollowUser = async (userId, otherUserId) => {
-    if (userId === otherUserId) {
+const toggleFollowUser = async (loggedInUserId, otherUserId) => {
+    if (loggedInUserId === otherUserId) {
         throw new Error('Can\'t follow self');
     }
-    const users = (await User_1.User.find({ _id: { $in: [userId, otherUserId] } }));
+    const users = (await User_1.User.find({ _id: { $in: [loggedInUserId, otherUserId] } }));
     if (users.length !== 2 || !users[0] || !users[1]) {
         throw new Error('One or more of requested users not found');
     }
-    const user = users.find((user) => user._id.toString() === userId);
+    const loggedInUser = users.find((user) => user._id.toString() === loggedInUserId);
     const otherUser = users.find((user) => user._id.toString() === otherUserId);
     let result;
-    if (user.following.includes(userId)) {
+    if (loggedInUser.following.includes(loggedInUserId)) {
         result = await Promise.all([
-            User_1.User.updateOne({ _id: userId }, { $pull: { following: otherUserId } }),
-            User_1.User.updateOne({ _id: otherUserId }, { $pull: { followers: userId } }),
+            User_1.User.updateOne({ _id: loggedInUserId }, { $pull: { following: otherUserId } }),
+            User_1.User.updateOne({ _id: otherUserId }, { $pull: { followers: loggedInUserId } }),
         ]);
     }
     else {
         result = await Promise.all([
-            User_1.User.updateOne({ _id: userId }, { $push: { following: otherUserId } }),
-            User_1.User.updateOne({ _id: otherUserId }, { $push: { followers: userId } }),
+            User_1.User.updateOne({ _id: loggedInUserId }, { $push: { following: otherUserId } }),
+            User_1.User.updateOne({ _id: otherUserId }, { $push: { followers: loggedInUserId } }),
         ]);
     }
     if (result[0].modifiedCount === 0 || result[1].modifiedCount === 0) {
@@ -134,30 +129,52 @@ const toggleFollowUser = async (userId, otherUserId) => {
 };
 exports.toggleFollowUser = toggleFollowUser;
 const uploadPhotos = async (photos, userId) => {
-    const mappedPhotos = photos.map((url) => ({ url }));
-    return User_1.User.findByIdAndUpdate(userId, { $push: { photos: { $each: mappedPhotos } } }).select('photos');
+    const imageUrls = await (0, serviceHelpers_1.savePhotos)(photos, userId);
+    const images = await User_1.User.findByIdAndUpdate(userId, {
+        $push: {
+            photos: {
+                $each: imageUrls.map(url => ({ url }))
+            }
+        }
+    }, { new: true }).select('photos');
+    return images;
 };
 exports.uploadPhotos = uploadPhotos;
 const fetchPhotos = async (userId) => {
     return await User_1.User.findById(userId).select('photos');
 };
 exports.fetchPhotos = fetchPhotos;
-const fetchProfileData = async (userId) => {
-    const userData = await User_1.User.findById(userId).select('username email bio profilePicture photos gender');
-    const counts = await User_1.User.aggregate([
-        { $match: { _id: userId } },
-        { $project: {
-                friendCount: { $size: "$friends" },
-                followersCount: { $size: "$followers" },
-                followingCount: { $size: "$following" }
-            } }
-    ]);
-    const profileData = {
-        ...userData?.toObject(),
-        friendCount: counts[0]?.friendCount || 0,
-        followersCount: counts[0]?.followersCount || 0,
-        followingCount: counts[0]?.followingCount || 0
-    };
-    return profileData;
+const deletePhoto = async (url, userId) => {
+    return await User_1.User.findByIdAndUpdate(userId, { $pull: { photos: { url } } }, { new: true }).select('photos');
+};
+exports.deletePhoto = deletePhoto;
+const fetchProfileData = async (loggedInUserId, userId) => {
+    const fields = 'username bio profilePicture photos gender friends following followers';
+    let user;
+    if (userId === loggedInUserId) {
+        user = await User_1.User.findById(userId).select(fields + ' friendRequests')
+            .populate('friends friendRequests.received', 'username profilePicture');
+    }
+    else {
+        user = await User_1.User.findById(userId).select(fields).populate('friends', 'username profilePicture');
+    }
+    throw new Error('Error fetching user');
+    user.photos.reverse(); // easiest way to get the newest photos first
+    return user;
 };
 exports.fetchProfileData = fetchProfileData;
+const fetchFriendStatus = async (loggedInUserId, otherUserId) => {
+    const loggedInUser = await User_1.User.findById(loggedInUserId).select('friendRequests friends');
+    if (loggedInUser.friendRequests.received.includes(otherUserId)) {
+        return 'received';
+    }
+    if (loggedInUser.friendRequests.sent.includes(otherUserId)) {
+        return 'sent';
+    }
+    if (loggedInUser.friends.includes(otherUserId)) {
+        return 'friends';
+    }
+    return 'none';
+};
+exports.fetchFriendStatus = fetchFriendStatus;
+//# sourceMappingURL=userService.js.map

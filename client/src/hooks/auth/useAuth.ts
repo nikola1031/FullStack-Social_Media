@@ -34,7 +34,6 @@ export function useAuth() {
     function logoutUser() {
         removeUser();
         setUser(() => {
-            console.log(user)
             return null
         });
     }

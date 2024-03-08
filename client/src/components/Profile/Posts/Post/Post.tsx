@@ -1,17 +1,14 @@
 import styles from './Post.module.css';
-import { Link } from 'react-router-dom';
-import { PostData } from '../../../../types/data';
+import { Post as PostType } from '../../../../types/data';
 import { seeMoreOfPost } from '../../../../utils/seeMoreTrimmer';
-import PathConstants from '../../../../routes/PathConstants';
-import Avatar from '../../../UI/Avatar/Avatar';
 import { useState } from 'react';
 import Modal from '../../../UI/Modal/Modal';
 
 interface PostProps {
     showOverlayOnCLick: (postId: string) => void;
-    deletePost: (post: PostData) => void;
+    deletePost: (post: PostType) => void;
     likePost: (postId: string, e: React.MouseEvent<HTMLButtonElement>) => void;
-    post: PostData | undefined;
+    post: PostType | undefined;
     loggedInUserId: string;
     profileId: string;
 }

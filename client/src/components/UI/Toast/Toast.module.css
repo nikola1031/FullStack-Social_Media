@@ -12,11 +12,11 @@
     padding: 0.5rem 0;
     border-radius: 7px;
     line-height: 1rem;
-    z-index: 10000000;
+    z-index: 10000;
     background-color: #fff;
     color: #000;
     opacity: 0;
-    transition: opacity 0.3s ease-in-out; /* Add transition for opacity */
+    transition: opacity 0.3s ease-in-out;
 }
 
 .toast.show {

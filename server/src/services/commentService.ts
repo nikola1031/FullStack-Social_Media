@@ -42,8 +42,7 @@ export const editComment = async (text: string, commentId: string) => {
 }
 
 export const removeComment = async (commentId: string, postId: string) => {
-    await Comment.deleteOne({_id: commentId});
-    await adjustCommentCount(postId, -1);
+    await Promise.all([Comment.deleteOne({_id: commentId}), adjustCommentCount(postId, -1)])
 }
 
 export const likeComment = async (commentId: string, userId: string) => {
@@ -52,7 +51,7 @@ export const likeComment = async (commentId: string, userId: string) => {
         if (!comment) {
             throw new Error("Comment not found");
         }
-        // pushing or pulling from array, and adjusting comment count by +1 or -1
+        // pushing to or pulling from array, and adjusting comment count by +1 or -1
         const action = comment.likes.userLikes.includes(userId) ? '$pull' : '$push';
 
         return await Comment.findByIdAndUpdate(

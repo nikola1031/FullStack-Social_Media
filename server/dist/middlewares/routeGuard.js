@@ -4,7 +4,7 @@ exports.onlyAdmins = exports.onlyAuthors = exports.onlyUsers = exports.onlyGuest
 function onlyGuests() {
     return function (req, res, next) {
         if (req.user) {
-            res.status(401).json({ message: 'Guest route cannot be reached' });
+            res.status(401).json({ message: 'You are already logged in. Please log out to switch accounts.' });
             return;
         }
         next();
@@ -43,7 +43,7 @@ function onlyAuthors(Model) {
             if (!resource) {
                 return res.status(404).json({ message: 'Resource not found' });
             }
-            if (resource._ownerId.toString() !== userId.toString() && req.user.role !== 'admin') {
+            if (resource.author.toString() !== userId.toString() && req.user.role !== 'admin') {
                 return res.status(403).json({ message: 'You are not authorized to perform this action' });
             }
             next();
@@ -54,3 +54,4 @@ function onlyAuthors(Model) {
     };
 }
 exports.onlyAuthors = onlyAuthors;
+//# sourceMappingURL=routeGuard.js.map

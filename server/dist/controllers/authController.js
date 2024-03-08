@@ -26,7 +26,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.logout = exports.register = exports.login = void 0;
 const authService = __importStar(require("../services/authService"));
 const trimmer_1 = require("../utils/trimmer");
-const login = async (req, res) => {
+const login = async (req, res, next) => {
     const trimmedBody = (0, trimmer_1.trimmer)(req.body);
     const { email, password } = trimmedBody;
     try {
@@ -37,11 +37,11 @@ const login = async (req, res) => {
         res.status(200).json(user);
     }
     catch (error) {
-        res.status(400).json({ message: error.message });
+        next(error);
     }
 };
 exports.login = login;
-const register = async (req, res) => {
+const register = async (req, res, next) => {
     const trimmedBody = (0, trimmer_1.trimmer)(req.body);
     const { email, username, password, confirmPass, gender } = trimmedBody;
     try {
@@ -55,10 +55,11 @@ const register = async (req, res) => {
         res.status(201).json(user);
     }
     catch (error) {
-        res.status(400).json({ message: error.message });
+        next(error);
     }
 };
 exports.register = register;
 const logout = async (req, res) => {
 };
 exports.logout = logout;
+//# sourceMappingURL=authController.js.map

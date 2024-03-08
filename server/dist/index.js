@@ -9,3 +9,4 @@ const app = (0, express_1.default)();
 const port = process.env.PORT || 3000;
 (0, appConfig_1.init)(app);
 app.listen(port, () => console.log('Server is listening on port ' + port));
+//# sourceMappingURL=index.js.map

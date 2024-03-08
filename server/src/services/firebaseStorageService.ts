@@ -24,7 +24,7 @@ export async function uploadImages(files: Express.Multer.File[]): Promise<string
         return downloadURLs;
       } catch (error) {
         console.error('Error during uploads:', error);
-        throw error; // Re-throw the error to handle it at the caller level
+        throw error;
       }
 }
 

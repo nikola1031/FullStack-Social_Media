@@ -29,8 +29,9 @@ const routeGuard_1 = require("../middlewares/routeGuard");
 const Comment_1 = require("../models/Comment");
 const router = (0, express_1.Router)({ mergeParams: true });
 router.post('/', (0, routeGuard_1.onlyUsers)(), commentController.createComment);
-router.get('/', commentController.getAllComments);
+router.get('/', (0, routeGuard_1.onlyUsers)(), commentController.getAllComments);
 router.put('/:commentId', (0, routeGuard_1.onlyAuthors)(Comment_1.Comment), commentController.updateComment);
 router.delete('/:commentId', (0, routeGuard_1.onlyAuthors)(Comment_1.Comment), commentController.deleteComment);
 router.post('/:commentId/like', (0, routeGuard_1.onlyUsers)(), commentController.likeComment);
 exports.default = router;
+//# sourceMappingURL=commentRouter.js.map

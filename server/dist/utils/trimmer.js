@@ -7,3 +7,4 @@ function trimmer(data) {
     }, {});
 }
 exports.trimmer = trimmer;
+//# sourceMappingURL=trimmer.js.map

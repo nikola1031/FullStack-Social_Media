@@ -30,9 +30,10 @@ const Post_1 = require("../models/Post");
 const multer_1 = require("../middlewares/multer");
 const router = (0, express_1.Router)();
 router.post('/', (0, routeGuard_1.onlyUsers)(), multer_1.upload.array('files', 5), postController.createPost);
-router.get('/', postController.getAllPosts);
-router.get('/user/:userId', postController.getPostsByUserId);
+router.get('/', (0, routeGuard_1.onlyUsers)(), postController.getPosts);
+router.get('/user/:userId', postController.getPosts);
 router.put('/:postId', (0, routeGuard_1.onlyAuthors)(Post_1.Post), postController.updatePost);
 router.delete('/:postId', (0, routeGuard_1.onlyAuthors)(Post_1.Post), postController.deletePost);
 router.post('/:postId/like', (0, routeGuard_1.onlyUsers)(), postController.likePost);
 exports.default = router;
+//# sourceMappingURL=postRouter.js.map

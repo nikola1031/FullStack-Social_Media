@@ -9,6 +9,7 @@ const cors_1 = __importDefault(require("cors"));
 function initExpress(app) {
     app.use(express_1.default.json());
     app.use(express_1.default.urlencoded({ extended: false }));
-    app.use((0, cors_1.default)());
+    app.use((0, cors_1.default)({ origin: '*' }));
 }
 exports.initExpress = initExpress;
+//# sourceMappingURL=expressConfig.js.map

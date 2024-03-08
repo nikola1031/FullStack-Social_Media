@@ -31,3 +31,4 @@ router.post('/login', (0, routeGuard_1.onlyGuests)(), authController.login);
 router.post('/register', (0, routeGuard_1.onlyGuests)(), authController.register);
 router.post('/logout', (0, routeGuard_1.onlyUsers)(), authController.logout);
 exports.default = router;
+//# sourceMappingURL=authRouter.js.map

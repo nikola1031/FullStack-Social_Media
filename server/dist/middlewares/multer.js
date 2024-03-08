@@ -7,3 +7,4 @@ exports.upload = void 0;
 const multer_1 = __importDefault(require("multer"));
 const storage = multer_1.default.memoryStorage();
 exports.upload = (0, multer_1.default)({ storage });
+//# sourceMappingURL=multer.js.map

@@ -13,20 +13,41 @@ async function login(email, password) {
     if (!existingUser || !(await (0, serviceHelpers_1.comparePasswords)(password, existingUser.password))) {
         throw new Error('Wrong email or password');
     }
-    const accessToken = jsonwebtoken_1.default.sign({ email, username: existingUser.username, _id: existingUser._id, gender: existingUser.gender, role: existingUser.role }, SECRET, { expiresIn: '2h' });
-    return { email, username: existingUser.username, _id: existingUser._id, gender: existingUser.gender, role: existingUser.role, accessToken };
+    const userData = {
+        email,
+        username: existingUser.username,
+        bio: existingUser.bio,
+        gender: existingUser.gender,
+        role: existingUser.role,
+        profilePicture: existingUser.profilePicture || '',
+        _id: existingUser._id
+    };
+    // email bio username gender gender role profilePicture id
+    const accessToken = jsonwebtoken_1.default.sign(userData, SECRET, { expiresIn: '2h' });
+    return { ...userData, accessToken };
 }
 exports.login = login;
 async function register(email, username, password, gender) {
-    const oldUser = await User_1.User.findOne({ email, username });
-    if (oldUser) {
+    const existingEmail = await User_1.User.findOne({ email });
+    const existingUsername = await User_1.User.findOne({ username });
+    if (existingEmail || existingUsername) {
         throw new Error('User already exists');
     }
     const hashedPassword = await (0, serviceHelpers_1.hashPassword)(password);
     const user = await User_1.User.create({ email, username, password: hashedPassword, gender });
-    const accessToken = jsonwebtoken_1.default.sign({ email, username, _id: user._id, role: user.role, gender }, SECRET, { expiresIn: '2h' });
-    return { email, username, role: user.role, _id: user._id, gender, accessToken };
+    const userData = {
+        email,
+        username,
+        bio: user.bio,
+        gender: user.gender,
+        role: user.role,
+        profilePicture: user.profilePicture || '',
+        _id: user._id
+    };
+    const accessToken = jsonwebtoken_1.default.sign(userData, SECRET, { expiresIn: '2h' });
+    return { ...userData, accessToken };
 }
 exports.register = register;
 function logout() { }
 exports.logout = logout;
+//# sourceMappingURL=authService.js.map

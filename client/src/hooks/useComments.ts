@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { CommentData } from "../types/data";
+import { Comment } from "../types/data";
 import { useApiComments } from '../api/useApiComments';
 import { timeoutMessage } from "../utils/timeoutMessage";
 
 export function useComments(postId: string, setCommentCount: React.Dispatch<React.SetStateAction<number>>) {
-    const [comments, setComments] = useState<CommentData[]>([]);
+    const [comments, setComments] = useState<Comment[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<null | string>(null);
     const timeoutId = useRef();

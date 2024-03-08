@@ -43,9 +43,12 @@ export default function Profile() {
         .then((status) => setFriendStatus(status));
     }
 
-    function fetchUser() {
-        userApi.getProfileById(id!)
-        .then(setUser)
+    async function fetchUser() {
+        try {
+            await userApi.getProfileById(id!).then(setUser)
+        } catch (error: any) {
+            console.log(error.message)
+        }
     }
 
     function friendRequest(id: string) {

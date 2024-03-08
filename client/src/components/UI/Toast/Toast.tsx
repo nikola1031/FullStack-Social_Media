@@ -3,12 +3,10 @@ import styles from './Toast.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleCheck, faCircleExclamation, faCircleXmark, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 
-
 interface ToastProps {
     message: string | null;
     type?: 'error' | 'success' | 'info'
 }
-
 
 export default function Toast({message, type = 'info'}: ToastProps) {
     const [showToast, setShowToast] = useState(Boolean(message));

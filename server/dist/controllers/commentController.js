@@ -25,34 +25,31 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.likeComment = exports.deleteComment = exports.updateComment = exports.getAllComments = exports.createComment = void 0;
 const commentService = __importStar(require("../services/commentService"));
-const types_1 = require("../services/types/types");
-const serviceHelpers_1 = require("../services/helpers/serviceHelpers");
-const createComment = async (req, res) => {
-    const _ownerId = req.user._id;
+const createComment = async (req, res, next) => {
+    const author = req.user._id;
     const { text } = req.body;
     const { postId } = req.params;
     try {
-        const newComment = await commentService.saveComment(text, postId, _ownerId);
+        const newComment = await commentService.saveComment(text, postId, author);
         res.status(201).json(newComment);
     }
     catch (error) {
-        console.log('Error here');
-        res.status(400).json({ message: error.message });
+        next(error);
     }
 };
 exports.createComment = createComment;
-const getAllComments = async (req, res) => {
+const getAllComments = async (req, res, next) => {
     const { postId } = req.params;
     try {
         const comments = await commentService.getComments(postId);
         res.status(200).json(comments);
     }
     catch (error) {
-        res.status(404).json({ message: error.message });
+        next(error);
     }
 };
 exports.getAllComments = getAllComments;
-const updateComment = async (req, res) => {
+const updateComment = async (req, res, next) => {
     const { text } = req.body;
     const { commentId } = req.params;
     try {
@@ -60,31 +57,31 @@ const updateComment = async (req, res) => {
         res.status(200).json(updatedComment);
     }
     catch (error) {
-        res.status(400).json({ message: error.message });
+        next(error);
     }
 };
 exports.updateComment = updateComment;
-const deleteComment = async (req, res) => {
-    const { commentId } = req.params;
-    const { postId } = req.params;
+const deleteComment = async (req, res, next) => {
+    const { commentId, postId } = req.params;
     try {
         await commentService.removeComment(commentId, postId);
         res.status(200).json({ message: 'Comment successfully deleted' });
     }
     catch (error) {
-        res.status(400).json({ message: error.message });
+        next(error);
     }
 };
 exports.deleteComment = deleteComment;
-const likeComment = async (req, res) => {
+const likeComment = async (req, res, next) => {
     const { commentId } = req.params;
     const userId = req.user._id;
     try {
-        await (0, serviceHelpers_1.toggleLike)(commentId, userId, types_1.TargetType.Comment);
-        res.status(200).json({ message: 'Like/Unlike successful' });
+        const likedComment = await commentService.likeComment(commentId, userId);
+        res.status(200).json({ likeCount: likedComment?.likes.userLikes.length });
     }
     catch (error) {
-        res.status(400).json({ message: error.message });
+        next(error);
     }
 };
 exports.likeComment = likeComment;
+//# sourceMappingURL=commentController.js.map

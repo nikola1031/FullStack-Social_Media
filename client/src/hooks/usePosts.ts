@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { useApiPosts} from '../api/useApiPosts'
-import { PostData } from "../types/data";
+import { Post } from "../types/data";
 import { useAuthContext } from "./auth/useAuthContext";
 import { timeoutMessage } from "../utils/timeoutMessage";
 import { successMessages } from "../Constants";
 
 export function usePosts(userId?: string) {
-    const [posts, setPosts] = useState<PostData[]>([]);
+    const [posts, setPosts] = useState<Post[]>([]);
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState<null | string>(null);
     const [error, setError] = useState<null | string>(null);
@@ -62,7 +62,7 @@ export function usePosts(userId?: string) {
 
     }
 
-    async function updatePost(post: PostData, text: string) {
+    async function updatePost(post: Post, text: string) {
         setError(null);
         try {
             if (!user) {
@@ -92,7 +92,7 @@ export function usePosts(userId?: string) {
 
     }
 
-    async function deletePost(post: PostData) {
+    async function deletePost(post: Post) {
         setError(null);
         try {
             if (!user) {

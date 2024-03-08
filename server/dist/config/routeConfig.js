@@ -15,3 +15,4 @@ function initRoutes(app) {
     app.use('/api/posts/:postId/comments', commentRouter_1.default);
 }
 exports.initRoutes = initRoutes;
+//# sourceMappingURL=routeConfig.js.map
