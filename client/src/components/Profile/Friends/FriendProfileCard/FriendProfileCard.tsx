@@ -14,7 +14,7 @@ export default function FriendProfileCard ({request, user, isProfileOwner, toggl
     return (
         <article className={styles["friend-profile-card"]}>
             <Link to={`/${PathConstants.Profile}/${user._id}`}>
-                <img className={styles["friend-profile-card-img"]} src={user.profilePicture} alt="profile image" />
+                <img className={styles["friend-profile-card-img"]} src={user.profilePicture || '/assets/default_avatar.jpg'} alt="profile image" />
             </Link>
             <div className={styles["friend-profile-card-info"]}>
                 <Link to={`/${PathConstants.Profile}/${user._id}`}>

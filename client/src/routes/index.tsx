@@ -1,4 +1,4 @@
-import { RouteObject } from 'react-router-dom';
+import { RouteObject, useParams } from 'react-router-dom';
 import PathConstants from './PathConstants.ts';
 import Home from '../components/Home/Home.tsx';
 import Register from '../components/auth/Register/Register.tsx';
@@ -23,6 +23,17 @@ const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
     return children;
 };
 
+const ProfileOwnerRoute = (({children}: {children: React.ReactNode}) =>  {
+    const { user } = useAuthContext();
+    const { id } = useParams();
+    
+    if (id && user?._id !== id) {
+        return <Navigate to="/" />;
+    }
+
+    return children;
+})
+
 const PublicRoute = ({ children }: { children: React.ReactNode }) => {
     const { user } = useAuthContext();
 
@@ -44,8 +55,8 @@ const routes: RouteObject[] = [
         { path: PathConstants.Posts, element: <PrivateRoute><Posts /></PrivateRoute> },
         { path: PathConstants.Photos, element: <PrivateRoute><Photos /></PrivateRoute> },
         { path: PathConstants.Friends, element: <PrivateRoute><Friends /></PrivateRoute> },
-        { path: PathConstants.Edit, element: <PrivateRoute><EditProfile /></PrivateRoute> },
-        { path: PathConstants.ChangePassword, element: <PrivateRoute><ChangePassword /></PrivateRoute> },
+        { path: PathConstants.Edit, element: <ProfileOwnerRoute><EditProfile /></ProfileOwnerRoute> },
+        { path: PathConstants.ChangePassword, element: <ProfileOwnerRoute><ChangePassword /></ProfileOwnerRoute> },
       ],
     },
   ];

@@ -1,11 +1,11 @@
 import { Router } from 'express';
 import * as userController from '../controllers/userController';
 import { onlyUsers } from '../middlewares/routeGuard';
-import { upload } from '../middlewares/multer';
+import { multerUpload } from '../middlewares/multer';
 const router = Router();
 
 router.put('/profile/', onlyUsers(), userController.updateProfile);
-router.post('/profile/photos', upload.array('files', 5), onlyUsers(), userController.postPhotos);
+router.post('/profile/photos', onlyUsers(), multerUpload(), userController.postPhotos);
 router.delete('/profile/photos/', onlyUsers(), userController.deletePhoto);
 router.put('/profile/picture', onlyUsers(), userController.updateProfilePicture);
 router.put('/profile/password', onlyUsers(), userController.updatePassword);

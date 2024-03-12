@@ -2,6 +2,7 @@ import { User } from '../models/User';
 import jwt from 'jsonwebtoken';
 import { comparePasswords, hashPassword } from './helpers/serviceHelpers';
 import { IUserData } from '../types/types';
+import { accountExistsValidationMessage, jwtExpirationTime, wrongEmailOrPasswordMessage } from '../Constants';
 
 const SECRET = process.env.JWT_SECRET;
 
@@ -10,7 +11,7 @@ async function login(email: string, password: string): Promise<IUserData> {
     const existingUser = await User.findOne({email});
 
     if (!existingUser || !(await comparePasswords(password, existingUser.password))){
-        throw new Error('Wrong email or password');
+        throw new Error(wrongEmailOrPasswordMessage);
     }
 
     const userData = {
@@ -22,8 +23,8 @@ async function login(email: string, password: string): Promise<IUserData> {
         profilePicture: existingUser.profilePicture || '', 
         _id: existingUser._id as string
     }
-    // email bio username gender gender role profilePicture id
-    const accessToken = jwt.sign(userData, SECRET!, {expiresIn: '2h'});
+    
+    const accessToken = jwt.sign(userData, SECRET!, {expiresIn: jwtExpirationTime});
     return { ...userData, accessToken };
 }
 
@@ -32,7 +33,7 @@ async function register(email: string, username: string, password: string, gende
     const existingUsername = await User.findOne({username});
 
     if (existingEmail || existingUsername) {
-        throw new Error('User already exists');
+        throw new Error(accountExistsValidationMessage);
     }
 
     const hashedPassword = await hashPassword(password);
@@ -48,7 +49,7 @@ async function register(email: string, username: string, password: string, gende
         _id: user._id as string
     }
 
-    const accessToken = jwt.sign(userData, SECRET!, {expiresIn: '2h'});
+    const accessToken = jwt.sign(userData, SECRET!, {expiresIn: jwtExpirationTime});
     return { ...userData, accessToken };
 }
 

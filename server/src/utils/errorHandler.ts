@@ -15,10 +15,6 @@ interface MongoValidationError extends Error {
 }
 
 export function errorHandler(error: any) {
-    if (error instanceof MulterError) {
-        return { message: error.message };
-    }
-
     if (error.code === 11000) {
         return { message: accountExistsValidationMessage };
     }

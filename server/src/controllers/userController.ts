@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import * as userService from '../services/userService';
-import { trimmer } from '../utils/trimmer';
-import { deleteImage } from '../services/firebaseStorageService';
+import { trimmer } from '../utils/helpers';
 import { errorHandler } from '../utils/errorHandler';
+import { fileUploadNotFoundMessage, passwordUpdateSuccessMessage, userFollowSuccess } from '../Constants';
 
 export const getProfile = async (req: Request, res: Response, next: NextFunction) => {
     const loggedInUserId = req.user!._id;
@@ -11,7 +11,7 @@ export const getProfile = async (req: Request, res: Response, next: NextFunction
         const userData = await userService.fetchProfileData(loggedInUserId, userId);
         res.status(200).json(userData);
     } catch (error: any) {
-        res.status(400).json(errorHandler(error));
+        res.status(404).json(errorHandler(error));
     }
 };
 
@@ -46,7 +46,7 @@ export const updatePassword = async (req: Request, res: Response, next: NextFunc
 
     try {
         await userService.editPassword(data, req.user!._id);
-        res.status(200).json({message: 'Password updated successfully'})
+        res.status(200).json({message: passwordUpdateSuccessMessage})
     } catch (error: any) {
         res.status(400).json({message: error.message})
     }
@@ -56,7 +56,7 @@ export const updateProfilePicture = async (req: Request, res: Response, next: Ne
     const { profilePicture } = req.body;
     try {
         if (!profilePicture) {
-            return res.status(400).json({message: 'Invalid profile picture format'});
+            return res.status(400).json({message: fileUploadNotFoundMessage});
         }
         const user = await userService.editProfilePicture(profilePicture, req.user!._id)
         res.status(200).json(user);
@@ -78,7 +78,7 @@ export const postPhotos = async (req: Request, res: Response, next: NextFunction
 export const deletePhoto = async (req: Request, res: Response, next: NextFunction) => {
     const { url }: { url: string } = req.body;
     try {
-        const [_, photos] = await Promise.all([deleteImage(url), userService.deletePhoto(url, req.user!._id)])
+        const photos = await userService.deletePhoto(url, req.user!._id);
         res.status(200).json(photos);
     } catch (error: any) {
         res.status(400).json(errorHandler(error));
@@ -125,7 +125,7 @@ export const toggleFollow = async (req: Request, res: Response, next: NextFuncti
     
     try {
         await userService.toggleFollowUser(loggedInUserId, userId);
-        res.status(200).json({message: 'User followed successfully'});
+        res.status(200).json({message: userFollowSuccess});
     } catch (error: any) {
         res.status(400).json(errorHandler(error));
     }

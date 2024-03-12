@@ -1,17 +1,27 @@
-import { ref, uploadBytesResumable, getDownloadURL, getStorage, deleteObject } from "firebase/storage";
+import { ref, uploadBytesResumable, getDownloadURL, getStorage, deleteObject, StorageReference } from "firebase/storage";
 import { firebaseApp } from "../config/firebaseConfig";
-import { extractImageName } from "../utils/imageNameExtractor";
+import { parseFileName } from "../utils/helpers";
+import { imageDeletionFailurMessage, uploadFailedMessage } from "../Constants";
+import { FirebaseImageDestination } from "../types/types";
 
 const storage = getStorage(firebaseApp);
 
-export async function uploadImages(files: Express.Multer.File[]): Promise<string[]> {
+export async function uploadImages(
+    files: Express.Multer.File[], 
+    userId: string, 
+    destination: FirebaseImageDestination | undefined
+    ): Promise<string[]> {
+    
     const filesArray = [...files];
+    
     if (!filesArray.length) {
         return [];
     }
+
     try {
         const uploadPromises = filesArray.map(async file => {
-            const storageRef = ref(storage, `images/${file.originalname} ${Date.now()}`);
+            const storageRef = ref(storage, `${destination}/${userId}|${file.originalname}|${Date.now()}`);
+
             const metadata = {
                 contentType: file.mimetype,
             };
@@ -24,17 +34,19 @@ export async function uploadImages(files: Express.Multer.File[]): Promise<string
         return downloadURLs;
       } catch (error) {
         console.error('Error during uploads:', error);
-        throw error;
+        throw new Error(uploadFailedMessage);
       }
 }
 
-export async function deleteImage(url: string) {
-  const imageName = extractImageName(url);
-  const imageRef = ref(storage, `images/${imageName}`);
+export async function deleteImage(url: string, destination: FirebaseImageDestination) {
+  const imageName = parseFileName(url, destination);
+  const imageRef = ref(storage, `${destination}/${imageName}`);
 
-  deleteObject(imageRef).then(() => {
-      console.log('Image deleted successfully')
-  }).catch((error) => {
-      console.error('Uh-oh, an error occurred while deleting photo!')
-  });
+  try {
+      await deleteObject(imageRef)
+      console.log('Image deleted successfully');
+  } catch (error) {
+      console.error(error);
+      throw new Error(imageDeletionFailurMessage);
+  }
 }

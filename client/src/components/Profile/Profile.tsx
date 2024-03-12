@@ -20,7 +20,6 @@ export default function Profile() {
     const [user, setUser] = useState<UserData>();
     const [friendStatus, setFriendStatus] = useState<FriendStatus>(FriendStatusEnum.None);
     const userApi = useApiUsers();
-
     const ref = useClickOutside(() => setDropDownActive(false))
 
     const { id } = useParams();
@@ -29,8 +28,7 @@ export default function Profile() {
     const isProfileOwner = loggedInUser?._id === id;
     
     useEffect(() => {
-        fetchUser()
-        determineFriendStatus();
+            fetchUser().then(() => determineFriendStatus());
     }, [id]);
 
     function determineFriendStatus() {
@@ -44,11 +42,8 @@ export default function Profile() {
     }
 
     async function fetchUser() {
-        try {
-            await userApi.getProfileById(id!).then(setUser)
-        } catch (error: any) {
-            console.log(error.message)
-        }
+        const user = await userApi.getProfileById(id!);
+        setUser(user);
     }
 
     function friendRequest(id: string) {

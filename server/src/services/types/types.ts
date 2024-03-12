@@ -15,3 +15,5 @@ export interface Passwords {
     newPassword: string;
     confirmPass: string;
 }
+
+export type FriendStatus = 'received' | 'sent' | 'friends' | 'none' 

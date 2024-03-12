@@ -1,7 +1,8 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Layout from './components/Layout';
+import Layout from './Layout';
 import routes from './routes';
 import { useTitle } from './hooks/useTitle';
+import Error from './components/Error/Error';
 
 function App() {
 
@@ -10,7 +11,7 @@ function App() {
     const router = createBrowserRouter([
         {
             element: <Layout />,
-            errorElement: <div>Error</div>,
+            errorElement: <Error />,
             children: routes
         },
     ]);

@@ -1,0 +1,25 @@
+.error-container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.error-h1, .error-h2 {
+    margin: 0;
+}
+
+.error-link {
+    color: #afab8e;
+    margin-top: 0.5rem;
+}
+
+.error-link:hover {
+    text-decoration: underline;
+}
+
+.error-link:active {
+    opacity: 0.7;
+}

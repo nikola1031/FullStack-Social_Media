@@ -1,15 +1,15 @@
 import { NextFunction, Request, Response } from 'express';
 import * as authService from '../services/authService';
-import { trimmer } from '../utils/trimmer';
+import { trimmer } from '../utils/helpers';
 import { errorHandler } from '../utils/errorHandler';
+import { allFieldsRequiredValidationMessage, passwordsMustMatchMessage } from '../Constants';
 
 export const login = async (req: Request, res: Response, next: NextFunction) => {
     const trimmedBody = trimmer(req.body);
     const { email, password } = trimmedBody;
-    debugger
     try {
         if (!email || !password) {
-            throw new Error('All fields are required');
+            throw new Error(allFieldsRequiredValidationMessage);
         }
 
         const user = await authService.login(email.toLocaleLowerCase(), password);
@@ -24,11 +24,11 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
     const { email, username, password, confirmPass, gender } = trimmedBody;
     try {
         if (!email || !username || !password || !confirmPass || !gender) {
-            throw new Error('All fields are required');
+            throw new Error(allFieldsRequiredValidationMessage);
         }
 
         if (password !== confirmPass) {
-            throw new Error('Passwords must match');
+            throw new Error(passwordsMustMatchMessage);
         }
 
         const user = await authService.register(email.toLocaleLowerCase(), username, password, gender);

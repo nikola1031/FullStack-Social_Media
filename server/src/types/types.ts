@@ -7,3 +7,5 @@ export interface IUserData {
     profilePicture: string;
     accessToken: string;
 }
+
+export type FirebaseImageDestination = 'profile' | 'avatar' | 'posts';

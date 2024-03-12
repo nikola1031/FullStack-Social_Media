@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import * as postService from '../services/postService';
 import { errorHandler } from '../utils/errorHandler';
+import { postDeletionSuccessMessage, textRequiredMessage } from '../Constants';
 
 export const createPost = async (req: Request, res: Response, next: NextFunction) => {
     const author = req.user!._id!;
@@ -10,7 +11,7 @@ export const createPost = async (req: Request, res: Response, next: NextFunction
     try {
         
         if (!text) {
-            throw new Error('Cannot post without text');
+            throw new Error(textRequiredMessage);
         }
         const newPost = await postService.savePost({text, images, author})
         res.status(201).json(newPost);
@@ -21,7 +22,7 @@ export const createPost = async (req: Request, res: Response, next: NextFunction
 
 export const getPosts = async (req: Request, res: Response, next: NextFunction) => {
     const { userId } = req.params;
-    const { liked } = req.query;
+    const { liked }: {liked?: string | undefined} = req.query;
     try {
         const posts = await postService.getPosts(userId, liked);
         res.status(200).json(posts);
@@ -47,7 +48,7 @@ export const deletePost = async (req: Request, res: Response, next: NextFunction
     
     try {
         await postService.removePost(postId);
-        res.status(200).json({ message: 'Post successfully deleted' });
+        res.status(200).json({ message: postDeletionSuccessMessage });
     } catch (error: any) {
         res.status(400).json(errorHandler(error));
     }
