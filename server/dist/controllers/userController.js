@@ -25,8 +25,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.toggleFollow = exports.toggleAddFriend = exports.toggleSendFriendRequest = exports.getUserPhotos = exports.deletePhoto = exports.postPhotos = exports.updateProfilePicture = exports.updatePassword = exports.updateProfile = exports.getFriendStatus = exports.getProfile = void 0;
 const userService = __importStar(require("../services/userService"));
-const trimmer_1 = require("../utils/trimmer");
-const firebaseStorageService_1 = require("../services/firebaseStorageService");
+const helpers_1 = require("../utils/helpers");
+const errorHandler_1 = require("../utils/errorHandler");
+const Constants_1 = require("../Constants");
 const getProfile = async (req, res, next) => {
     const loggedInUserId = req.user._id;
     const { userId } = req.params;
@@ -35,8 +36,7 @@ const getProfile = async (req, res, next) => {
         res.status(200).json(userData);
     }
     catch (error) {
-        console.log('Is my error here???');
-        next(error);
+        res.status(404).json((0, errorHandler_1.errorHandler)(error));
     }
 };
 exports.getProfile = getProfile;
@@ -48,12 +48,12 @@ const getFriendStatus = async (req, res, next) => {
         res.status(200).json(result);
     }
     catch (error) {
-        next(error);
+        res.status(400).json((0, errorHandler_1.errorHandler)(error));
     }
 };
 exports.getFriendStatus = getFriendStatus;
 const updateProfile = async (req, res, next) => {
-    const trimmedBody = (0, trimmer_1.trimmer)(req.body);
+    const trimmedBody = (0, helpers_1.trimmer)(req.body);
     const { username, email, password, bio } = trimmedBody;
     const data = { username, email, password, bio };
     try {
@@ -61,17 +61,17 @@ const updateProfile = async (req, res, next) => {
         return res.status(200).json(user.toObject());
     }
     catch (error) {
-        next(error);
+        res.status(400).json((0, errorHandler_1.errorHandler)(error));
     }
 };
 exports.updateProfile = updateProfile;
 const updatePassword = async (req, res, next) => {
-    const trimmedBody = (0, trimmer_1.trimmer)(req.body);
+    const trimmedBody = (0, helpers_1.trimmer)(req.body);
     const { password, newPassword, confirmPass } = trimmedBody;
     const data = { password, newPassword, confirmPass };
     try {
         await userService.editPassword(data, req.user._id);
-        res.status(200).json({ message: 'Password updated successfully' });
+        res.status(200).json({ message: Constants_1.passwordUpdateSuccessMessage });
     }
     catch (error) {
         res.status(400).json({ message: error.message });
@@ -82,13 +82,13 @@ const updateProfilePicture = async (req, res, next) => {
     const { profilePicture } = req.body;
     try {
         if (!profilePicture) {
-            return res.status(400).json({ message: 'Invalid profile picture format' });
+            return res.status(400).json({ message: Constants_1.fileUploadNotFoundMessage });
         }
         const user = await userService.editProfilePicture(profilePicture, req.user._id);
         res.status(200).json(user);
     }
     catch (error) {
-        next(error);
+        res.status(400).json((0, errorHandler_1.errorHandler)(error));
     }
 };
 exports.updateProfilePicture = updateProfilePicture;
@@ -99,18 +99,18 @@ const postPhotos = async (req, res, next) => {
         res.status(200).json(imageData);
     }
     catch (error) {
-        next(error);
+        res.status(400).json((0, errorHandler_1.errorHandler)(error));
     }
 };
 exports.postPhotos = postPhotos;
 const deletePhoto = async (req, res, next) => {
     const { url } = req.body;
     try {
-        const [_, photos] = await Promise.all([(0, firebaseStorageService_1.deleteImage)(url), userService.deletePhoto(url, req.user._id)]);
+        const photos = await userService.deletePhoto(url, req.user._id);
         res.status(200).json(photos);
     }
     catch (error) {
-        next(error);
+        res.status(400).json((0, errorHandler_1.errorHandler)(error));
     }
 };
 exports.deletePhoto = deletePhoto;
@@ -121,7 +121,7 @@ const getUserPhotos = async (req, res, next) => {
         res.status(200).json(photos);
     }
     catch (error) {
-        next(error);
+        res.status(400).json((0, errorHandler_1.errorHandler)(error));
     }
 };
 exports.getUserPhotos = getUserPhotos;
@@ -154,10 +154,10 @@ const toggleFollow = async (req, res, next) => {
     const loggedInUserId = req.user._id;
     try {
         await userService.toggleFollowUser(loggedInUserId, userId);
-        res.status(200).json({ message: 'User followed successfully' });
+        res.status(200).json({ message: Constants_1.userFollowSuccess });
     }
     catch (error) {
-        next(error);
+        res.status(400).json((0, errorHandler_1.errorHandler)(error));
     }
 };
 exports.toggleFollow = toggleFollow;

@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.initDB = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
-const connectionString = 'mongodb://127.0.0.1:27017/' + process.env.DB_NAME;
+const connectionString = process.env.MONGO_URI;
 async function initDB() {
     try {
         const db = (await mongoose_1.default.connect(connectionString)).connection;

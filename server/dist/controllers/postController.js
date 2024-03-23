@@ -25,19 +25,21 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.likePost = exports.deletePost = exports.updatePost = exports.getPosts = exports.createPost = void 0;
 const postService = __importStar(require("../services/postService"));
+const errorHandler_1 = require("../utils/errorHandler");
+const Constants_1 = require("../Constants");
 const createPost = async (req, res, next) => {
     const author = req.user._id;
     const { text } = req.body;
     const images = req.files || [];
     try {
         if (!text) {
-            throw new Error('Cannot post without text');
+            throw new Error(Constants_1.textRequiredMessage);
         }
         const newPost = await postService.savePost({ text, images, author });
         res.status(201).json(newPost);
     }
     catch (error) {
-        next(error);
+        res.status(400).json((0, errorHandler_1.errorHandler)(error));
     }
 };
 exports.createPost = createPost;
@@ -49,7 +51,7 @@ const getPosts = async (req, res, next) => {
         res.status(200).json(posts);
     }
     catch (error) {
-        next(error);
+        res.status(400).json((0, errorHandler_1.errorHandler)(error));
     }
 };
 exports.getPosts = getPosts;
@@ -61,7 +63,7 @@ const updatePost = async (req, res, next) => {
         res.status(200).json(updatedPost);
     }
     catch (error) {
-        next(error);
+        res.status(400).json((0, errorHandler_1.errorHandler)(error));
     }
 };
 exports.updatePost = updatePost;
@@ -69,10 +71,10 @@ const deletePost = async (req, res, next) => {
     const { postId } = req.params;
     try {
         await postService.removePost(postId);
-        res.status(200).json({ message: 'Post successfully deleted' });
+        res.status(200).json({ message: Constants_1.postDeletionSuccessMessage });
     }
     catch (error) {
-        next(error);
+        res.status(400).json((0, errorHandler_1.errorHandler)(error));
     }
 };
 exports.deletePost = deletePost;
@@ -84,7 +86,7 @@ const likePost = async (req, res, next) => {
         res.status(200).json({ likeCount: likedPost?.likes.userLikes.length });
     }
     catch (error) {
-        next(error);
+        res.status(400).json((0, errorHandler_1.errorHandler)(error));
     }
 };
 exports.likePost = likePost;

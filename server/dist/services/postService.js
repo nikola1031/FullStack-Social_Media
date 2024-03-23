@@ -5,43 +5,41 @@ const Comment_1 = require("../models/Comment");
 const Post_1 = require("../models/Post");
 const User_1 = require("../models/User");
 const serviceHelpers_1 = require("./helpers/serviceHelpers");
+const firebaseStorageService_1 = require("./firebaseStorageService");
+const Constants_1 = require("../Constants");
 const savePost = async ({ text, images, author }) => {
-    try {
-        const imageUrls = await (0, serviceHelpers_1.savePhotos)(images, author);
-        await User_1.User.updateOne({ _id: author }, { $push: { photos: { $each: imageUrls.map(url => ({ url })) } } });
-        const newPost = new Post_1.Post({ text, imageUrls, author });
-        await newPost.save();
-        await newPost.populate({
-            path: 'author',
-            select: 'username profilePicture'
-        });
-        return newPost;
+    (0, serviceHelpers_1.checkObjectIdValidity)(author);
+    const user = await User_1.User.findById(author);
+    if (!user) {
+        throw new Error(Constants_1.userNotFoundMessage);
     }
-    catch (error) {
-        throw error;
-    }
+    const imageUrls = await (0, serviceHelpers_1.savePhotos)(images, author, 'posts');
+    const newPost = new Post_1.Post({ text, imageUrls, author });
+    await newPost.save();
+    await newPost.populate({
+        path: 'author',
+        select: 'username profilePicture'
+    });
+    return newPost;
 };
 exports.savePost = savePost;
 const getPosts = async (userId = null, liked) => {
-    if (liked) {
-        return await Post_1.Post.find({ 'likes.userLikes': userId }).populate({
-            path: 'author',
-            select: 'username profilePicture'
-        }).sort({ createdAt: 'desc' });
+    userId && (0, serviceHelpers_1.checkObjectIdValidity)(userId);
+    let criteria = {};
+    if (liked && userId) {
+        criteria = { 'likes.userLikes': userId };
     }
-    if (userId) {
-        return await Post_1.Post.find({ author: userId }).populate({
-            path: 'author',
-            select: 'username profilePicture'
-        }).sort({ createdAt: 'desc' });
+    else if (!liked && userId) {
+        criteria = { author: userId };
     }
-    return await Post_1.Post.find(liked ? { 'likes.userLikes': userId } : {}).populate({
+    return await Post_1.Post.find(criteria).populate({
         path: 'author',
         select: 'username profilePicture'
     }).sort({ createdAt: 'desc' });
 };
 exports.getPosts = getPosts;
 const editPost = async (text, postId) => {
+    (0, serviceHelpers_1.checkObjectIdValidity)(postId);
     try {
         const updatedPost = await Post_1.Post.findByIdAndUpdate(postId, { text }, { new: true, runValidators: true }).populate({
             path: 'author',
@@ -50,25 +48,32 @@ const editPost = async (text, postId) => {
         return updatedPost;
     }
     catch (error) {
-        throw error;
+        console.error(error);
+        throw new Error(Constants_1.postUpdateMessage);
     }
 };
 exports.editPost = editPost;
 const removePost = async (_postId) => {
-    const postDeletion = await Post_1.Post.deleteOne({ _id: _postId });
-    if (postDeletion.deletedCount === 0) {
-        throw new Error('Delete operation had no effect. Perform database integrity check');
+    (0, serviceHelpers_1.checkObjectIdValidity)(_postId);
+    const post = await User_1.User.find({ _id: _postId });
+    if (!post) {
+        throw new Error(Constants_1.postNotFoundMessage);
     }
+    const deletedPost = await Post_1.Post.findByIdAndDelete(_postId);
+    if (!deletedPost) {
+        throw new Error(Constants_1.postUpdateMessage);
+    }
+    deletedPost.imageUrls.forEach((url) => (0, firebaseStorageService_1.deleteImage)(url, 'posts'));
     await Comment_1.Comment.deleteMany({ _postId });
 };
 exports.removePost = removePost;
 const likePost = async (postId, userId) => {
+    (0, serviceHelpers_1.checkObjectIdValidity)(postId, userId);
     try {
         const post = await Post_1.Post.findById(postId);
         if (!post) {
-            throw new Error("Post not found");
+            throw new Error(Constants_1.postNotFoundMessage);
         }
-        // pushing or pulling from array, and adjusting post count by +1 or -1
         const action = post.likes.userLikes.includes(userId) ? '$pull' : '$push';
         return await Post_1.Post.findByIdAndUpdate(postId, { [action]: { 'likes.userLikes': userId } }, { new: true, runValidators: true });
     }

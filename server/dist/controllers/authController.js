@@ -25,37 +25,39 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.logout = exports.register = exports.login = void 0;
 const authService = __importStar(require("../services/authService"));
-const trimmer_1 = require("../utils/trimmer");
+const helpers_1 = require("../utils/helpers");
+const errorHandler_1 = require("../utils/errorHandler");
+const Constants_1 = require("../Constants");
 const login = async (req, res, next) => {
-    const trimmedBody = (0, trimmer_1.trimmer)(req.body);
+    const trimmedBody = (0, helpers_1.trimmer)(req.body);
     const { email, password } = trimmedBody;
     try {
         if (!email || !password) {
-            throw new Error('All fields are required');
+            throw new Error(Constants_1.allFieldsRequiredValidationMessage);
         }
         const user = await authService.login(email.toLocaleLowerCase(), password);
         res.status(200).json(user);
     }
     catch (error) {
-        next(error);
+        res.status(400).json((0, errorHandler_1.errorHandler)(error));
     }
 };
 exports.login = login;
 const register = async (req, res, next) => {
-    const trimmedBody = (0, trimmer_1.trimmer)(req.body);
+    const trimmedBody = (0, helpers_1.trimmer)(req.body);
     const { email, username, password, confirmPass, gender } = trimmedBody;
     try {
         if (!email || !username || !password || !confirmPass || !gender) {
-            throw new Error('All fields are required');
+            throw new Error(Constants_1.allFieldsRequiredValidationMessage);
         }
         if (password !== confirmPass) {
-            throw new Error('Passwords must match');
+            throw new Error(Constants_1.passwordsMustMatchMessage);
         }
         const user = await authService.register(email.toLocaleLowerCase(), username, password, gender);
         res.status(201).json(user);
     }
     catch (error) {
-        next(error);
+        res.status(400).json((0, errorHandler_1.errorHandler)(error));
     }
 };
 exports.register = register;

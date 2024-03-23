@@ -3,16 +3,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteImage = exports.uploadImages = void 0;
 const storage_1 = require("firebase/storage");
 const firebaseConfig_1 = require("../config/firebaseConfig");
-const imageNameExtractor_1 = require("../utils/imageNameExtractor");
+const helpers_1 = require("../utils/helpers");
+const Constants_1 = require("../Constants");
 const storage = (0, storage_1.getStorage)(firebaseConfig_1.firebaseApp);
-async function uploadImages(files) {
+async function uploadImages(files, userId, destination) {
     const filesArray = [...files];
     if (!filesArray.length) {
         return [];
     }
     try {
         const uploadPromises = filesArray.map(async (file) => {
-            const storageRef = (0, storage_1.ref)(storage, `images/${file.originalname} ${Date.now()}`);
+            const storageRef = (0, storage_1.ref)(storage, `${destination}/${userId}|${file.originalname}|${Date.now()}`);
             const metadata = {
                 contentType: file.mimetype,
             };
@@ -25,18 +26,21 @@ async function uploadImages(files) {
     }
     catch (error) {
         console.error('Error during uploads:', error);
-        throw error;
+        throw new Error(Constants_1.uploadFailedMessage);
     }
 }
 exports.uploadImages = uploadImages;
-async function deleteImage(url) {
-    const imageName = (0, imageNameExtractor_1.extractImageName)(url);
-    const imageRef = (0, storage_1.ref)(storage, `images/${imageName}`);
-    (0, storage_1.deleteObject)(imageRef).then(() => {
+async function deleteImage(url, destination) {
+    const imageName = (0, helpers_1.parseFileName)(url, destination);
+    const imageRef = (0, storage_1.ref)(storage, `${destination}/${imageName}`);
+    try {
+        await (0, storage_1.deleteObject)(imageRef);
         console.log('Image deleted successfully');
-    }).catch((error) => {
-        console.error('Uh-oh, an error occurred while deleting photo!');
-    });
+    }
+    catch (error) {
+        console.error(error);
+        throw new Error(Constants_1.imageDeletionFailurMessage);
+    }
 }
 exports.deleteImage = deleteImage;
 //# sourceMappingURL=firebaseStorageService.js.map

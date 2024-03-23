@@ -13,8 +13,8 @@ const photoSchema = new mongoose_1.Schema({
     url: { type: String, required: true }
 });
 const userSchema = new mongoose_1.Schema({
-    username: { type: String, required: [true, Constants_1.allFieldsRequiredValidationMessage], unique: [true, Constants_1.accountExistsValidationMessage], match: [Constants_1._emailPattern, Constants_1.usernameValidationMessage] },
-    email: { type: String, required: [true, Constants_1.allFieldsRequiredValidationMessage], unique: [true, Constants_1.accountExistsValidationMessage], match: [Constants_1._usernamePattern, Constants_1.emailValidationMessage] },
+    username: { type: String, required: [true, Constants_1.allFieldsRequiredValidationMessage], unique: [true, Constants_1.accountExistsValidationMessage], match: [Constants_1._usernamePattern, Constants_1.usernameValidationMessage] },
+    email: { type: String, required: [true, Constants_1.allFieldsRequiredValidationMessage], unique: [true, Constants_1.accountExistsValidationMessage], match: [Constants_1._emailPattern, Constants_1.emailValidationMessage] },
     password: { type: String, required: [true, Constants_1.allFieldsRequiredValidationMessage], match: [Constants_1._passwordPattern, Constants_1.passwordValidationMessage] },
     gender: { type: String, required: [true, Constants_1.allFieldsRequiredValidationMessage], enum: { values: genders, message: Constants_1.genderValidationMessage } },
     bio: { type: String, default: '', maxLength: [200, Constants_1.bioLengthValidationMessage] },

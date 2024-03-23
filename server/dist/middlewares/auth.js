@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.auth = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const Constants_1 = require("../Constants");
 function auth() {
     return function (req, res, next) {
         const authHeader = req.headers.authorization;
@@ -21,7 +22,7 @@ function auth() {
         }
         catch (error) {
             if (error instanceof jsonwebtoken_1.default.TokenExpiredError) {
-                return res.status(403).json({ message: 'Token expired or is invalid. Please log in' });
+                return res.status(403).json({ message: Constants_1.tokenExpiredMessage });
             }
             else {
                 return res.status(400).json({ message: error.message });

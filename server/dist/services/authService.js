@@ -7,11 +7,12 @@ exports.logout = exports.register = exports.login = void 0;
 const User_1 = require("../models/User");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const serviceHelpers_1 = require("./helpers/serviceHelpers");
+const Constants_1 = require("../Constants");
 const SECRET = process.env.JWT_SECRET;
 async function login(email, password) {
     const existingUser = await User_1.User.findOne({ email });
     if (!existingUser || !(await (0, serviceHelpers_1.comparePasswords)(password, existingUser.password))) {
-        throw new Error('Wrong email or password');
+        throw new Error(Constants_1.wrongEmailOrPasswordMessage);
     }
     const userData = {
         email,
@@ -22,8 +23,7 @@ async function login(email, password) {
         profilePicture: existingUser.profilePicture || '',
         _id: existingUser._id
     };
-    // email bio username gender gender role profilePicture id
-    const accessToken = jsonwebtoken_1.default.sign(userData, SECRET, { expiresIn: '2h' });
+    const accessToken = jsonwebtoken_1.default.sign(userData, SECRET, { expiresIn: Constants_1.jwtExpirationTime });
     return { ...userData, accessToken };
 }
 exports.login = login;
@@ -31,7 +31,7 @@ async function register(email, username, password, gender) {
     const existingEmail = await User_1.User.findOne({ email });
     const existingUsername = await User_1.User.findOne({ username });
     if (existingEmail || existingUsername) {
-        throw new Error('User already exists');
+        throw new Error(Constants_1.accountExistsValidationMessage);
     }
     const hashedPassword = await (0, serviceHelpers_1.hashPassword)(password);
     const user = await User_1.User.create({ email, username, password: hashedPassword, gender });
@@ -44,7 +44,7 @@ async function register(email, username, password, gender) {
         profilePicture: user.profilePicture || '',
         _id: user._id
     };
-    const accessToken = jsonwebtoken_1.default.sign(userData, SECRET, { expiresIn: '2h' });
+    const accessToken = jsonwebtoken_1.default.sign(userData, SECRET, { expiresIn: Constants_1.jwtExpirationTime });
     return { ...userData, accessToken };
 }
 exports.register = register;

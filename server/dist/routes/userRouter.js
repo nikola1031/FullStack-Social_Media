@@ -29,7 +29,7 @@ const routeGuard_1 = require("../middlewares/routeGuard");
 const multer_1 = require("../middlewares/multer");
 const router = (0, express_1.Router)();
 router.put('/profile/', (0, routeGuard_1.onlyUsers)(), userController.updateProfile);
-router.post('/profile/photos', multer_1.upload.array('files', 5), (0, routeGuard_1.onlyUsers)(), userController.postPhotos);
+router.post('/profile/photos', (0, routeGuard_1.onlyUsers)(), (0, multer_1.multerUpload)(), userController.postPhotos);
 router.delete('/profile/photos/', (0, routeGuard_1.onlyUsers)(), userController.deletePhoto);
 router.put('/profile/picture', (0, routeGuard_1.onlyUsers)(), userController.updateProfilePicture);
 router.put('/profile/password', (0, routeGuard_1.onlyUsers)(), userController.updatePassword);
