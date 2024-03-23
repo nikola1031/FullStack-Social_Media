@@ -7,7 +7,7 @@
     "dev": "nodemon",
     "build": "tsc",
     "start": "node --env-file .env dist/index.js",
-    "prod": "npm run build && npm start"
+    "prod": "node dist/index.js"
   },
   "keywords": [],
   "author": "KonImperator",
