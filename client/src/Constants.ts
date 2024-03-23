@@ -27,4 +27,4 @@ export const successMessages = {
 export const apiBaseUrlDev = 'http://localhost:3000/api';
 export const siteBaseUrlDev = 'http://localhost:5173';
 export const apiBaseUrl = 'https://gather-grid-api.onrender.com/api';
-export const siteBaseUrl = 'https://gather-grid.vercel.app/';
+export const siteBaseUrl = 'https://gather-grid.vercel.app';
