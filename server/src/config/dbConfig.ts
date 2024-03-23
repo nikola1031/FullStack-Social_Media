@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
-const connectionString = 'mongodb://127.0.0.1:27017/' + process.env.DB_NAME;
+const connectionString = 
+`mongodb+srv://konimperator:${process.env.DB_PASSWORD}@gather-grid.l6woqfg.mongodb.net/`
+// `mongodb+srv://konimperator:${process.env.DB_PASSWORD}@gather-grid.l6woqfg.mongodb.net/?retryWrites=true&w=majority&appName=gather-grid`
 
 export async function initDB(): Promise<void> {
     try {
