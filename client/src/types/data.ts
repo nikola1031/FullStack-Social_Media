@@ -30,10 +30,10 @@ export type LoggedInUserData = {
     username: string;
     email: string;
     bio: string;
+    profilePicture: string;
     gender: 'male' | 'female';
     role: 'user' | 'admin';
     accessToken: string;
-    profilePicture: string;
 };
 
 export type Image = {
@@ -57,8 +57,8 @@ export type UserData = {
     username: string;
     bio: string;
     profilePicture: string;
-    photos: Image[];
     gender: 'male' | 'female';
+    photos: Image[];
     friendRequests: FriendRequests;
     friends: Friend[];
     following: string[];

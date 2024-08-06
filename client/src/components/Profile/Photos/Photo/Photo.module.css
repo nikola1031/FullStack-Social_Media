@@ -1,6 +1,5 @@
 .photo-container {
     border-radius: 6px;
-    overflow: hidden;
     cursor: pointer;
     min-width: fit-content;
     max-width: 750px;

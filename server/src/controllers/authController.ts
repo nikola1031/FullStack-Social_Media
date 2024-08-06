@@ -15,7 +15,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
         const user = await authService.login(email.toLocaleLowerCase(), password);
         res.status(200).json(user);
     } catch (error: any) {
-        res.status(400).json(errorHandler(error));
+        res.status(401).json(errorHandler(error));
     }
 }
 
@@ -23,6 +23,7 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
     const trimmedBody = trimmer(req.body);
     const { email, username, password, confirmPass, gender } = trimmedBody;
     try {
+
         if (!email || !username || !password || !confirmPass || !gender) {
             throw new Error(allFieldsRequiredValidationMessage);
         }

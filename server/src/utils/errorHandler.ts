@@ -1,4 +1,3 @@
-import { MulterError } from 'multer';
 import { accountExistsValidationMessage } from '../Constants';
 
 interface MongoValidationError extends Error {

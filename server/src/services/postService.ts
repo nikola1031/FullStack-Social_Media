@@ -36,6 +36,7 @@ export const getPosts = async (userId: string | null = null, liked?: string | un
     userId && checkObjectIdValidity(userId);
 
     let criteria: Record<string, string> = {};
+    console.log(liked, userId)
     if (liked && userId) {
         criteria = {'likes.userLikes': userId};
     } else if (!liked && userId) {

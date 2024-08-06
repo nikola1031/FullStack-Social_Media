@@ -6,6 +6,7 @@ import { tokenExpiredMessage } from "../Constants";
 export function auth() {
     return function(req: Request, res: Response, next: NextFunction) {
         const authHeader = req.headers.authorization;
+
         let token = '';
         if (authHeader) {
             token = authHeader.split(' ')[1];

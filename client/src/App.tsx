@@ -5,7 +5,6 @@ import { useTitle } from './hooks/useTitle';
 import Error from './components/Error/Error';
 
 function App() {
-
     useTitle('Gather Grid');
 
     const router = createBrowserRouter([

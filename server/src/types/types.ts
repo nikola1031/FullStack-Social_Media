@@ -6,6 +6,7 @@ export interface IUserData {
     role: 'user' | 'admin';
     profilePicture: string;
     accessToken: string;
+    bio: string;
 }
 
 export type FirebaseImageDestination = 'profile' | 'avatar' | 'posts';
